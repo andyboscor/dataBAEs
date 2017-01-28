@@ -99,7 +99,7 @@ class Dashboard extends Component {
           <Profile />
           </div>
         </Tab>
-        <Tab label="Circles" value="c">
+        <Tab label="Photo Albums" value="c">
           <div>
           <Photos />
           </div>

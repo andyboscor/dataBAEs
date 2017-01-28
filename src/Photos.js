@@ -16,52 +16,42 @@ const styles = {
     justifyContent: 'space-around',
   },
   gridList: {
-    width: 500,
-    height: 450,
+    width: 1000,
+    height: 950,
     overflowY: 'auto',
   },
 };
 
 const tilesData = [
   {
-    img: 'images/grid-list/00-52-29-429_640.jpg',
+    img: 'http://cdn3-www.dogtime.com/assets/uploads/gallery/pembroke-welsh-corgi-dog-breed-pictures/side-6.jpg',
     title: 'Breakfast',
     author: 'jill111',
   },
   {
-    img: 'images/grid-list/burger-827309_640.jpg',
+    img: 'http://www.petsionary.com/wp-content/uploads/pe/pembroke-welsh-corgi-black-color-at-green-lawn.jpg',
     title: 'Tasty burger',
     author: 'pashminu',
   },
   {
-    img: 'images/grid-list/camera-813814_640.jpg',
+    img: 'https://aos.iacpublishinglabs.com/question/1144fc9f1f837c9774b5351d1b66f231/aq/700px-394px/corgi-puppies-local-rescues_8336131e130fcb88.jpg?domain=cx.aos.ask.com',
     title: 'Camera',
     author: 'Danson67',
   },
   {
-    img: 'images/grid-list/morning-819362_640.jpg',
+    img: 'https://i.ytimg.com/vi/To8oesttqc4/hqdefault.jpg',
     title: 'Morning',
     author: 'fancycrave1',
   },
   {
-    img: 'images/grid-list/hats-829509_640.jpg',
+    img: 'http://www.dogster.com/wp-content/uploads/2015/05/shiba-inu-puppies-10.jpg',
     title: 'Hats',
     author: 'Hans',
   },
   {
-    img: 'images/grid-list/honey-823614_640.jpg',
+    img: 'http://cdn.skim.gs/images/kqdbg8dxw1r6nd8uaszd/shiba-inu-puppies-shiba-inu-times-two',
     title: 'Honey',
     author: 'fancycravel',
-  },
-  {
-    img: 'images/grid-list/vegetables-790022_640.jpg',
-    title: 'Vegetables',
-    author: 'jill111',
-  },
-  {
-    img: 'images/grid-list/water-plant-821293_640.jpg',
-    title: 'Water plant',
-    author: 'BkrmadtyaKarki',
   },
 ];
     return (
