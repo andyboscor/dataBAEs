@@ -19,6 +19,14 @@ static muiName = 'FlatButton';
     );
   }
 }
+const styles = {
+  headline: {
+    fontSize: 24,
+    paddingTop: 16,
+    marginBottom: 12,
+    fontWeight: 400,
+  },
+};
 
 const Logged = (props) => (
   <IconMenu
@@ -35,14 +43,6 @@ const Logged = (props) => (
   </IconMenu>
 );
 
-const styles = {
-  headline: {
-    fontSize: 24,
-    paddingTop: 16,
-    marginBottom: 12,
-    fontWeight: 400,
-  },
-};
 
 
 Logged.muiName = 'IconMenu';
@@ -54,8 +54,9 @@ Logged.muiName = 'IconMenu';
 class Dashboard extends Component {
   state = {
     logged: true,
+    dataSource: [],
+    title: "FriendZone",
   };
-
   handleChange = (event, logged) => {
     this.setState({logged: logged});
   };
@@ -71,15 +72,16 @@ class Dashboard extends Component {
           style={{margin: 20}}
         />
         <AppBar
-          title="FriendZone"
+        title={ <div>{this.state.title} <AutoComplete
+         hintText="Type anything"
+        dataSource={this.state.dataSource}/> </div>}
+
           iconElementLeft={<IconButton><NavigationMenu /></IconButton>}
-          iconElementRight={this.state.logged ? <Logged /> : <Login />}
+
+          //iconElementRight={this.state.logged ? <Logged /> : <Login />}
         />
-
-        <Tabs
-        value={this.state.value}
-        onChange={this.handleChange}>
-
+        <div>
+        <Tabs>
         <Tab label="Blog" value="a" >
           <div>
             <h2 style={styles.headline}>Controllable Tab A</h2>
@@ -109,8 +111,8 @@ class Dashboard extends Component {
               you wont be able to select them.
             </p>
           </div>
-        </Tab>        
-     
+        </Tab>
+
         <Tab label="Messaging" value="d">
           <div>
             <h2 style={styles.headline}>Controllable Tab B</h2>
@@ -120,8 +122,10 @@ class Dashboard extends Component {
               you wont be able to select them.
             </p>
           </div>
-        </Tab>      
+        </Tab>
  </Tabs>
+
+        </div>
       </div>
     );
   }
