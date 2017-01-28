@@ -9,7 +9,8 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import AutoComplete from 'material-ui/AutoComplete';
 import {Tabs, Tab} from 'material-ui/Tabs';
-
+import Avatar from 'material-ui/Avatar';
+import Blog from './Blog.js';
 class Login extends Component {
 static muiName = 'FlatButton';
 
@@ -79,17 +80,16 @@ class Dashboard extends Component {
           iconElementLeft={<IconButton><NavigationMenu /></IconButton>}
 
           //iconElementRight={this.state.logged ? <Logged /> : <Login />}
+          iconElementRight={<Avatar
+          src="https://pbs.twimg.com/profile_images/1416214039/me.jpg"
+          size={50} />
+        }
         />
         <div>
         <Tabs>
         <Tab label="Blog" value="a" >
           <div>
-            <h2 style={styles.headline}>Controllable Tab A</h2>
-            <p>
-              Tabs are also controllable if you want to programmatically pass them their values.
-              This allows for more functionality in Tabs such as not
-              having any Tab selected or assigning them different values.
-            </p>
+            <Blog />
           </div>
         </Tab>
         <Tab label="Friend List" value="b">
