@@ -11,6 +11,8 @@ import AutoComplete from 'material-ui/AutoComplete';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Avatar from 'material-ui/Avatar';
 import Blog from './Blog.js';
+import Photos from './Photos.js';
+import Profile from './Profile.js';
 class Login extends Component {
 static muiName = 'FlatButton';
 
@@ -92,24 +94,14 @@ class Dashboard extends Component {
             <Blog />
           </div>
         </Tab>
-        <Tab label="Friend List" value="b">
+        <Tab label="Profile" value="b">
           <div>
-            <h2 style={styles.headline}>Controllable Tab B</h2>
-            <p>
-              This is another example of a controllable tab. Remember, if you
-              use controllable Tabs, you need to give all of your tabs values or else
-              you wont be able to select them.
-            </p>
+          <Profile />
           </div>
         </Tab>
         <Tab label="Circles" value="c">
           <div>
-            <h2 style={styles.headline}>Controllable Tab B</h2>
-            <p>
-              This is another example of a controllable tab. Remember, if you
-              use controllable Tabs, you need to give all of your tabs values or else
-              you wont be able to select them.
-            </p>
+          <Photos />
           </div>
         </Tab>
 
