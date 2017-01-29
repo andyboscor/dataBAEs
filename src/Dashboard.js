@@ -13,6 +13,7 @@ import Avatar from 'material-ui/Avatar';
 import Blog from './Blog.js';
 import Photos from './Photos.js';
 import Profile from './Profile.js';
+import Messaging from './Messaging.js';
 class Login extends Component {
 static muiName = 'FlatButton';
 
@@ -54,6 +55,9 @@ Logged.muiName = 'IconMenu';
  * This example is taking advantage of the composability of the `AppBar`
  * to render different components depending on the application state.
  */
+ var container = {
+   height:'100%'
+ };
 class Dashboard extends Component {
   state = {
     logged: true,
@@ -63,17 +67,18 @@ class Dashboard extends Component {
   handleChange = (event, logged) => {
     this.setState({logged: logged});
   };
+  /*<Toggle
+    label="Logged"
+    defaultToggled={true}
+    onToggle={this.handleChange}
+    labelPosition="right"
+    style={{margin: 20}}
+  />*/
 
   render() {
     return (
-      <div>
-        <Toggle
-          label="Logged"
-          defaultToggled={true}
-          onToggle={this.handleChange}
-          labelPosition="right"
-          style={{margin: 20}}
-        />
+      <div style={container}>
+
         <AppBar
         title={ <div>{this.state.title} <AutoComplete
          hintText="Type anything"
@@ -107,12 +112,7 @@ class Dashboard extends Component {
 
         <Tab label="Messaging" value="d">
           <div>
-            <h2 style={styles.headline}>Controllable Tab B</h2>
-            <p>
-              This is another example of a controllable tab. Remember, if you
-              use controllable Tabs, you need to give all of your tabs values or else
-              you wont be able to select them.
-            </p>
+            <Messaging />
           </div>
         </Tab>
  </Tabs>
