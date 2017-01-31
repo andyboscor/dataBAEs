@@ -1,78 +1,66 @@
 import React, {Component} from 'react';
-import {GridList, GridTile} from 'material-ui/GridList';
+import Dialog from 'material-ui/Dialog';
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
-import Subheader from 'material-ui/Subheader';
 import StarBorder from 'material-ui/svg-icons/toggle/star-border';
 
+var title = {
 
-class Photos extends Component {
+      color: 'gray',
+      fontWeight: 400,
+      paddingTop: 0
 
-  render() {
-
-const styles = {
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-  },
-  gridList: {
-    width: 1000,
-    height: 950,
-    overflowY: 'auto',
-  },
+  };
+var message = {
+    color:'black',
+    fontWeight: 400,
+    paddingTop:5
 };
+var showButtonStyle = {
+  marginRight: 10
+}
+class Photos extends Component {
+  state = {
+   open: false,
+ };
 
-const tilesData = [
-  {
-    img: 'http://cdn3-www.dogtime.com/assets/uploads/gallery/pembroke-welsh-corgi-dog-breed-pictures/side-6.jpg',
-    title: 'Breakfast',
-    author: 'jill111',
-  },
-  {
-    img: 'http://www.petsionary.com/wp-content/uploads/pe/pembroke-welsh-corgi-black-color-at-green-lawn.jpg',
-    title: 'Tasty burger',
-    author: 'pashminu',
-  },
-  {
-    img: 'https://aos.iacpublishinglabs.com/question/1144fc9f1f837c9774b5351d1b66f231/aq/700px-394px/corgi-puppies-local-rescues_8336131e130fcb88.jpg?domain=cx.aos.ask.com',
-    title: 'Camera',
-    author: 'Danson67',
-  },
-  {
-    img: 'https://i.ytimg.com/vi/To8oesttqc4/hqdefault.jpg',
-    title: 'Morning',
-    author: 'fancycrave1',
-  },
-  {
-    img: 'http://www.dogster.com/wp-content/uploads/2015/05/shiba-inu-puppies-10.jpg',
-    title: 'Hats',
-    author: 'Hans',
-  },
-  {
-    img: 'http://cdn.skim.gs/images/kqdbg8dxw1r6nd8uaszd/shiba-inu-puppies-shiba-inu-times-two',
-    title: 'Honey',
-    author: 'fancycravel',
-  },
-];
+ handleOpen = () => {
+   this.setState({open: true});
+ };
+
+ handleClose = () => {
+   this.setState({open: false});
+ };
+  render() {
+    const actions = [
+      <FlatButton
+        label="Cancel"
+        primary={true}
+        onTouchTap={this.handleClose}
+      />,
+      <FlatButton
+        label="Submit"
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={this.handleClose}
+      />,
+    ];
     return (
-	  <div style={styles.root}>
-	    <GridList
-	      cellHeight={180}
-	      style={styles.gridList}
-	    >
-	      <Subheader>December</Subheader>
-	      {tilesData.map((tile) => (
-	        <GridTile
-	          key={tile.img}
-	          title={tile.title}
-	          subtitle={<span>by <b>{tile.author}</b></span>}
-	          actionIcon={<IconButton><StarBorder color="white" /></IconButton>}
-	        >
-	          <img src={tile.img} />
-	        </GridTile>
-	      ))}
-	    </GridList>
-	  </div>
+      <div>
+      <RaisedButton style={showButtonStyle} onTouchTap={this.handleOpen}>Show</RaisedButton>
+        <Dialog
+          title="Scrollable Dialog"
+          actions={actions}
+          modal={false}
+          open={this.state.open}
+          onRequestClose={this.handleClose}
+          autoScrollBodyContent={true}
+        >
+
+        </Dialog>
+      </div>
     );
   }
 }

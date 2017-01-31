@@ -11,7 +11,7 @@ import AutoComplete from 'material-ui/AutoComplete';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Avatar from 'material-ui/Avatar';
 import Blog from './Blog.js';
-import Photos from './Photos.js';
+import Albums from './Albums.js';
 import Profile from './Profile.js';
 import Messaging from './Messaging.js';
 class Login extends Component {
@@ -62,7 +62,7 @@ class Dashboard extends Component {
   state = {
     logged: true,
     dataSource: [],
-    title: "FriendZone",
+    title: "FriendZone"
   };
   handleChange = (event, logged) => {
     this.setState({logged: logged});
@@ -74,7 +74,7 @@ class Dashboard extends Component {
     labelPosition="right"
     style={{margin: 20}}
   />*/
-
+//iconElementLeft={<IconButton><NavigationMenu /></IconButton>}
   render() {
     return (
       <div style={container}>
@@ -84,7 +84,7 @@ class Dashboard extends Component {
          hintText="Type anything"
         dataSource={this.state.dataSource}/> </div>}
 
-          iconElementLeft={<IconButton><NavigationMenu /></IconButton>}
+          iconElementLeft = {<div> </div>}
 
           //iconElementRight={this.state.logged ? <Logged /> : <Login />}
           iconElementRight={<Avatar
@@ -106,7 +106,7 @@ class Dashboard extends Component {
         </Tab>
         <Tab label="Photo Albums" value="c">
           <div>
-          <Photos />
+          <Albums />
           </div>
         </Tab>
 
