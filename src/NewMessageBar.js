@@ -13,7 +13,7 @@ class NewMessageBar extends Component {
     return (
       <div>
       <AppBar
-    iconElementLeft={<TextField hintStyle = {hintStyle} style={barStyle}
+    iconElementLeft={<TextField hintStyle={hintStyle} style={barStyle}
       hintText="Type your message here"
     />}
     iconElementRight={<FlatButton label="Send" />}

@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
+import {Card, CardHeader} from 'material-ui/Card';
 
 var title = {
 
@@ -20,7 +19,7 @@ class ChatBubble extends Component {
       <div>
         <Card>
           <CardHeader titleStyle={title} subtitleStyle={message}
-            title={this.props.firstName}
+            title={this.props.firstname}
             avatar="https://lumiere-a.akamaihd.net/v1/images/07ff8e314e2798d32bfc8c39f82a9601677de34c.jpeg"
             subtitle={this.props.message}
           />
