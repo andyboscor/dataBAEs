@@ -6,8 +6,10 @@ import NewMessageBar from './NewMessageBar.js';
 var chatStyle = {
   display:'flex',
   flexDirection: 'row',
-  height:'100vh',
-     overflowY: 'auto',
+  height:'80vh',
+  position: 'relative',
+  //boxSizing: 'border-box',
+     overflowY: 'scroll',
      width:'100%'
 };
 var bubbles = {
@@ -24,7 +26,8 @@ var container = {
 var stickyContainer={
   display:'flex',
   flexDirection: 'column',
-  height:'80vh',
+  //height:'80vh',
+  boxSizing: 'border-box',
   flexGrow: '1'
   //flex: '1 0 auto'
 }

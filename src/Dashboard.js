@@ -56,8 +56,16 @@ Logged.muiName = 'IconMenu';
  * to render different components depending on the application state.
  */
  var container = {
-   height:'100%'
+   height:'100%',
+   width:'100%',
+   position:'fixed'
  };
+ var scrollable = {
+   overflowY: 'scroll',
+   position:'relative',
+   height: '90%'
+ };
+
 class Dashboard extends Component {
   state = {
     logged: true,
@@ -93,8 +101,8 @@ class Dashboard extends Component {
         }
         />
         <div>
-        <Tabs>
-        <Tab label="Blog" value="a" >
+        <Tabs style={container} contentContainerStyle={scrollable}>
+        <Tab label="Blog" value="a">
           <div>
             <Blog />
           </div>
@@ -104,13 +112,13 @@ class Dashboard extends Component {
           <Profile />
           </div>
         </Tab>
-        <Tab label="Photo Albums" value="c">
+        <Tab label="Photo Albums" value="c" >
           <div>
           <Albums />
           </div>
         </Tab>
 
-        <Tab label="Messaging" value="d">
+        <Tab label="Messaging" value="d" >
           <div>
             <Messaging />
           </div>

@@ -14,10 +14,9 @@ var showButtonStyle = {
 
 var photoWrapper ={
   position: 'relative',
-  height: '350px'
+  height: '450px'
 
 }
-
 const PHOTO_SET = [
   {
     src: 'http://example.com/example/img1_small.jpg',
@@ -63,6 +62,23 @@ const PHOTO_SET = [
       'http://example.com/example/img2_320.jpg 320w',
     ]
     }
+  },
+  {
+  src: 'http://example.com/example/img2_small.jpg',
+  width: 600,
+  height: 600,
+  aspectRatio: 1,
+  lightboxImage:{
+  src: 'http://example.com/example/img2_large.jpg',
+  srcset: [
+    'http://example.com/example/img2_1024.jpg 1024w',
+    'http://example.com/example/img2_800.jpg 800w',
+    'http://example.com/example/img2_500.jpg 500w',
+    'http://example.com/example/img2_320.jpg 320w',
+  ]
+  }
+
+
   }
 ];
 
