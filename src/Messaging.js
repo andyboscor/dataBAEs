@@ -6,7 +6,7 @@ import NewMessageBar from './NewMessageBar.js';
 var chatStyle = {
   display:'flex',
   flexDirection: 'row',
-  height:'80vh',
+  height:'85vh',
   position: 'relative',
   //boxSizing: 'border-box',
      overflowY: 'scroll',
