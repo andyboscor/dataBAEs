@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {GridList, GridTile} from 'material-ui/GridList';
+import AutoComplete from 'material-ui/AutoComplete';
 import IconButton from 'material-ui/IconButton';
 import Subheader from 'material-ui/Subheader';
 import Chip from 'material-ui/Chip';
@@ -7,6 +7,7 @@ import Photos from './Photos.js';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import Divider from 'material-ui/Divider';
 
 var showButtonStyle = {
   marginLeft: 10,
@@ -74,6 +75,24 @@ class Albums extends Component {
   handleClose = () => {
     this.setState({open: false});
   };
+
+// end of popup
+
+  stateAnnot = {
+    dataSource: [],
+  };
+
+  handleUpdateInput = (value) => {
+    this.setState({
+      dataSource: [
+        value,
+        value + value,
+        value + value + value,
+      ],
+    });
+  };
+
+
   render() {
 
     const actions = [
@@ -83,8 +102,6 @@ class Albums extends Component {
         onTouchTap={this.handleClose}
       />,
     ];
-
-
 
     return (
     <div>
@@ -97,10 +114,21 @@ class Albums extends Component {
           onRequestClose={this.handleClose}
           autoScrollBodyContent={true}
         >
-      
-      <div style={this.styles.wrapper}>
-        {this.state.chipData.map(this.renderChip, this)}
-      </div>
+          Photo annotations
+       
+            <div style={this.styles.wrapper}>
+              {this.state.chipData.map(this.renderChip, this)}
+            </div>
+
+            <AutoComplete
+              hintText="Type anything"
+              dataSource={this.stateAnnot.dataSource}
+              onUpdateInput={this.handleUpdateInput}
+              floatingLabelText="Add annotations"
+              fullWidth={true}
+            />    
+
+            <Divider />
 
         </Dialog>
         </div>
