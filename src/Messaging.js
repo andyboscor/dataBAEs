@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import ChatBubble from './ChatBubble.js';
 import ChatList from './ChatList.js';
 import NewMessageBar from './NewMessageBar.js';
-import { StickyContainer, Sticky } from 'react-sticky';
+
 var chatStyle = {
   display:'flex',
   flexDirection: 'row',
@@ -38,8 +38,8 @@ class Messaging extends Component {
 
 
   render() {
-    const message = { firstName: 'Graham',
-    message: 'Graham sends a message here.',
+    const message = { firstName: 'Nemo',
+    message: 'Nemo sends a message here.',
     photo: 'this'
     }
     return (

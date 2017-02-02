@@ -21,7 +21,7 @@ class ChatBubble extends Component {
         <Card>
           <CardHeader titleStyle={title} subtitleStyle={message}
             title={this.props.firstName}
-            avatar="https://pbs.twimg.com/profile_images/1416214039/me.jpg"
+            avatar="https://lumiere-a.akamaihd.net/v1/images/07ff8e314e2798d32bfc8c39f82a9601677de34c.jpeg"
             subtitle={this.props.message}
           />
         </Card>

@@ -88,7 +88,7 @@ class Dashboard extends Component {
 
           //iconElementRight={this.state.logged ? <Logged /> : <Login />}
           iconElementRight={<Avatar
-          src="https://pbs.twimg.com/profile_images/1416214039/me.jpg"
+          src="https://lumiere-a.akamaihd.net/v1/images/07ff8e314e2798d32bfc8c39f82a9601677de34c.jpeg"
           size={50} />
         }
         />
