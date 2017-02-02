@@ -64,15 +64,15 @@ class Albums extends Component {
   /*end of annotations*/
 
   state = {
-    open: false,
+    open2: false,
   };
 
   handleOpen = () => {
-    this.setState({open: true});
+    this.setState({open2: true});
   };
 
   handleClose = () => {
-    this.setState({open: false});
+    this.setState({open2: false});
   };
   render() {
 
@@ -93,11 +93,11 @@ class Albums extends Component {
           title="Scrollable Dialog"
           actions={actions}
           modal={false}
-          open={this.state.open}
+          open={this.state.open2}
           onRequestClose={this.handleClose}
           autoScrollBodyContent={true}
         >
-      
+
       <div style={this.styles.wrapper}>
         {this.state.chipData.map(this.renderChip, this)}
       </div>
