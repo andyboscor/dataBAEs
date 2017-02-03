@@ -25,7 +25,8 @@ class Albums extends Component {
       {key: 1, label: 'JQuery'},
       {key: 2, label: 'Polymer'},
       {key: 3, label: 'ReactJS'},
-    ]};
+    ],
+  open: false};
     this.styles = {
       chip: {
         margin: 4,
@@ -64,16 +65,12 @@ class Albums extends Component {
 
   /*end of annotations*/
 
-  state = {
-    open2: false,
-  };
-
   handleOpen = () => {
-    this.setState({open2: true});
+    this.setState({open: true});
   };
 
   handleClose = () => {
-    this.setState({open2: false});
+    this.setState({open: false});
   };
 
 // end of popup
@@ -110,13 +107,13 @@ class Albums extends Component {
           title="Scrollable Dialog"
           actions={actions}
           modal={false}
-          open={this.state.open2}
+          open={this.state.open}
           onRequestClose={this.handleClose}
           autoScrollBodyContent={true}
         >
 
           Photo annotations
-       
+
             <div style={this.styles.wrapper}>
               {this.state.chipData.map(this.renderChip, this)}
             </div>
@@ -127,7 +124,7 @@ class Albums extends Component {
               onUpdateInput={this.handleUpdateInput}
               floatingLabelText="Add annotations"
               fullWidth={true}
-            />    
+            />
 
             <Divider />
 

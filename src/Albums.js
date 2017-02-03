@@ -153,7 +153,6 @@ class Albums extends Component {
    this.setState({open: false});
   };
   renderConditionala(){
-    console.log(this.props.open);
     if(this.state.open===true&&this.props.open===true)
     {
       return(
