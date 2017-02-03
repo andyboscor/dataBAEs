@@ -124,7 +124,7 @@ const PHOTO_SET = [
 var onTop ={
   position: 'fixed',
   overflowY: 'scroll',
-  height:'100vh',
+  height:'100%',
   zIndex: '999',
   width: '100%',
   backgroundColor: 'white'
@@ -137,6 +137,10 @@ var grid = {
 }
 class Albums extends Component {
 
+  constructor(props) {
+    super(props);
+    this.renderConditionala = this.renderConditionala.bind(this);
+  }
   state = {
    open: false,
   };
@@ -149,7 +153,8 @@ class Albums extends Component {
    this.setState({open: false});
   };
   renderConditionala(){
-    if(this.state.open===true)
+    console.log(this.props.open);
+    if(this.state.open===true&&this.props.open===true)
     {
       return(
         <div style={onTop}>

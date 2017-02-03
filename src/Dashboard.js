@@ -70,10 +70,17 @@ class Dashboard extends Component {
   state = {
     logged: true,
     dataSource: [],
-    title: "FriendZone"
+    title: "FriendZone",
+    open: true
   };
   handleChange = (event, logged) => {
     this.setState({logged: logged});
+  };
+  handleOpen = () => {
+   this.setState({open: true});
+  };
+  handleClose = () => {
+   this.setState({open: false});
   };
   /*<Toggle
     label="Logged"
@@ -101,24 +108,24 @@ class Dashboard extends Component {
         }
         />
         <div>
-        <Tabs style={container} contentContainerStyle={scrollable}>
-        <Tab label="Blog" value="a">
+        <Tabs style={container} contentContainerStyle={scrollable} >
+        <Tab label="Blog" value="a" onClick={this.handleClose}>
           <div>
             <Blog />
           </div>
         </Tab>
-        <Tab label="Profile" value="b">
+        <Tab label="Profile" value="b" onClick={this.handleClose}>
           <div>
           <Profile />
           </div>
         </Tab>
-        <Tab label="Photo Albums" value="c" >
+        <Tab label="Photo Albums" value="c" onClick={this.handleOpen}>
           <div>
-          <Albums />
+          <Albums {...this.state}/>
           </div>
         </Tab>
 
-        <Tab label="Messaging" value="d" >
+        <Tab label="Messaging" value="d" onClick={this.handleClose}>
           <div>
             <Messaging />
           </div>
