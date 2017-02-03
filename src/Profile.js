@@ -5,14 +5,6 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 
-import {
-  blue300,
-  indigo900,
-  orange200,
-  deepOrange300,
-  pink400,
-  purple500,
-} from 'material-ui/styles/colors';
 
 const style = {margin: 5};
 class Profile extends Component {
@@ -27,7 +19,7 @@ class Profile extends Component {
 
   handleClose = () => {
     this.setState({open: false});
-  };	
+  };
 
   render() {
 
@@ -55,14 +47,14 @@ class Profile extends Component {
           <br />
 		  <TextField
 		      hintText="First Name"
-		  /><br />          
+		  /><br />
 		    <TextField
 		      hintText="Last Name"
-		    /><br />	
+		    /><br />
 
 		    <TextField
 		      hintText="Email"
-		    /><br />	
+		    /><br />
 
 		    <br />
 
@@ -77,10 +69,10 @@ class Profile extends Component {
 		        >
 		          The actions in this window were passed in as an array of React objects.
 		        </Dialog>
-		      </div>		    	    	  
+		      </div>
 
 			<br />
-          </center>        
+          </center>
       </div>
     );
   }

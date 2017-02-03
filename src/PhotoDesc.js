@@ -1,9 +1,6 @@
 import React, {Component} from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
-import IconButton from 'material-ui/IconButton';
-import Subheader from 'material-ui/Subheader';
 import Chip from 'material-ui/Chip';
-import Photos from './Photos.js';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';

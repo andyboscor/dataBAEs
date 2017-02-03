@@ -99,7 +99,7 @@ class Dashboard extends Component {
          hintText="Type anything"
         dataSource={this.state.dataSource}/> </div>}
 
-          iconElementLeft = {<div> </div>}
+          iconElementLeft={<div> </div>}
 
           //iconElementRight={this.state.logged ? <Logged /> : <Login />}
           iconElementRight={<Avatar

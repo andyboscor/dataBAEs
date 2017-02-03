@@ -1,12 +1,7 @@
 import React, {Component} from 'react';
 import {GridList, GridTile} from 'material-ui/GridList';
-import IconButton from 'material-ui/IconButton';
 import Subheader from 'material-ui/Subheader';
-import StarBorder from 'material-ui/svg-icons/toggle/star-border';
-import Photos from './Photos.js';
-import PhotoGallery from './PhotoGallery.js';
 import RaisedButton from 'material-ui/RaisedButton';
-import Gallery from 'react-photo-gallery';
 import PhotoDesc from './PhotoDesc.js';
 var showButtonStyle = {
   marginRight: 10
@@ -57,70 +52,7 @@ const tilesData = [
     author: 'fancycravel',
   },
 ];
-const PHOTO_SET = [
-  {
-    src: 'http://example.com/example/img1_small.jpg',
-    width: 681,
-    height: 1024,
-    aspectRatio: 1.5,
-    lightboxImage:{
-    src: 'http://example.com/example/img1_large.jpg',
-    srcset: [
-      'http://example.com/example/img1_1024.jpg 1024w',
-      'http://example.com/example/img1_800.jpg 800w',
-      'http://example.com/example/img1_500.jpg 500w',
-      'http://example.com/example/img1_320.jpg 320w',
-    ]
-    }
-  },
-  {
-    src: 'http://example.com/example/img2_small.jpg',
-    width: 600,
-    height: 600,
-    aspectRatio: 1,
-    lightboxImage:{
-    src: 'http://example.com/example/img2_large.jpg',
-    srcset: [
-      'http://example.com/example/img2_1024.jpg 1024w',
-      'http://example.com/example/img2_800.jpg 800w',
-      'http://example.com/example/img2_500.jpg 500w',
-      'http://example.com/example/img2_320.jpg 320w',
-    ]
-    }
-  },
-    {
-    src: 'http://example.com/example/img2_small.jpg',
-    width: 600,
-    height: 600,
-    aspectRatio: 1,
-    lightboxImage:{
-    src: 'http://example.com/example/img2_large.jpg',
-    srcset: [
-      'http://example.com/example/img2_1024.jpg 1024w',
-      'http://example.com/example/img2_800.jpg 800w',
-      'http://example.com/example/img2_500.jpg 500w',
-      'http://example.com/example/img2_320.jpg 320w',
-    ]
-    }
-  },
-  {
-  src: 'http://example.com/example/img2_small.jpg',
-  width: 600,
-  height: 600,
-  aspectRatio: 1,
-  lightboxImage:{
-  src: 'http://example.com/example/img2_large.jpg',
-  srcset: [
-    'http://example.com/example/img2_1024.jpg 1024w',
-    'http://example.com/example/img2_800.jpg 800w',
-    'http://example.com/example/img2_500.jpg 500w',
-    'http://example.com/example/img2_320.jpg 320w',
-  ]
-  }
 
-
-  }
-];
 var onTop ={
   position: 'fixed',
   overflowY: 'scroll',
@@ -178,7 +110,7 @@ class Albums extends Component {
                   cols={tile.featured ? 2 : 1}
                   rows={tile.featured ? 2 : 1}
                 >
-                  <img src={tile.img} />
+                  <img src={tile.img} role="presentation" />
                 </GridTile>
               ))}
             </GridList>
@@ -212,7 +144,7 @@ class Albums extends Component {
         subtitle={<span>by <b>{tile.author}</b></span>}
         actionIcon={<RaisedButton style={showButtonStyle} onTouchTap={this.handleOpen}>Show</RaisedButton>}
       >
-        <img src={tile.img} />
+        <img src={tile.img} role="presentation"/>
       </GridTile>
     ))}
   </GridList>
