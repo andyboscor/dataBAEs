@@ -64,7 +64,8 @@ Logged.muiName = 'IconMenu';
  var scrollable = {
    overflowY: 'scroll',
    position:'relative',
-   height: '90%'
+   height: '90%',
+   width: '100%'
  };
 
 class Dashboard extends Component {

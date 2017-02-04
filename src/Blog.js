@@ -18,14 +18,18 @@ class Blog extends Component {
   }
   componentDidMount() {
     var self = this;
-    fetch('https://itunes.apple.com/search?term=beyonce')
+    fetch('http://friendzone.azurewebsites.net/API.php/friends/1', {
+      headers: {
+    'Authorization': 'Basic ' + window.btoa(unescape(encodeURIComponent("email_address1@google.com:secret")))
+  }
+    })
       .then(function(response) {
         return response.json()
       }).then(function(json) {
         console.log('parsed json', json)
 
         //cardarray = json.results;
-    self.setState({cardarray: json.results})
+    self.setState({cardarray: json})
       }).catch(function(ex) {
         console.log('parsing failed', ex)
       })

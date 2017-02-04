@@ -17,6 +17,11 @@ const styles = {
     height: 950,
     overflowY: 'auto',
   },
+  root2: {
+    flexWrap: 'wrap',
+    width: '100%',
+    alignItems: 'center',
+  }
 };
 
 const tilesData = [
@@ -129,9 +134,9 @@ class Albums extends Component {
 
     return (
 
-	  <div style={styles.root}>
+	  <div >
   {this.renderConditionala()}
-  <div>
+  <div style={styles.root}>
   <GridList
     cellHeight={180}
     style={styles.gridList}
