@@ -5,6 +5,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
+import PasswordField from 'material-ui-password-field'
 
 var addBottom = {
   marginBottom: '50px'
@@ -12,6 +13,10 @@ var addBottom = {
 
 const style = {
   margin: 12,
+};
+
+const maxPass = {
+  width: '255px'
 };
 
 var backgroundPaint = {
@@ -49,9 +54,11 @@ class LoginPage extends Component {
               <TextField
                 hintText="Email"
               /><br />   
-              <TextField
-                hintText="Password"
-              /><br />                             
+              <PasswordField
+                style={maxPass}
+                disableButton={false}
+                floatingLabelText="Enter your password"
+              />                        
             <RaisedButton label="Login" style={style} />
             <h3>Not registered yet?</h3>
             <RaisedButton label="Register" onTouchTap={this.handleOpen} />
@@ -64,6 +71,7 @@ class LoginPage extends Component {
               autoScrollBodyContent={true}
             >
             <div>
+              <center>
               <TextField
                   hintText="First Name"
               /><br />
@@ -72,7 +80,12 @@ class LoginPage extends Component {
               /><br />
               <TextField
                 hintText="Email"
-              /><br />              
+              /><br /> 
+              <PasswordField
+                style={maxPass}
+                disableButton={false}
+                floatingLabelText="Enter your password"
+              /></center>                           
             </div>
             </Dialog>
           </div>          
