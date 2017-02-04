@@ -20,7 +20,8 @@ const maxPass = {
 };
 
 var backgroundPaint = {
-  backgroundColor:'#80DEEA'
+  backgroundColor:'#80DEEA',
+  height: '100%'
 }
 
 class LoginPage extends Component {
@@ -53,13 +54,13 @@ class LoginPage extends Component {
           <div>
               <TextField
                 hintText="Email"
-              /><br />   
+              /><br />
               <PasswordField
                 style={maxPass}
                 disableButton={false}
                 floatingLabelText="Enter your password"
-              />                        
-            <RaisedButton label="Login" style={style} />
+              />
+            <RaisedButton label="Login" style={style} onTouchTap={this.props.handleLogin} />
             <h3>Not registered yet?</h3>
             <RaisedButton label="Register" onTouchTap={this.handleOpen} />
             <Dialog
@@ -80,17 +81,17 @@ class LoginPage extends Component {
               /><br />
               <TextField
                 hintText="Email"
-              /><br /> 
+              /><br />
               <PasswordField
                 style={maxPass}
                 disableButton={false}
                 floatingLabelText="Enter your password"
-              /></center>                           
+              /></center>
             </div>
             </Dialog>
-          </div>          
+          </div>
           <br />
-            
+
           <br />
           </center>
       </div>

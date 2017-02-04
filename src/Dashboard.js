@@ -14,6 +14,7 @@ import Blog from './Blog.js';
 import Albums from './Albums.js';
 import Profile from './Profile.js';
 import Messaging from './Messaging.js';
+import LoginPage from './LoginPage.js';
 class Login extends Component {
 static muiName = 'FlatButton';
 
@@ -71,7 +72,8 @@ class Dashboard extends Component {
     logged: true,
     dataSource: [],
     title: "FriendZone",
-    open: true
+    open: true,
+    loggedin: false
   };
   handleChange = (event, logged) => {
     this.setState({logged: logged});
@@ -90,49 +92,82 @@ class Dashboard extends Component {
     style={{margin: 20}}
   />*/
 //iconElementLeft={<IconButton><NavigationMenu /></IconButton>}
+handleLogin = () =>{
+  this.setState({loggedin:true});
+  //console.log("here");
+};
+handleLogout = () =>{
+  this.setState({loggedin:false});
+};
+renderConditionala(){
+  if(this.state.loggedin===false)
+  {  return(
+      <div style={container}>
+      <LoginPage handleLogin={this.handleLogin} />
+      </div>
+    );
+  }
+  else return (
+    <div>
+    <AppBar
+    title={ <div>{this.state.title} <AutoComplete
+     hintText="Type anything"
+    dataSource={this.state.dataSource}/> </div>}
+
+      iconElementLeft={<div> </div>}
+
+      //iconElementRight={this.state.logged ? <Logged /> : <Login />}
+      iconElementRight={
+        <IconMenu
+
+          iconButtonElement={
+            <IconButton><Avatar
+          src="https://lumiere-a.akamaihd.net/v1/images/07ff8e314e2798d32bfc8c39f82a9601677de34c.jpeg"
+          size={50} /></IconButton>
+          }
+          targetOrigin={{horizontal: 'right', vertical: 'top'}}
+          anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+        >
+          <MenuItem primaryText="Refresh" />
+          <MenuItem primaryText="Help" />
+          <MenuItem primaryText="Sign out" onTouchTap={this.handleLogout} />
+        </IconMenu>
+    }
+    />
+    <div>
+    <Tabs style={container} contentContainerStyle={scrollable} >
+    <Tab label="Blog" value="a" onClick={this.handleClose}>
+      <div>
+        <Blog />
+      </div>
+    </Tab>
+    <Tab label="Profile" value="b" onClick={this.handleClose}>
+      <div>
+      <Profile />
+      </div>
+    </Tab>
+    <Tab label="Photo Albums" value="c" onClick={this.handleOpen}>
+      <div>
+      <Albums {...this.state}/>
+      </div>
+    </Tab>
+
+    <Tab label="Messaging" value="d" onClick={this.handleClose}>
+      <div>
+        <Messaging />
+      </div>
+    </Tab>
+</Tabs>
+
+    </div>
+    </div>
+  );
+}
   render() {
     return (
       <div style={container}>
+        {this.renderConditionala()}
 
-        <AppBar
-        title={ <div>{this.state.title} <AutoComplete
-         hintText="Type anything"
-        dataSource={this.state.dataSource}/> </div>}
-
-          iconElementLeft={<div> </div>}
-
-          //iconElementRight={this.state.logged ? <Logged /> : <Login />}
-          iconElementRight={<Avatar
-          src="https://lumiere-a.akamaihd.net/v1/images/07ff8e314e2798d32bfc8c39f82a9601677de34c.jpeg"
-          size={50} />
-        }
-        />
-        <div>
-        <Tabs style={container} contentContainerStyle={scrollable} >
-        <Tab label="Blog" value="a" onClick={this.handleClose}>
-          <div>
-            <Blog />
-          </div>
-        </Tab>
-        <Tab label="Profile" value="b" onClick={this.handleClose}>
-          <div>
-          <Profile />
-          </div>
-        </Tab>
-        <Tab label="Photo Albums" value="c" onClick={this.handleOpen}>
-          <div>
-          <Albums {...this.state}/>
-          </div>
-        </Tab>
-
-        <Tab label="Messaging" value="d" onClick={this.handleClose}>
-          <div>
-            <Messaging />
-          </div>
-        </Tab>
- </Tabs>
-
-        </div>
       </div>
     );
   }
