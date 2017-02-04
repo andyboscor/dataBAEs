@@ -5,10 +5,9 @@ import ChatList from './ChatList.js';
 var chatStyle = {
   display:'flex',
   flexDirection: 'row',
-  height:'85vh',
+  height:'82vh',
   position: 'relative',
   //boxSizing: 'border-box',
-     overflowY: 'scroll',
      width:'100%'
 };
 

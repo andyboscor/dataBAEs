@@ -122,15 +122,15 @@ renderConditionala(){
         <IconMenu
 
           iconButtonElement={
-            <IconButton><Avatar
+          <Avatar
           src="https://lumiere-a.akamaihd.net/v1/images/07ff8e314e2798d32bfc8c39f82a9601677de34c.jpeg"
-          size={50} /></IconButton>
+          size={50} />
           }
           targetOrigin={{horizontal: 'right', vertical: 'top'}}
           anchorOrigin={{horizontal: 'right', vertical: 'top'}}
         >
           <MenuItem primaryText="Refresh" />
-          <MenuItem primaryText="Help" />
+          <MenuItem primaryText="Profile" />
           <MenuItem primaryText="Sign out" onTouchTap={this.handleLogout} />
         </IconMenu>
     }

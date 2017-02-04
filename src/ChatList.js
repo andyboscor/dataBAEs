@@ -5,10 +5,11 @@ import Subheader from 'material-ui/Subheader';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 
 var chatlist_style = {
-  width: '300px',
+  width: '400px',
   maxWidth: '400px',
   fontWeight: 400,
-  paddingTop: 0
+  paddingTop: 0,
+  overflowY: 'scroll'
 
 };
 /*<ListItem
@@ -63,7 +64,17 @@ leftAvatar={<Avatar src="https://kenanfellows.org/wp-content/uploads/2016/02/bla
 var  items = [
      {id: 1, title: 'Item 1'},
      {id: 2, title: 'Item 2'},
-     {id: 3, title: 'Item 3'}
+     {id: 3, title: 'Item 3'},
+     {id: 4, title: 'Item 3'},
+     {id: 5, title: 'Item 3'},
+     {id: 6, title: 'Item 3'},
+     {id: 7, title: 'Item 3'},
+     {id: 8, title: 'Item 3'},
+     {id: 9, title: 'Item 3'},
+     {id: 10, title: 'Item 3'},
+     {id: 11, title: 'Item 3'},
+     {id: 12, title: 'Item 3'},
+     {id: 13, title: 'Item 3'}
    ];
 class ChatList extends Component {
   constructor(props) {

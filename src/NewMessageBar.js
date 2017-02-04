@@ -6,17 +6,19 @@ var hintStyle = {
   color: 'white'
 }
 var barStyle = {
-  flexGrow: '1'
+  //flexGrow: '1'
+}
+var sendStyle = {
+  color:'white'
 }
 class NewMessageBar extends Component {
   render() {
     return (
       <div>
       <AppBar
-    iconElementLeft={<TextField hintStyle={hintStyle} style={barStyle}
+    iconElementLeft={<div><TextField hintStyle={hintStyle} style={barStyle}
       hintText="Type your message here"
-    />}
-    iconElementRight={<FlatButton label="Send" />}
+    /><FlatButton style={sendStyle} label="Send" /> </div>}
   />
       </div>
     );
