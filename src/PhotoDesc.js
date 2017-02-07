@@ -5,13 +5,13 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Divider from 'material-ui/Divider';
-
+import CommentCard from './CommentCard.js';
 var showButtonStyle = {
   marginLeft: 10,
   marginRight: 10
 }
 
-
+  var commentarr = [ {firstname:'Nemo', message:'this', photo:'this'},{firstname:'Hello', message:'this sss', photo:'this'}, {firstname:'jeee', message:'this sss', photo:'this'}];
 
 class Albums extends Component {
 
@@ -99,9 +99,9 @@ class Albums extends Component {
 
     return (
     <div>
-    <RaisedButton style={showButtonStyle} onTouchTap={this.handleOpen}>Show</RaisedButton>
+    <RaisedButton style={showButtonStyle} onTouchTap={this.handleOpen}>Comment</RaisedButton>
         <Dialog
-          title="Scrollable Dialog"
+          title="Comments"
           actions={actions}
           modal={false}
           open={this.state.open}
@@ -109,7 +109,7 @@ class Albums extends Component {
           autoScrollBodyContent={true}
         >
 
-          Photo annotations
+          <h2>Photo annotations</h2>
 
             <div style={this.styles.wrapper}>
               {this.state.chipData.map(this.renderChip, this)}
@@ -123,7 +123,18 @@ class Albums extends Component {
               fullWidth={true}
             />
 
-            <Divider />
+
+            <h2> Comments </h2>
+            {commentarr.map(function(item, i){
+                return <CommentCard key={i} {...item} />
+              },this)}
+              <AutoComplete
+                hintText="Type anything"
+                dataSource={this.stateAnnot.dataSource}
+                onUpdateInput={this.handleUpdateInput}
+                floatingLabelText="Add new comment"
+                fullWidth={true}
+              />
 
         </Dialog>
         </div>
