@@ -33,7 +33,13 @@ const styles = {
     fontWeight: 400,
   },
 };
-
+var tabColor = {
+  backgroundColor: '#8F98C4'
+}
+var underlineColor = {
+  backgroundColor: '#80CBC4',
+  height:'5px'
+}
 const Logged = (props) => (
   <IconMenu
     {...props}
@@ -72,13 +78,14 @@ Logged.muiName = 'IconMenu';
  var titleStyle={
   color: 'white',
   fontSize: '26px',
-  lineHeight: '55px',
+  lineHeight: '60px',
  }
 var inLiners= {
    display: 'flex',
-  width: '400px'
+  width: '400px',
+  marginTop:'-8px'
 }
-//This is where Dashboard starts 
+//This is where Dashboard starts
 // Imagine you have a list of languages that you'd like to autosuggest.
 const languages = [
   {
@@ -176,7 +183,7 @@ class Dashboard extends Component {
 
     // Autosuggest will pass through all these props to the input element.
     const inputProps = {
-      placeholder: 'Type a programming language',
+      placeholder: 'Type a name',
       value,
       onChange: this.onChange
     };
@@ -190,10 +197,10 @@ class Dashboard extends Component {
     }
     else return (
       <div>
-     
+
       <AppBar
       title={<div> </div>}
-
+      className="appBar"
       iconElementLeft={<div style={inLiners}>{this.state.title}<div><Autosuggest
         suggestions={suggestions}
         onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
@@ -223,8 +230,8 @@ class Dashboard extends Component {
       }
       />
       <div>
-      <Tabs style={container} contentContainerStyle={scrollable} >
-      <Tab label="Blog" value="a" onClick={this.handleClose}>
+      <Tabs style={container} contentContainerStyle={scrollable} tabItemContainerStyle={tabColor} inkBarStyle={underlineColor} >
+      <Tab label="Blog" value="a" onClick={this.handleClose} >
         <div>
           <Blog />
         </div>

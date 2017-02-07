@@ -20,10 +20,12 @@ const maxPass = {
 };
 
 var backgroundPaint = {
-  backgroundColor:'#80DEEA',
   height: '100%'
+};
+var responsiveImg = {
+  maxHeight:'300px',
+  height:'20vw'
 }
-
 class LoginPage extends Component {
   state = {
     open: false,
@@ -48,10 +50,10 @@ class LoginPage extends Component {
       />
     ];
     return (
-      <div style={backgroundPaint} >
+      <div style={backgroundPaint} className="backgroundLogin">
           <center>
           <br />
-          <img src={require('../images/logo2-small.png')} />
+          <img style={responsiveImg} src={require('../images/logo2-small.png')} />
 
           <div>
             <TextField
