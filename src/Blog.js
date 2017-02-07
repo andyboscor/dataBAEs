@@ -108,7 +108,16 @@ class Blog extends Component {
             hintText="Type anything"
             dataSource={this.state.dataSource}
             onUpdateInput={this.handleUpdateInput}
-            floatingLabelText="Full width"
+            floatingLabelText="Blog Title"
+            fullWidth={true}
+          />
+
+
+          <TextField
+            hintText="Type anything"
+            dataSource={this.state.dataSource}
+            onUpdateInput={this.handleUpdateInput}
+            floatingLabelText="Write Your blog here"
             fullWidth={true}
           />
 
