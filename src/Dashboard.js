@@ -9,6 +9,7 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import AutoComplete from 'material-ui/AutoComplete';
 import {Tabs, Tab} from 'material-ui/Tabs';
+import Autosuggest from 'react-autosuggest';
 import Avatar from 'material-ui/Avatar';
 import Blog from './Blog.js';
 import Albums from './Albums.js';
@@ -68,6 +69,50 @@ Logged.muiName = 'IconMenu';
    height: '100%',
    width: '100%'
  };
+ var titleStyle={
+  color: 'white',
+  fontSize: '26px',
+  lineHeight: '55px',
+ 
+ }
+var inLiners= {
+   display: 'flex',
+  width: '400px'
+}
+//This is where Dashboard starts 
+// Imagine you have a list of languages that you'd like to autosuggest.
+const languages = [
+  {
+    name: 'Hello',
+    year: 1972
+  },
+  {
+    name: 'Helmo',
+    year: 2012
+  },
+];
+
+// Teach Autosuggest how to calculate suggestions for any given input value.
+const getSuggestions = value => {
+  const inputValue = value.trim().toLowerCase();
+  const inputLength = inputValue.length;
+
+  return inputLength === 0 ? [] : languages.filter(lang =>
+    lang.name.toLowerCase().slice(0, inputLength) === inputValue
+  );
+};
+
+// When suggestion is clicked, Autosuggest needs to populate the input element
+// based on the clicked suggestion. Teach Autosuggest how to calculate the
+// input value for every given suggestion.
+const getSuggestionValue = suggestion => suggestion.name;
+
+// Use your imagination to render suggestions.
+const renderSuggestion = suggestion => (
+  <div>
+    {suggestion.name}
+  </div>
+);
 
 class Dashboard extends Component {
   state = {
@@ -75,7 +120,9 @@ class Dashboard extends Component {
     dataSource: [],
     title: "FriendZone",
     open: true,
-    loggedin: false
+    loggedin: false,
+    value: '',
+    suggestions: []
   };
   handleChange = (event, logged) => {
     this.setState({logged: logged});
@@ -94,85 +141,129 @@ class Dashboard extends Component {
     style={{margin: 20}}
   />*/
 //iconElementLeft={<IconButton><NavigationMenu /></IconButton>}
-handleLogin = () =>{
-  this.setState({loggedin:true});
-  //console.log("here");
-};
-handleLogout = () =>{
-  this.setState({loggedin:false});
-};
-renderConditionala(){
-  if(this.state.loggedin===false)
-  {  return(
-      <div style={container}>
-      <LoginPage handleLogin={this.handleLogin} />
-      </div>
-    );
-  }
-  else return (
-    <div>
-    <AppBar
-    title={ <div>{this.state.title} <AutoComplete
-     hintText="Type anything"
-    dataSource={this.state.dataSource}/> </div>}
 
-      iconElementLeft={<div> </div>}
+/*
+*****Autocomplete functions start!!!!!*****
+*/
 
-      //iconElementRight={this.state.logged ? <Logged /> : <Login />}
-      iconElementRight={
-        <IconMenu
+ 
 
-          iconButtonElement={
-          <Avatar
-          src="https://lumiere-a.akamaihd.net/v1/images/07ff8e314e2798d32bfc8c39f82a9601677de34c.jpeg"
-          size={50} />
-          }
-          targetOrigin={{horizontal: 'right', vertical: 'top'}}
-          anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-        >
-          <MenuItem primaryText="Refresh" />
-          <MenuItem primaryText="Profile" />
-          <MenuItem primaryText="Sign out" onTouchTap={this.handleLogout} />
-        </IconMenu>
+
+  onChange = (event, { newValue }) => {
+    this.setState({
+      value: newValue
+    });
+  };
+
+  // Autosuggest will call this function every time you need to update suggestions.
+  // You already implemented this logic above, so just use it.
+  onSuggestionsFetchRequested = ({ value }) => {
+    this.setState({
+      suggestions: getSuggestions(value)
+    });
+  };
+
+  // Autosuggest will call this function every time you need to clear suggestions.
+  onSuggestionsClearRequested = () => {
+    this.setState({
+      suggestions: []
+    });
+  };
+
+
+  handleLogin = () =>{
+    this.setState({loggedin:true});
+    //console.log("here");
+  };
+  handleLogout = () =>{
+    this.setState({loggedin:false});
+  };
+
+  renderConditionala(){
+    const { value, suggestions } = this.state;
+
+    // Autosuggest will pass through all these props to the input element.
+    const inputProps = {
+      placeholder: 'Type a programming language',
+      value,
+      onChange: this.onChange
+    };
+
+    if(this.state.loggedin===false)
+    {  return(
+        <div style={container}>
+        <LoginPage handleLogin={this.handleLogin} />
+        </div>
+      );
     }
-    />
-    <div>
-    <Tabs style={container} contentContainerStyle={scrollable} >
-    <Tab label="Blog" value="a" onClick={this.handleClose}>
+    else return (
       <div>
-        <Blog />
-      </div>
-    </Tab>
-    <Tab label="Profile" value="b" onClick={this.handleClose}>
-      <div>
-      <Profile />
-      </div>
-    </Tab>
-    <Tab label="Photo Albums" value="c" onClick={this.handleOpen}>
-      <div>
-      <Albums {...this.state}/>
-      </div>
-    </Tab>
+     
+      <AppBar
+      title={  <div> </div>}
+      iconElementLeft={<div style={inLiners}>{this.state.title}<div><Autosuggest
+        suggestions={suggestions}
+        onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+        onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+        getSuggestionValue={getSuggestionValue}
+        renderSuggestion={renderSuggestion}
+        inputProps={inputProps}
+      /> </div></div>}
+      iconStyleLeft={titleStyle}
+        children={<div>   <IconMenu
 
-    <Tab label="Messaging" value="d" onClick={this.handleClose}>
+            iconButtonElement={
+            <Avatar
+            src="https://lumiere-a.akamaihd.net/v1/images/07ff8e314e2798d32bfc8c39f82a9601677de34c.jpeg"
+            size={50} />
+            }
+            targetOrigin={{horizontal: 'right', vertical: 'top'}}
+            anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+          >
+            <MenuItem primaryText="Refresh" />
+            <MenuItem primaryText="Profile" />
+            <MenuItem primaryText="Sign out" onTouchTap={this.handleLogout} />
+          </IconMenu></div>}
+        iconElementRight={<div> </div>
+      }
+      />
       <div>
-        <Messaging />
+      <Tabs style={container} contentContainerStyle={scrollable} >
+      <Tab label="Blog" value="a" onClick={this.handleClose}>
+        <div>
+          <Blog />
+        </div>
+      </Tab>
+      <Tab label="Profile" value="b" onClick={this.handleClose}>
+        <div>
+        <Profile />
+        </div>
+      </Tab>
+      <Tab label="Photo Albums" value="c" onClick={this.handleOpen}>
+        <div>
+        <Albums {...this.state}/>
+        </div>
+      </Tab>
+
+      <Tab label="Messaging" value="d" onClick={this.handleClose}>
+        <div>
+          <Messaging />
+        </div>
+      </Tab>
+  </Tabs>
+
       </div>
-    </Tab>
-</Tabs>
-
-    </div>
-    </div>
-  );
-}
-  render() {
-    return (
-      <div style={container}>
-        {this.renderConditionala()}
-
       </div>
     );
   }
+    render() {
+      return (
+        <div style={container}>
+          {this.renderConditionala()}
+
+        </div>
+      );
+    }
 }
 
 export default Dashboard;
