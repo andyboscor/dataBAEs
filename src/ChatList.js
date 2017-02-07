@@ -9,7 +9,8 @@ var chatlist_style = {
   fontWeight: 400,
   paddingTop: 0,
   overflowY: 'scroll',
-  height: '100%'
+  height: '100%',
+  borderRight: '1.5px solid #8088B0'
 
 };
 /*<ListItem

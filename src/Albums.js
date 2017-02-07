@@ -11,6 +11,7 @@ const styles = {
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
+    paddingTop: '70px'
   },
   gridList: {
     width: 1000,
@@ -72,6 +73,12 @@ var grid = {
     height: '100%',
     overflowY: 'scroll',
 }
+var closeButtonStyle = {
+  marginTop: '20px',
+  marginLeft: '20px',
+  color: 'white',
+  fontColor: 'white'
+}
 class Albums extends Component {
 
   constructor(props) {
@@ -94,7 +101,7 @@ class Albums extends Component {
     {
       return(
         <div style={onTop}>
-        <RaisedButton style={showButtonStyle} onTouchTap={this.handleClose}>Close</RaisedButton>
+        <RaisedButton style={closeButtonStyle} onTouchTap={this.handleClose} label="Close" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
         <div>
 
           <div style={styles.root}>
@@ -141,7 +148,7 @@ class Albums extends Component {
     cellHeight={180}
     style={styles.gridList}
   >
-    <Subheader>December</Subheader>
+
     {tilesData.map((tile) => (
       <GridTile
         key={tile.img}

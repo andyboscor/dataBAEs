@@ -34,7 +34,7 @@ const styles = {
   },
 };
 var tabColor = {
-  backgroundColor: '#8F98C4'
+  backgroundColor: '#8088B0'
 }
 var underlineColor = {
   backgroundColor: '#80CBC4',
