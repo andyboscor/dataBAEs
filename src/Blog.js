@@ -7,7 +7,7 @@ import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Post from './Post.js';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import AutoComplete from 'material-ui/AutoComplete';
+import TextField from 'material-ui/TextField';
 import 'whatwg-fetch';
 
 var addBottom = {
@@ -104,7 +104,7 @@ class Blog extends Component {
             autoScrollBodyContent={true}
           >
 
-          <AutoComplete
+          <TextField
             hintText="Type anything"
             dataSource={this.state.dataSource}
             onUpdateInput={this.handleUpdateInput}
