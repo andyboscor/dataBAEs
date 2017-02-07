@@ -7,7 +7,7 @@ var addBottom = {
   marginBottom: '50px'
 }
 
-  var cardarray1 = [ {title:"This is my long ass post", message: "I don't think I'm into this whole Computer Science thing anymore. Writing code. What the hell was I thinking when I signed up for this. Like duuuh. But like it's cool tho. Look at me go I've already wasted so much time writing this when I could've handled the states."}, {title:"This is my long ass post", message:"  I don't think I'm into this whole Computer Science thing anymore. Writing code. What the hell was I thinking when I signed up for this. Like duuuh. But like it's cool tho. Look at me go I've already wasted so much time writing this when I could've handled the states."}, {title:'This is my long ass post', message:"  I don't think I'm into this whole Computer Science thing anymore. Writing code. What the hell was I thinking when I signed up for this. Like duuuh. But like it's cool tho. Look at me go I've already wasted so much time writing this when I couldve handled the states and some other shit."}];
+  var cardarray1 = [ {username:"This is my long ass post", email_address: "I don't think I'm into this whole Computer Science thing anymore. Writing code. What the hell was I thinking when I signed up for this. Like duuuh. But like it's cool tho. Look at me go I've already wasted so much time writing this when I could've handled the states."}, {username:"This is my long ass post", email_address:"  I don't think I'm into this whole Computer Science thing anymore. Writing code. What the hell was I thinking when I signed up for this. Like duuuh. But like it's cool tho. Look at me go I've already wasted so much time writing this when I could've handled the states."}, {username:'This is my long ass post', email_address:"  I don't think I'm into this whole Computer Science thing anymore. Writing code. What the hell was I thinking when I signed up for this. Like duuuh. But like it's cool tho. Look at me go I've already wasted so much time writing this when I couldve handled the states and some other shit."}];
 
 
 
@@ -33,6 +33,7 @@ class Blog extends Component {
       }).catch(function(ex) {
         console.log('parsing failed', ex)
       })
+    self.setState({cardarray: cardarray1})
     }
 
   render() {
