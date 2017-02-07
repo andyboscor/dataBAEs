@@ -16,6 +16,7 @@ import Albums from './Albums.js';
 import Profile from './Profile.js';
 import Messaging from './Messaging.js';
 import LoginPage from './LoginPage.js';
+import OtherProfile from './OtherProfile.js';
 class Login extends Component {
 static muiName = 'FlatButton';
 
@@ -89,11 +90,11 @@ var inLiners= {
 // Imagine you have a list of languages that you'd like to autosuggest.
 const languages = [
   {
-    name: 'Hello',
+    name: 'Fat Kitten',
     year: 1972
   },
   {
-    name: 'Helmo',
+    name: 'Fatter Kitten',
     year: 2012
   },
 ];
@@ -128,7 +129,8 @@ class Dashboard extends Component {
     open: true,
     loggedin: false,
     value: '',
-    suggestions: []
+    suggestions: [],
+    profile: false
   };
   handleChange = (event, logged) => {
     this.setState({logged: logged});
@@ -177,58 +179,16 @@ class Dashboard extends Component {
   handleLogout = () =>{
     this.setState({loggedin:false});
   };
-
-  renderConditionala(){
-    const { value, suggestions } = this.state;
-
-    // Autosuggest will pass through all these props to the input element.
-    const inputProps = {
-      placeholder: 'Type a name',
-      value,
-      onChange: this.onChange
-    };
-
-    if(this.state.loggedin===false)
-    {  return(
-        <div style={container}>
-        <LoginPage handleLogin={this.handleLogin} />
-        </div>
-      );
-    }
+  showProfile = () => {
+    this.setState({profile:true});
+  };
+  closeProfile = () => {
+    this.setState({profile:false});
+  };
+  renderProfile(){
+    if(this.state.profile===true)
+    return (<div style={container}><OtherProfile handleClose={this.closeProfile} /> </div>);
     else return (
-      <div>
-
-      <AppBar
-      title={<div> </div>}
-      className="appBar"
-      iconElementLeft={<div style={inLiners}>{this.state.title}<div><Autosuggest
-        suggestions={suggestions}
-        onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-        onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-        getSuggestionValue={getSuggestionValue}
-        renderSuggestion={renderSuggestion}
-        inputProps={inputProps}
-      /> </div></div>
-      }
-
-      iconStyleLeft={titleStyle}
-        children={<div>   <IconMenu
-
-            iconButtonElement={
-            <Avatar
-            src="https://lumiere-a.akamaihd.net/v1/images/07ff8e314e2798d32bfc8c39f82a9601677de34c.jpeg"
-            size={50} />
-            }
-            targetOrigin={{horizontal: 'right', vertical: 'top'}}
-            anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-          >
-            <MenuItem primaryText="Refresh" />
-            <MenuItem primaryText="Profile" />
-            <MenuItem primaryText="Sign out" onTouchTap={this.handleLogout} />
-          </IconMenu></div>}
-        iconElementRight={<div> </div>
-      }
-      />
       <div>
       <Tabs style={container} contentContainerStyle={scrollable} tabItemContainerStyle={tabColor} inkBarStyle={underlineColor} >
       <Tab label="Blog" value="a" onClick={this.handleClose} >
@@ -255,6 +215,60 @@ class Dashboard extends Component {
   </Tabs>
 
       </div>
+    );
+  }
+  renderConditionala(){
+    const { value, suggestions } = this.state;
+
+    // Autosuggest will pass through all these props to the input element.
+    const inputProps = {
+      placeholder: 'Type a name',
+      value,
+      onChange: this.onChange
+    };
+
+    if(this.state.loggedin===false)
+    {  return(
+        <div style={container}>
+        <LoginPage handleLogin={this.handleLogin} />
+        </div>
+      );
+    }
+    else return (
+      <div>
+      <AppBar
+      title={<div> </div>}
+      className="appBar"
+      iconElementLeft={<div style={inLiners}>{this.state.title}<div><Autosuggest
+        suggestions={suggestions}
+        onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+        onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+        getSuggestionValue={getSuggestionValue}
+        renderSuggestion={renderSuggestion}
+        inputProps={inputProps}
+        onSuggestionSelected={this.showProfile}
+      /> </div></div>
+      }
+
+      iconStyleLeft={titleStyle}
+        children={<div>   <IconMenu
+
+            iconButtonElement={
+            <Avatar
+            src="https://lumiere-a.akamaihd.net/v1/images/07ff8e314e2798d32bfc8c39f82a9601677de34c.jpeg"
+            size={50} />
+            }
+            targetOrigin={{horizontal: 'right', vertical: 'top'}}
+            anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+          >
+            <MenuItem primaryText="Refresh" />
+            <MenuItem primaryText="Profile" />
+            <MenuItem primaryText="Sign out" onTouchTap={this.handleLogout} />
+          </IconMenu></div>}
+        iconElementRight={<div> </div>
+      }
+      />
+      {this.renderProfile()}
       </div>
     );
   }
