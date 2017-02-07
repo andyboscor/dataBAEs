@@ -59,12 +59,13 @@ Logged.muiName = 'IconMenu';
  var container = {
    height:'100%',
    width:'100%',
-   position:'fixed'
+   position:'fixed',
+   overflowY:'hidden'
  };
  var scrollable = {
    overflowY: 'scroll',
    position:'relative',
-   height: '90%',
+   height: '100%',
    width: '100%'
  };
 

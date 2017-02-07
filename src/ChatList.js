@@ -6,10 +6,10 @@ import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bu
 
 var chatlist_style = {
   width: '400px',
-  maxWidth: '400px',
   fontWeight: 400,
   paddingTop: 0,
-  overflowY: 'scroll'
+  overflowY: 'scroll',
+  height: '100%'
 
 };
 /*<ListItem

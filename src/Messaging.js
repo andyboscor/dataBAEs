@@ -5,10 +5,9 @@ import ChatList from './ChatList.js';
 var chatStyle = {
   display:'flex',
   flexDirection: 'row',
-  height:'82vh',
-  position: 'relative',
-  //boxSizing: 'border-box',
-     width:'100%'
+  overflowY:'scroll',
+  height: window.innerHeight - 112,
+  width:'100%'
 };
 
 class Messaging extends Component {
@@ -38,14 +37,14 @@ class Messaging extends Component {
   render() {
 
     return (
-      <div>
+
         <div style={chatStyle}>
           <ChatList handleResponse={this.handleResponse} />
           {this.renderConditionala()}
 
         </div>
 
-      </div>
+
     );
   }
 }

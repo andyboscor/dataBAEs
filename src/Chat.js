@@ -7,24 +7,32 @@ var fixedSend = {
   position: 'absolute',
   bottom: '0',
   height: '64px',
-  width:'inherit'
+  //width: window.innerWidth - 400
+  width: '100%',
+
 }
 var stickyContainer={
-  display:'flex',
-  flexDirection: 'column',
+  //display:'flex',
+  //flexDirection: 'column',
   width: '100%',
-  height: '90%',
+  height: '100%',
+  //height: window.innerHeight - 64,
    overflowY: 'scroll',
-  //marginBottom: '128px'
+
+  //marginBottom: '-64px'
   //flex: '1 0 auto'
 }
 var maincontainer={
   width: '100%',
   height:'100%',
+  position: 'relative'
+  //display:'flex'
   //minHeight: '100%',
-  position:'relative'
+  //position:'absolute'
 }
-
+var extra = {
+  height:' 64px'
+}
 class Chat extends Component {
 
 
@@ -50,6 +58,7 @@ class Chat extends Component {
                 <ChatBubble {...message}/>
                 <ChatBubble {...message}/>
                 <ChatBubble {...message}/>
+                <div style={extra}> </div>
 
 </div>
         <div style={fixedSend}>
