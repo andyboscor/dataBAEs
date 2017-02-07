@@ -7,6 +7,7 @@ import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Post from './Post.js';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import AutoComplete from 'material-ui/AutoComplete';
 import 'whatwg-fetch';
 
 var addBottom = {
@@ -26,6 +27,7 @@ var buttonFloat ={
 class Blog extends Component {
 
   state = {
+    dataSource: [],
     cardarray: []
   }
 
@@ -61,6 +63,17 @@ class Blog extends Component {
     this.setState({open: false});
   };
 
+    handleUpdateInput = (value) => {
+    this.setState({
+      dataSource: [
+        value,
+        value + value,
+        value + value + value,
+      ],
+    });
+  };
+
+
 
   render() {
 
@@ -90,6 +103,15 @@ class Blog extends Component {
             onRequestClose={this.handleClose}
             autoScrollBodyContent={true}
           >
+
+          <AutoComplete
+            hintText="Type anything"
+            dataSource={this.state.dataSource}
+            onUpdateInput={this.handleUpdateInput}
+            floatingLabelText="Full width"
+            fullWidth={true}
+          />
+
           </Dialog>
         </FloatingActionButton>
       </div>
