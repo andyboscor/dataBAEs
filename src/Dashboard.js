@@ -73,7 +73,6 @@ Logged.muiName = 'IconMenu';
   color: 'white',
   fontSize: '26px',
   lineHeight: '55px',
- 
  }
 var inLiners= {
    display: 'flex',
@@ -142,13 +141,6 @@ class Dashboard extends Component {
   />*/
 //iconElementLeft={<IconButton><NavigationMenu /></IconButton>}
 
-/*
-*****Autocomplete functions start!!!!!*****
-*/
-
- 
-
-
   onChange = (event, { newValue }) => {
     this.setState({
       value: newValue
@@ -200,7 +192,8 @@ class Dashboard extends Component {
       <div>
      
       <AppBar
-      title={  <div> </div>}
+      title={<div> </div>}
+
       iconElementLeft={<div style={inLiners}>{this.state.title}<div><Autosuggest
         suggestions={suggestions}
         onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
@@ -208,7 +201,9 @@ class Dashboard extends Component {
         getSuggestionValue={getSuggestionValue}
         renderSuggestion={renderSuggestion}
         inputProps={inputProps}
-      /> </div></div>}
+      /> </div></div>
+      }
+
       iconStyleLeft={titleStyle}
         children={<div>   <IconMenu
 

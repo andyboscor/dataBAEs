@@ -49,17 +49,19 @@ class LoginPage extends Component {
     ];
     return (
       <div style={backgroundPaint} >
-          <center><h1> Welcome to FriendZone </h1>
+          <center>
           <br />
+          <img src={require('../images/logo2-small.png')} />
+
           <div>
-              <TextField
-                hintText="Email"
-              /><br />
-              <PasswordField
-                style={maxPass}
-                disableButton={false}
-                floatingLabelText="Enter your password"
-              />
+            <TextField
+              hintText="Email"
+            /><br />
+            <PasswordField
+              style={maxPass}
+              disableButton={false}
+              floatingLabelText="Enter your password"
+            />
             <RaisedButton label="Login" style={style} onTouchTap={this.props.handleLogin} />
             <h3>Not registered yet?</h3>
             <RaisedButton label="Register" onTouchTap={this.handleOpen} />
