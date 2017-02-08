@@ -11,18 +11,11 @@ import TextField from 'material-ui/TextField';
 import 'whatwg-fetch';
 
 var addBottom = {
-  marginBottom: '50px'
+  marginTop:'40px',
+  marginBottom: '150px'
 }
 
 var cardarray1 = [ {username:"This is my long ass post", email_address: "I don't think I'm into this whole Computer Science thing anymore. Writing code. What the hell was I thinking when I signed up for this. Like duuuh. But like it's cool tho. Look at me go I've already wasted so much time writing this when I could've handled the states."}, {username:"This is my long ass post", email_address: "I don't think I'm into this whole Computer Science thing anymore. Writing code. What the hell was I thi"}, {username:"This is my long ass post", email_address:"  I don't think I'm into this whole Computer Science thing anymore. Writing code. What the hell was I thinking when I signed up for this. Like duuuh. But like it's cool tho. Look at me go I've already wasted so much time writing this when I could've handled the states."}, {username:'This is my long ass post', email_address:"  I don't think I'm into this whole Computer Science thing anymore. Writing code. What the hell was I thinking when I signed up for this. Like duuuh. But like it's cool tho. Look at me go I've already wasted so much time writing this when I couldve handled the states and some other shit."}];
-
-
-var buttonFloat ={
-  marginRight: 20,
-  display: 'flex', 
-  justifyContent: 'center'
-};
-
 
 class Blog extends Component {
 
@@ -93,8 +86,9 @@ class Blog extends Component {
 
     return (
     <div style={addBottom}>
-      <div style={buttonFloat}>
-        <FloatingActionButton onTouchTap={this.handleOpen}>
+      <div >
+      <center>
+        <FloatingActionButton onTouchTap={this.handleOpen} backgroundColor='#8088B0'>
           <ContentAdd/>
           <Dialog
             actions={actions}
@@ -123,6 +117,7 @@ class Blog extends Component {
 
           </Dialog>
         </FloatingActionButton>
+        </center>
       </div>
 
       {this.state.cardarray.map(function(item, i){
