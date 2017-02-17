@@ -31,6 +31,7 @@ class OtherProfile extends Component {
 
   state = {
     open: false,
+    name: ''
   };
 
   handleOpen = () => {
@@ -40,16 +41,32 @@ class OtherProfile extends Component {
   handleClose = () => {
     this.setState({open: false});
   };
+  componentDidMount(){
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/profile/' + self.props[0] , {
+      headers: {
+    'Authorization': 'Basic ' + localStorage.getItem('usercred')
+  }
+    })
+      .then(function(response) {
+        return response.json()
+      }).then(function(json) {
+        console.log('parsed json', json)
+        self.setState({name: json.first_name + " " + json.last_name})
+      }).catch(function(ex) {
+        console.log('parsing failed', ex)
+      })
 
+  }
   render() {
-
+    console.log(this.props[0]);
 
 
     return (
       <div style={profileContainer}>
       <div style={profileInfo}>
       <RaisedButton style={closeButtonStyle} onTouchTap={this.props.handleClose} label="Close" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
-          <center><h1> Fat Kitten </h1>
+          <center><h1> {this.state.name} </h1>
 		  <Avatar
           src="http://www.heragtv.com/wp-content/uploads/2015/02/SM-AR-150-8.jpg"
           size={230}
