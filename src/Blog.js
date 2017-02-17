@@ -27,22 +27,26 @@ class Blog extends Component {
 
   componentDidMount() {
     var self = this;
-    fetch('http://friendzone.azurewebsites.net/API.php/friends/1', {
+    fetch('http://friendzone.azurewebsites.net/API.php/blog/5', {
       headers: {
-    'Authorization': 'Basic ' + window.btoa(unescape(encodeURIComponent("email_address1@google.com:secret")))
-  }
+        'Authorization': 'Basic ' + localStorage.getItem('usercred')
+      } 
     })
       .then(function(response) {
         return response.json()
       }).then(function(json) {
+        // json.map(function(item, i)
+
         console.log('parsed json', json)
 
+        // self.setState({cardarray: item})
+
+        //   )
         //cardarray = json.results;
-    self.setState({cardarray: json})
+        self.setState({cardarray: cardarray1})
       }).catch(function(ex) {
         console.log('parsing failed', ex)
       })
-    self.setState({cardarray: cardarray1})
     }
 
   stateButton = {
