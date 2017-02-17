@@ -30,7 +30,9 @@ class LoginPage extends Component {
   state = {
     open: false,
     username: '',
-    password: ''
+    password: '',
+    firstName: '',
+    lastName: ''
   };
 
   handleOpen = () => {
@@ -46,6 +48,12 @@ class LoginPage extends Component {
   handlePassword = (event) => {
   this.setState({password: event.target.value});
   }
+  handleFirstName = (event) => {
+    this.setState({firstName: event.target.value});
+  }
+  handleLastName = (event) => {
+    this.setState({lastName: event.target.value});
+  }
   handleLogin = (event) => {
     event.preventDefault();
     var credentials = this.state.username + ":" + this.state.password;
@@ -57,17 +65,36 @@ class LoginPage extends Component {
   }
     })
       .then(function(response) {
-
         return response.json()
       }).then(function(json) {
         console.log('parsed json', json)
       }).catch(function(ex) {
         console.log('parsing failed', ex)
       })
-
-
   }
-
+  handleRegister = (event) => {
+    event.preventDefault();
+    var self = this;
+    fetch('http://localhost:8888/API.php/register', {
+      method: 'POST',
+      headers: {
+      'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        first_name: self.state.firstName,
+        last_name: self.state.lastName,
+        email_address: self.state.username,
+        password: self.state.password
+      })
+    })
+      .then(function(response) {
+        return response.json()
+      }).then(function(json) {
+        console.log('parsed json', json)
+      }).catch(function(ex) {
+        console.log('parsing failed', ex)
+      })
+  }
   render() {
 
     const actions = [
@@ -75,7 +102,7 @@ class LoginPage extends Component {
         label="Submit"
         primary={true}
         keyboardFocused={true}
-        onTouchTap={this.handleClose}
+        onTouchTap={this.handleRegister}
       />
     ];
     return (
@@ -100,6 +127,7 @@ class LoginPage extends Component {
           </form>
             <h3>Not registered yet?</h3>
             <RaisedButton label="Register" onTouchTap={this.handleOpen} />
+            <form onSubmit={this.handleRegister}>
             <Dialog
               title="Register"
               actions={actions}
@@ -110,22 +138,29 @@ class LoginPage extends Component {
             >
             <div>
               <center>
+
               <TextField
                   hintText="First Name"
+                  onChange={this.handleFirstName}
               /><br />
               <TextField
                 hintText="Last Name"
+                  onChange={this.handleLastName}
               /><br />
               <TextField
                 hintText="Email"
+                 onChange={this.handleUsername}
               /><br />
               <PasswordField
                 style={maxPass}
                 disableButton={false}
+                onChange={this.handlePassword}
                 floatingLabelText="Enter your password"
-              /></center>
+              />
+              </center>
             </div>
             </Dialog>
+            </form>
           </div>
           <br />
 
