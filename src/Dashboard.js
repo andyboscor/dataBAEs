@@ -34,6 +34,10 @@ const styles = {
     fontWeight: 400,
   },
 };
+var iconSize = {
+  width: '65px',
+  height: '65px'
+}
 var tabColor = {
   backgroundColor: '#8088B0'
 }
@@ -254,9 +258,12 @@ class Dashboard extends Component {
         children={<div>   <IconMenu
 
             iconButtonElement={
+              <IconButton style={iconSize}>
             <Avatar
             src="https://lumiere-a.akamaihd.net/v1/images/07ff8e314e2798d32bfc8c39f82a9601677de34c.jpeg"
-            size={50} />
+            size={50}
+            />
+            </IconButton>
             }
             targetOrigin={{horizontal: 'right', vertical: 'top'}}
             anchorOrigin={{horizontal: 'right', vertical: 'top'}}

@@ -57,7 +57,7 @@ class LoginPage extends Component {
   handleLogin = (event) => {
     event.preventDefault();
     var credentials = this.state.username + ":" + this.state.password;
-    console.log(credentials);
+
     var self = this;
     fetch('http://localhost:8888/API.php/login', {
       headers: {
@@ -68,6 +68,7 @@ class LoginPage extends Component {
         return response.json()
       }).then(function(json) {
         console.log('parsed json', json)
+        self.props.handleLogin();
       }).catch(function(ex) {
         console.log('parsing failed', ex)
       })

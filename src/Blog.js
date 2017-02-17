@@ -21,7 +21,8 @@ class Blog extends Component {
 
   state = {
     dataSource: [],
-    cardarray: []
+    cardarray: [],
+    open: false
   }
 
   componentDidMount() {
