@@ -32,13 +32,15 @@ class Blog extends Component {
     })
       .then(function(response) {
         return response.json()
+      }).then(function(json) {
 
         var cardDatabase =json;
         self.setState({
           cardarray: [{
-            username: json.blogID,
-            email_address: json.blogName
+            postTitle: json.blogID,
+            postContent: json.blogName
           }]
+
         })
 
       }).catch(function(ex) {

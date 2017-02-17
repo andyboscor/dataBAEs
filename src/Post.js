@@ -21,13 +21,13 @@ class Post extends Component {
     <div>
     <Card style={blogCards}>
     <CardHeader
-      title={this.props.username}
+      title={this.props.postTitle}
       actAsExpander={true}
       titleColor="white"
       style={headerStyle}
     />
     <CardText>
-      {this.props.email_address}
+      {this.props.postContent}
     </CardText>
     <CardActions>
     </CardActions>
