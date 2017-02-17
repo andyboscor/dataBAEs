@@ -10,8 +10,35 @@ const style = {margin: 5};
 class Profile extends Component {
 
   state = {
-    open: false,
-  };
+      open: false,
+      first_name: '',
+      last_name: '',
+      email_address: ''
+    };
+
+  componentDidMount() {
+    let value = localStorage.getItem('userID');
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/profile/' + value , {
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred')
+        }
+      })
+      .then(function(response) {
+        return response.json();
+      }).then(function(json) {
+        console.log(json);
+        self.setState({
+          first_name: json.first_name,
+          last_name: json.last_name,
+          email_address: json.email_address
+        });
+      }).catch(function(ex) {
+        // FIXME: Add handling errors.
+        console.log('parsing failed', ex)
+        return;
+      })
+  }
 
   handleOpen = () => {
     this.setState({open: true});
@@ -22,7 +49,6 @@ class Profile extends Component {
   };
 
   render() {
-
     const actions = [
       <FlatButton
         label="Cancel"
@@ -39,25 +65,16 @@ class Profile extends Component {
 
     return (
       <div>
-          <center><h1> VIKA Christy </h1>
+          <center><h1> {this.state.first_name + " " + this.state.last_name} </h1>
 		  <Avatar
           src="https://lumiere-a.akamaihd.net/v1/images/07ff8e314e2798d32bfc8c39f82a9601677de34c.jpeg"
           size={230}
           style={style}/>
           <br />
-		  <TextField
-		      hintText="First Name"
-		  /><br />
-		    <TextField
-		      hintText="Last Name"
-		    /><br />
-
-		    <TextField
-		      hintText="Email"
-		    /><br />
-
+		  <TextField value={this.state.first_name} hintText="First Name" /><br />
+		  <TextField value={this.state.last_name} hintText="Last Name" /><br />
+      <TextField value={this.state.email_address} hintText="Email" /><br />
 		    <br />
-
 		      <div>
 		        <RaisedButton label="Save Changes" onTouchTap={this.handleOpen} />
 		        <Dialog
@@ -70,7 +87,6 @@ class Profile extends Component {
 		          The actions in this window were passed in as an array of React objects.
 		        </Dialog>
 		      </div>
-
 			<br />
           </center>
       </div>

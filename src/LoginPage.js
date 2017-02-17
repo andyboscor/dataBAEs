@@ -32,7 +32,8 @@ class LoginPage extends Component {
     username: '',
     password: '',
     firstName: '',
-    lastName: ''
+    lastName: '',
+    userID: null
   };
 
   handleOpen = () => {
@@ -67,6 +68,7 @@ class LoginPage extends Component {
       .then(function(response) {
         return response.json()
       }).then(function(json) {
+        localStorage.setItem("userID", json.userID);
         console.log('parsed json', json)
         self.props.handleLogin();
       }).catch(function(ex) {

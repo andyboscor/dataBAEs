@@ -25,26 +25,6 @@ class Blog extends Component {
     open: false
   }
 
-  componentDidMount() {
-    var self = this;
-    fetch('http://friendzone.azurewebsites.net/API.php/friends/1', {
-      headers: {
-    'Authorization': 'Basic ' + window.btoa(unescape(encodeURIComponent("email_address1@google.com:secret")))
-  }
-    })
-      .then(function(response) {
-        return response.json()
-      }).then(function(json) {
-        console.log('parsed json', json)
-
-        //cardarray = json.results;
-    self.setState({cardarray: json})
-      }).catch(function(ex) {
-        console.log('parsing failed', ex)
-      })
-    self.setState({cardarray: cardarray1})
-    }
-
   stateButton = {
     open: false,
   };
