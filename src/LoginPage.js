@@ -76,7 +76,7 @@ class LoginPage extends Component {
   handleRegister = (event) => {
     event.preventDefault();
     var self = this;
-    fetch('https://friendzone.azurewebsites.net/API.php/login', {
+    fetch('https://friendzone.azurewebsites.net/API.php/register', {
       method: 'POST',
       headers: {
       'Content-Type': 'application/json'
