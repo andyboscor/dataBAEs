@@ -29,6 +29,8 @@ var responsiveImg = {
 class LoginPage extends Component {
   state = {
     open: false,
+    username: '',
+    password: ''
   };
 
   handleOpen = () => {
@@ -38,6 +40,33 @@ class LoginPage extends Component {
   handleClose = () => {
     this.setState({open: false});
   };
+  handleUsername = (event) => {
+  this.setState({username: event.target.value});
+}
+  handlePassword = (event) => {
+  this.setState({password: event.target.value});
+  }
+  handleLogin = (event) => {
+    event.preventDefault();
+    var credentials = this.state.username + ":" + this.state.password;
+    console.log(credentials);
+    var self = this;
+    fetch('http://localhost:8888/API.php/login', {
+      headers: {
+    'Authorization': 'Basic ' + window.btoa(unescape(encodeURIComponent(credentials)))
+  }
+    })
+      .then(function(response) {
+
+        return response.json()
+      }).then(function(json) {
+        console.log('parsed json', json)
+      }).catch(function(ex) {
+        console.log('parsing failed', ex)
+      })
+
+
+  }
 
   render() {
 
@@ -56,15 +85,19 @@ class LoginPage extends Component {
           <img style={responsiveImg} src={require('../images/logo2-small.png')} />
 
           <div>
+          <form onSubmit={this.handleLogin}>
             <TextField
               hintText="Email"
+              onChange={this.handleUsername}
             /><br />
             <PasswordField
               style={maxPass}
               disableButton={false}
+              onChange={this.handlePassword}
               floatingLabelText="Enter your password"
             />
-            <RaisedButton label="Login" style={style} onTouchTap={this.props.handleLogin} />
+            <RaisedButton type="submit" label="Login" style={style} />
+          </form>
             <h3>Not registered yet?</h3>
             <RaisedButton label="Register" onTouchTap={this.handleOpen} />
             <Dialog
