@@ -9,7 +9,6 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import AutoComplete from 'material-ui/AutoComplete';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import Autosuggest from 'react-autosuggest';
 import Avatar from 'material-ui/Avatar';
 import Blog from './Blog.js';
 import Albums from './Albums.js';
@@ -90,41 +89,6 @@ var inLiners= {
   width: '400px',
   marginTop:'-8px'
 }
-//This is where Dashboard starts
-// Imagine you have a list of languages that you'd like to autosuggest.
-const languages = [
-  {
-    name: 'Fat Kitten',
-    year: 1972
-  },
-  {
-    name: 'Fatter Kitten',
-    year: 2012
-  },
-];
-
-// Teach Autosuggest how to calculate suggestions for any given input value.
-const getSuggestions = value => {
-  const inputValue = value.trim().toLowerCase();
-  const inputLength = inputValue.length;
-
-  return inputLength === 0 ? [] : languages.filter(lang =>
-    lang.name.toLowerCase().slice(0, inputLength) === inputValue
-  );
-};
-
-// When suggestion is clicked, Autosuggest needs to populate the input element
-// based on the clicked suggestion. Teach Autosuggest how to calculate the
-// input value for every given suggestion.
-const getSuggestionValue = suggestion => suggestion.name;
-
-// Use your imagination to render suggestions.
-const renderSuggestion = suggestion => (
-  <div>
-    {suggestion.name}
-  </div>
-);
-
 class Dashboard extends Component {
   state = {
     logged: true,
@@ -133,7 +97,7 @@ class Dashboard extends Component {
     open: true,
     loggedin: false,
     value: '',
-    suggestions: [],
+    dataSource: [],
     profile: false
   };
   handleChange = (event, logged) => {
@@ -145,40 +109,8 @@ class Dashboard extends Component {
   handleClose = () => {
    this.setState({open: false});
   };
-  /*<Toggle
-    label="Logged"
-    defaultToggled={true}
-    onToggle={this.handleChange}
-    labelPosition="right"
-    style={{margin: 20}}
-  />*/
-//iconElementLeft={<IconButton><NavigationMenu /></IconButton>}
-
-  onChange = (event, { newValue }) => {
-    this.setState({
-      value: newValue
-    });
-  };
-
-  // Autosuggest will call this function every time you need to update suggestions.
-  // You already implemented this logic above, so just use it.
-  onSuggestionsFetchRequested = ({ value }) => {
-    this.setState({
-      suggestions: getSuggestions(value)
-    });
-  };
-
-  // Autosuggest will call this function every time you need to clear suggestions.
-  onSuggestionsClearRequested = () => {
-    this.setState({
-      suggestions: []
-    });
-  };
-
-
   handleLogin = () =>{
     this.setState({loggedin:true});
-    //console.log("here");
   };
   handleLogout = () =>{
     this.setState({loggedin:false});
@@ -189,6 +121,36 @@ class Dashboard extends Component {
   closeProfile = () => {
     this.setState({profile:false});
   };
+  handleUpdateInput = (value) => {
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/search/' + value , {
+      headers: {
+    'Authorization': 'Basic ' + localStorage.getItem('usercred')
+  }
+    })
+      .then(function(response) {
+        return response.json()
+      }).then(function(json) {
+        //console.log('parsed json', json)
+        var results = [];
+        json.map(function(item,i)
+        {
+          results.push({text: item.first_name + " " + item.last_name, value: (
+      <MenuItem
+        primaryText= {item.first_name + " " + item.last_name}
+        secondaryText="&#9786;"
+        onClick ={self.showProfile}
+      />)});
+        })
+        self.setState({
+          dataSource: results
+        });
+      }).catch(function(ex) {
+        return;
+        console.log('parsing failed', ex)
+      })
+
+};
   renderProfile(){
     if(this.state.profile===true)
     return (<div style={container}><OtherProfile handleClose={this.closeProfile} /> </div>);
@@ -243,15 +205,12 @@ class Dashboard extends Component {
       <AppBar
       title={<div> </div>}
       className="appBar"
-      iconElementLeft={<div style={inLiners}>{this.state.title}<div><Autosuggest
-        suggestions={suggestions}
-        onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-        onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-        getSuggestionValue={getSuggestionValue}
-        renderSuggestion={renderSuggestion}
-        inputProps={inputProps}
-        onSuggestionSelected={this.showProfile}
-      /> </div></div>
+      iconElementLeft={<div style={inLiners}>{this.state.title}<div>  <AutoComplete
+          hintText="Type anything"
+          dataSource={this.state.dataSource}
+          onUpdateInput={this.handleUpdateInput}
+           filter={AutoComplete.noFilter}
+        /></div></div>
       }
 
       iconStyleLeft={titleStyle}
