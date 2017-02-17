@@ -15,8 +15,6 @@ var addBottom = {
   marginBottom: '150px'
 }
 
-var cardarray1 = [ {username:"This is my long ass post", email_address: "I don't think I'm into this whole Computer Science thing anymore. Writing code. What the hell was I thinking when I signed up for this. Like duuuh. But like it's cool tho. Look at me go I've already wasted so much time writing this when I could've handled the states."}, {username:"This is my long ass post", email_address: "I don't think I'm into this whole Computer Science thing anymore. Writing code. What the hell was I thi"}, {username:"This is my long ass post", email_address:"  I don't think I'm into this whole Computer Science thing anymore. Writing code. What the hell was I thinking when I signed up for this. Like duuuh. But like it's cool tho. Look at me go I've already wasted so much time writing this when I could've handled the states."}, {username:'This is my long ass post', email_address:"  I don't think I'm into this whole Computer Science thing anymore. Writing code. What the hell was I thinking when I signed up for this. Like duuuh. But like it's cool tho. Look at me go I've already wasted so much time writing this when I couldve handled the states and some other shit."}];
-
 class Blog extends Component {
 
   state = {
@@ -34,16 +32,15 @@ class Blog extends Component {
     })
       .then(function(response) {
         return response.json()
-      }).then(function(json) {
-        // json.map(function(item, i)
 
-        console.log('parsed json', json)
+        var cardDatabase =json;
+        self.setState({
+          cardarray: [{
+            username: json.blogID,
+            email_address: json.blogName
+          }]
+        })
 
-        // self.setState({cardarray: item})
-
-        //   )
-        //cardarray = json.results;
-        self.setState({cardarray: cardarray1})
       }).catch(function(ex) {
         console.log('parsing failed', ex)
       })
