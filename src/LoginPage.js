@@ -59,7 +59,7 @@ class LoginPage extends Component {
     var credentials = this.state.username + ":" + this.state.password;
 
     var self = this;
-    fetch('http://localhost:8888/API.php/login', {
+    fetch('https://friendzone.azurewebsites.net/API.php/login', {
       headers: {
     'Authorization': 'Basic ' + window.btoa(unescape(encodeURIComponent(credentials)))
   }
@@ -76,7 +76,7 @@ class LoginPage extends Component {
   handleRegister = (event) => {
     event.preventDefault();
     var self = this;
-    fetch('http://localhost:8888/API.php/register', {
+    fetch('https://friendzone.azurewebsites.net/API.php/login', {
       method: 'POST',
       headers: {
       'Content-Type': 'application/json'
