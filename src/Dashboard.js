@@ -98,7 +98,8 @@ class Dashboard extends Component {
     loggedin: false,
     value: '',
     dataSource: [],
-    profile: false
+    profile: false,
+    userSearch: ''
   };
   handleChange = (event, logged) => {
     this.setState({logged: logged});
@@ -115,8 +116,8 @@ class Dashboard extends Component {
   handleLogout = () =>{
     this.setState({loggedin:false});
   };
-  showProfile = () => {
-    this.setState({profile:true});
+  showProfile = (value) => {
+    this.setState({profile:true, userID: value});
   };
   closeProfile = () => {
     this.setState({profile:false});
@@ -139,7 +140,7 @@ class Dashboard extends Component {
       <MenuItem
         primaryText= {item.first_name + " " + item.last_name}
         secondaryText="&#9786;"
-        onClick ={self.showProfile}
+        onTouchTap ={() => self.showProfile(item.userID)}
       />)});
         })
         self.setState({
@@ -153,7 +154,7 @@ class Dashboard extends Component {
 };
   renderProfile(){
     if(this.state.profile===true)
-    return (<div style={container}><OtherProfile handleClose={this.closeProfile} /> </div>);
+    return (<div style={container}><OtherProfile {...this.state.userID} handleClose={this.closeProfile} /> </div>);
     else return (
       <div>
       <Tabs style={container} contentContainerStyle={scrollable} tabItemContainerStyle={tabColor} inkBarStyle={underlineColor} >
