@@ -80,12 +80,32 @@ var  items = [
 class ChatList extends Component {
   constructor(props) {
     super(props);
-    this.state = {userid: '123'};
+    this.state = {userid: '', users:[]};
 
     // This binding is necessary to make `this` work in the callback
     this.handleClick = this.handleClick.bind(this);
   }
+ componentDidMount(){
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/chats' , {
+      headers: {
+    'Authorization': 'Basic ' + localStorage.getItem('usercred')
+  }
+    })
+      .then(function(response) {
+        return response.json()
+      }).then(function(json) {
+        //console.log('parsed json', json);
+        self.setState({
+          users: json.users
+        })
 
+      console.log(self.state.users)
+      }).catch(function(ex) {
+        return;
+        console.log('parsing failed', ex)
+      })
+  }
   handleClick(id) {
     this.setState({userid: id});
     this.props.handleResponse(this.state);
@@ -97,8 +117,8 @@ class ChatList extends Component {
       <div style={chatlist_style}>
       <List>
       <Subheader>Friend chats</Subheader>
-      {items.map(function(item){
-            return <ListItem key={item.id} primaryText={item.title} onClick={this.handleClick.bind(this,item.id)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" />} />
+      {this.state.users.map(function(item){
+            return <ListItem key={item.userID} primaryText={item.first_name + " " + item.last_name} onClick={this.handleClick.bind(this,item.id)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" />} />
           },this)}
 
 

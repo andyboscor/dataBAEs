@@ -41,8 +41,8 @@ class Chat extends Component {
     message: 'Nemo sends a message here.',
     photo: 'this'
     }
-    //console.log(this.props.list[0]);
-    var arr = this.props.list[0];
+  //console.log(this.props.list);
+    var arr = this.props.list;
     //var arr = [];
     return (
       <div style={maincontainer}>
@@ -51,18 +51,11 @@ class Chat extends Component {
               arr.map(function(item, i){
                   return <ChatBubble key={i} {...item} />
                 },this)}
-                <ChatBubble {...message}/>
-                <ChatBubble {...message}/>
-                <ChatBubble {...message}/>
-                <ChatBubble {...message}/>
-                <ChatBubble {...message}/>
-                <ChatBubble {...message}/>
-                <ChatBubble {...message}/>
                 <div style={extra}> </div>
 
 </div>
         <div style={fixedSend}>
-              <NewMessageBar />
+              <NewMessageBar handleSend={this.props.handleSend} />
         </div>
 
         </div>

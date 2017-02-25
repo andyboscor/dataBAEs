@@ -17,20 +17,41 @@ class Messaging extends Component {
 
     // This binding is necessary to make `this` work in the callback
     this.handleResponse = this.handleResponse.bind(this);
+    this.handleSend = this.handleSend.bind(this);
   }
   handleResponse(data) {
   var messagearray = [ {firstname:'Nemo', message:'this', photo:'this'},{firstname:'Hello', message:'this sss', photo:'this'}, {firstname:'jeee', message:'this sss', photo:'this'}];
-  var newList=this.state.list;
-  newList.push(messagearray);
-  this.setState({
-    list:newList,
-    exista: true
-  });
+  var self = this;
+  fetch('https://friendzone.azurewebsites.net/API.php/messages/to_user/3' , {
+    headers: {
+  'Authorization': 'Basic ' + localStorage.getItem('usercred')
+}
+  })
+    .then(function(response) {
+      return response.json()
+    }).then(function(json) {
+      console.log('parsed json', json)
+      var results = [];
+      json.map(function(item,i)
+      {
+        results.push({message:item.message_content});
+    });
+    self.setState({
+      list:results,
+      exista: true
+    });
+    }).catch(function(ex) {
+      return;
+      console.log('parsing failed', ex)
+    })
+  }
+  handleSend(data){
+
   }
   renderConditionala(){
     if(this.state.exista===true)
       return(
-        <Chat {...this.state}/>
+        <Chat {...this.state} handleSend={this.handleSend}/>
       );
   }
 
