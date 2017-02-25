@@ -100,7 +100,7 @@ class ChatList extends Component {
           users: json.users
         })
 
-      console.log(self.state.users)
+      //console.log(self.state.users)
       }).catch(function(ex) {
         return;
         console.log('parsing failed', ex)

@@ -133,21 +133,24 @@ class Dashboard extends Component {
         return response.json()
       }).then(function(json) {
         //console.log('parsed json', json)
+
         var results = [];
-        json.map(function(item,i)
-        {
+
+        json.map(function(item,i){
+          console.log("here");
           results.push({text: item.first_name + " " + item.last_name, value: (
       <MenuItem
         primaryText= {item.first_name + " " + item.last_name}
         secondaryText="&#9786;"
         onTouchTap ={() => self.showProfile(item.userID)}
       />)});
-        })
+    });
+
+      //  console.log(results);
         self.setState({
           dataSource: results
         });
       }).catch(function(ex) {
-        return;
         console.log('parsing failed', ex)
       })
 
@@ -185,14 +188,7 @@ class Dashboard extends Component {
     );
   }
   renderConditionala(){
-    const { value, suggestions } = this.state;
 
-    // Autosuggest will pass through all these props to the input element.
-    const inputProps = {
-      placeholder: 'Type a name',
-      value,
-      onChange: this.onChange
-    };
 
     if(this.state.loggedin===false)
     {  return(
