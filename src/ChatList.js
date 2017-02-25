@@ -108,8 +108,7 @@ class ChatList extends Component {
   }
   handleClick(id) {
     this.setState({userid: id});
-    this.props.handleResponse(this.state);
-
+    this.props.handleResponse(id);
   }
 
   render() {
@@ -118,7 +117,7 @@ class ChatList extends Component {
       <List>
       <Subheader>Friend chats</Subheader>
       {this.state.users.map(function(item){
-            return <ListItem key={item.userID} primaryText={item.first_name + " " + item.last_name} onClick={this.handleClick.bind(this,item.id)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" />} />
+            return <ListItem key={item.userID} primaryText={item.first_name + " " + item.last_name} onTouchTap={this.handleClick.bind(this,item.userID)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" />} />
           },this)}
 
 

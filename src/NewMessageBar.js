@@ -14,13 +14,25 @@ var sendStyle = {
 
 }
 class NewMessageBar extends Component {
+  state = {
+    message: ''
+  }
+  handleMessage = (event) => {
+  this.setState({message: event.target.value});
+  }
+  handleNewMessage = () =>{
+    console.log(this.state.message);
+    this.props.handleSend(this.state.message);
+  }
   render() {
     return (
       <div>
       <AppBar style={barStyle}
-    iconElementLeft={<div><TextField hintStyle={hintStyle}
+    iconElementLeft={<div>
+      <TextField hintStyle={hintStyle}
       hintText="Type your message here"
-    /><FlatButton style={sendStyle} label="Send" /> </div>}
+      onChange={this.handleMessage}
+    /><FlatButton style={sendStyle} label="Send" onTouchTap={this.handleNewMessage} /> </div>}
   />
       </div>
     );
