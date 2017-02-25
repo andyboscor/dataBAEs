@@ -20,7 +20,8 @@ class Blog extends Component {
   state = {
     dataSource: [],
     cardarray: [],
-    open: false
+    open: false,
+    blogID: '5'
   }
 
   componentDidMount() {
@@ -33,20 +34,45 @@ class Blog extends Component {
       .then(function(response) {
         return response.json()
       }).then(function(json) {
-
         var cardDatabase =json;
         self.setState({
-          cardarray: [{
-            postTitle: json.blogID,
-            postContent: json.blogName
-          }]
-
+          // cardarray: [{
+          //   postTitle: json.blogID,
+          //   postContent: json.blogName
+          // }]
+          blogID: json.blogID
         })
+        fetch('http://friendzone.azurewebsites.net/API.php/blog_posts/' + self.state.blogID, {
+          headers: {
+            'Authorization': 'Basic ' + localStorage.getItem('usercred')
+          } 
+        })
+        .then(function(response) {
+          return response.json()
+        }).then(function(postObject) {
+          var arr=[];
+          for(let post in postObject) {
+            // console.log('here postContent', postObject);
+            // console.log('here post', postObject[post].postID);
+            var postAttributes = postObject[post];
+            arr.push({
+              postTitle: postAttributes.postID,
+              postContent: postAttributes.blog_content
+            });
+          }
+          self.setState({
+            cardarray: arr
+          });
+
+        }).catch(function(ex) {
+          console.log('parsing failed', ex)
+        })          
+        console.log('hello parse', self.state.blogID)      
 
       }).catch(function(ex) {
         console.log('parsing failed', ex)
       })
-    }
+  }
 
   stateButton = {
     open: false,
@@ -109,7 +135,6 @@ class Blog extends Component {
             floatingLabelText="Blog Title"
             fullWidth={true}
           />
-
 
           <TextField
             hintText="Type anything"
