@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import ChatBubble from './ChatBubble.js';
 import NewMessageBar from './NewMessageBar.js';
-import ReactDOM from 'react-dom';
-
 
 var fixedSend = {
   //flexGrow: '1',
@@ -37,24 +35,16 @@ var extra = {
 }
 class Chat extends Component {
   scrollToBottom = () => {
-    //  const node = ReactDOM.findDOMNode(this.messagesEnd);
       var myElement = document.getElementById('element_within_div');
       var topPos = myElement.offsetTop;
       document.getElementById('scrolling_div').scrollTop = topPos;
-    //  node.scrollIntoView({behavior: "smooth"});
   }
-
   componentDidMount() {
       this.scrollToBottom();
   }
-
   componentDidUpdate() {
       this.scrollToBottom();
   }
-doSomething = () => {
-
-}
-
   render() {
     const message = { firstName: 'Nemo',
     message: 'Nemo sends a message here.',
@@ -74,7 +64,7 @@ doSomething = () => {
                 <div style={extra} > </div>
 </div>
         <div style={fixedSend}>
-              <NewMessageBar handleSend={this.props.handleSend} scroll={this.doSomething}/>
+              <NewMessageBar handleSend={this.props.handleSend} />
         </div>
 
         </div>

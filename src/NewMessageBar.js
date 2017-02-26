@@ -24,7 +24,6 @@ class NewMessageBar extends Component {
     console.log(this.state.message);
     this.props.handleSend(this.state.message);
     this.setState({message:''});
-    this.props.scroll();
   }
   render() {
     return (
