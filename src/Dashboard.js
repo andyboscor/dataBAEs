@@ -16,15 +16,16 @@ import Profile from './Profile.js';
 import Messaging from './Messaging.js';
 import LoginPage from './LoginPage.js';
 import OtherProfile from './OtherProfile.js';
+
 class Login extends Component {
 static muiName = 'FlatButton';
-
   render() {
     return (
       <FlatButton {...this.props} label="Login" />
     );
   }
 }
+
 const styles = {
   headline: {
     fontSize: 24,
@@ -33,10 +34,12 @@ const styles = {
     fontWeight: 400,
   },
 };
+
 var iconSize = {
   width: '65px',
   height: '65px'
 }
+
 var tabColor = {
   backgroundColor: '#8088B0'
 }
@@ -44,6 +47,7 @@ var underlineColor = {
   backgroundColor: '#80CBC4',
   height:'5px'
 }
+
 const Logged = (props) => (
   <IconMenu
     {...props}
@@ -59,36 +63,38 @@ const Logged = (props) => (
   </IconMenu>
 );
 
-
-
 Logged.muiName = 'IconMenu';
 
 /**
  * This example is taking advantage of the composability of the `AppBar`
  * to render different components depending on the application state.
  */
- var container = {
-   height:'100%',
-   width:'100%',
-   position:'fixed',
-   overflowY:'hidden'
- };
- var scrollable = {
-   overflowY: 'scroll',
-   position:'relative',
-   height: '100%',
-   width: '100%'
- };
- var titleStyle={
-  color: 'white',
-  fontSize: '26px',
-  lineHeight: '60px',
- }
+var container = {
+ height:'100%',
+ width:'100%',
+ position:'fixed',
+ overflowY:'hidden'
+};
+
+var scrollable = {
+ overflowY: 'scroll',
+ position:'relative',
+ height: '100%',
+ width: '100%'
+};
+
+var titleStyle={
+color: 'white',
+fontSize: '26px',
+lineHeight: '60px',
+}
+
 var inLiners= {
-   display: 'flex',
+  display: 'flex',
   width: '400px',
   marginTop:'-8px'
 }
+
 class Dashboard extends Component {
   state = {
     logged: true,
@@ -101,89 +107,95 @@ class Dashboard extends Component {
     profile: false,
     userSearch: ''
   };
+
   handleChange = (event, logged) => {
     this.setState({logged: logged});
   };
+
   handleOpen = () => {
    this.setState({open: true});
   };
+
   handleClose = () => {
    this.setState({open: false});
   };
+
   handleLogin = () =>{
     this.setState({loggedin:true});
   };
+
   handleLogout = () =>{
     this.setState({loggedin:false});
   };
+
   showProfile = (value) => {
     this.setState({profile:true, userID: value});
   };
+
   closeProfile = () => {
     this.setState({profile:false});
   };
+
   handleUpdateInput = (value) => {
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/search/' + value , {
       headers: {
-    'Authorization': 'Basic ' + localStorage.getItem('usercred')
-  }
-    })
-      .then(function(response) {
+        'Authorization': 'Basic ' + localStorage.getItem('usercred')
+      }
+    }).then(function(response) {
         return response.json()
-      }).then(function(json) {
-        //console.log('parsed json', json)
-        var results = [];
-        json.map(function(item,i)
-        {
-          results.push({text: item.first_name + " " + item.last_name, value: (
-      <MenuItem
-        primaryText= {item.first_name + " " + item.last_name}
-        secondaryText="&#9786;"
-        onTouchTap ={() => self.showProfile(item.userID)}
-      />)});
+    }).then(function(json) {
+      var results = [];
+      json.map(function(item,i){
+        results.push({text: item.first_name + " " + item.last_name, value: (
+        <MenuItem
+          primaryText= {item.first_name + " " + item.last_name}
+          secondaryText="&#9786;"
+          onTouchTap ={() => self.showProfile(item.userID)}
+        />)});
         })
+
         self.setState({
           dataSource: results
         });
-      }).catch(function(ex) {
-        return;
-        console.log('parsing failed', ex)
-      })
+    }).catch(function(ex) {
+      return;
+      console.log('parsing failed', ex)
+    })};
 
-};
   renderProfile(){
     if(this.state.profile===true)
-    return (<div style={container}><OtherProfile {...this.state.userID} handleClose={this.closeProfile} /> </div>);
+      return(
+        <div style={container}><OtherProfile friendID={this.state.userID} handleClose={this.closeProfile} /> </div>
+      );
     else return (
       <div>
       <Tabs style={container} contentContainerStyle={scrollable} tabItemContainerStyle={tabColor} inkBarStyle={underlineColor} >
-      <Tab label="Blog" value="a" onClick={this.handleClose} >
-        <div>
-          <Blog />
-        </div>
-      </Tab>
-      <Tab label="Profile" value="b" onClick={this.handleClose}>
-        <div>
-        <Profile />
-        </div>
-      </Tab>
-      <Tab label="Photo Albums" value="c" onClick={this.handleOpen}>
-        <div>
-        <Albums {...this.state}/>
-        </div>
-      </Tab>
-
-      <Tab label="Messaging" value="d" onClick={this.handleClose}>
-        <div>
-          <Messaging />
-        </div>
-      </Tab>
-  </Tabs>
-
+        <Tab label="Blog" value="a" onClick={this.handleClose} >
+          <div>
+            <Blog />
+          </div>
+        </Tab>
+        <Tab label="Profile" value="b" onClick={this.handleClose}>
+          <div>
+          <Profile />
+          </div>
+        </Tab>
+        <Tab label="Photo Albums" value="c" onClick={this.handleOpen}>
+          <div>
+          <Albums {...this.state}/>
+          </div>
+        </Tab>
+        <Tab label="Messaging" value="d" onClick={this.handleClose}>
+          <div>
+            <Messaging />
+          </div>
+        </Tab>
+      </Tabs>
       </div>
     );
   }
+
   renderConditionala(){
     const { value, suggestions } = this.state;
 

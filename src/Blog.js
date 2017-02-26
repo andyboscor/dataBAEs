@@ -21,7 +21,7 @@ class Blog extends Component {
     dataSource: [],
     cardarray: [],
     open: false,
-    blogID: '5'
+    blogID: ''
   }
 
   componentDidMount() {
@@ -31,45 +31,38 @@ class Blog extends Component {
         'Authorization': 'Basic ' + localStorage.getItem('usercred')
       } 
     })
+    .then(function(response) {
+      return response.json()})
+    .then(function(json) {
+      var cardDatabase =json;
+
+      self.setState({
+        blogID: json.blogID})
+
+      fetch('http://friendzone.azurewebsites.net/API.php/blog_posts/' + self.state.blogID, {
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred')
+        }})
       .then(function(response) {
-        return response.json()
-      }).then(function(json) {
-        var cardDatabase =json;
-        self.setState({
-          // cardarray: [{
-          //   postTitle: json.blogID,
-          //   postContent: json.blogName
-          // }]
-          blogID: json.blogID
-        })
-        fetch('http://friendzone.azurewebsites.net/API.php/blog_posts/' + self.state.blogID, {
-          headers: {
-            'Authorization': 'Basic ' + localStorage.getItem('usercred')
-          } 
-        })
-        .then(function(response) {
-          return response.json()
-        }).then(function(postObject) {
-          var arr=[];
-          for(let post in postObject) {
-            // console.log('here postContent', postObject);
-            // console.log('here post', postObject[post].postID);
-            var postAttributes = postObject[post];
-            arr.push({
-              postTitle: postAttributes.postID,
-              postContent: postAttributes.blog_content
-            });
-          }
-          self.setState({
-            cardarray: arr
+        return response.json()})
+      .then(function(postObject) {
+        var arr=[];
+        for(let post in postObject) {
+          var postAttributes = postObject[post];
+          arr.push({
+            postTitle: postAttributes.postID,
+            postContent: postAttributes.blog_content
           });
+        }
 
-        }).catch(function(ex) {
-          console.log('parsing failed', ex)
-        })          
-        console.log('hello parse', self.state.blogID)      
-
-      }).catch(function(ex) {
+        self.setState({
+          cardarray: arr
+        });
+      })
+      .catch(function(ex) {
+        console.log('parsing failed', ex)})          
+      })
+      .catch(function(ex) {
         console.log('parsing failed', ex)
       })
   }
@@ -86,7 +79,7 @@ class Blog extends Component {
     this.setState({open: false});
   };
 
-    handleUpdateInput = (value) => {
+  handleUpdateInput = (value) => {
     this.setState({
       dataSource: [
         value,
@@ -96,10 +89,7 @@ class Blog extends Component {
     });
   };
 
-
-
   render() {
-
     const actions = [
       <FlatButton
         label="Cancel"
@@ -113,7 +103,7 @@ class Blog extends Component {
         onTouchTap={this.handleClose}
       />,
     ];
-
+    
     return (
     <div style={addBottom}>
       <div >
@@ -146,12 +136,10 @@ class Blog extends Component {
 
           </Dialog>
         </FloatingActionButton>
-        </center>
+      </center>
       </div>
-
       {this.state.cardarray.map(function(item, i){
         return <Post key={i} {...item} />},this)}
-
     </div>
     );
   }

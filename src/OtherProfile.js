@@ -28,10 +28,10 @@ const closeButtonStyle = {
 }
 
 class OtherProfile extends Component {
-
   state = {
     open: false,
-    name: ''
+    name: '',
+    friendID: ''
   };
 
   handleOpen = () => {
@@ -43,25 +43,22 @@ class OtherProfile extends Component {
   };
   componentDidMount(){
     var self = this;
-    fetch('https://friendzone.azurewebsites.net/API.php/profile/' + self.props[0] , {
+    fetch('https://friendzone.azurewebsites.net/API.php/profile/' + self.props.friendID , {
       headers: {
-    'Authorization': 'Basic ' + localStorage.getItem('usercred')
-  }
+        'Authorization': 'Basic ' + localStorage.getItem('usercred')
+      }})
+    .then(function(response) {
+      return response.json()})
+    .then(function(json) {
+      console.log('parsed json', json)
+      self.setState({name: json.first_name + " " + json.last_name})})
+    .catch(function(ex) {
+      console.log('parsing failed', ex)
     })
-      .then(function(response) {
-        return response.json()
-      }).then(function(json) {
-        console.log('parsed json', json)
-        self.setState({name: json.first_name + " " + json.last_name})
-      }).catch(function(ex) {
-        console.log('parsing failed', ex)
-      })
-
   }
+
   render() {
-    console.log(this.props[0]);
-
-
+    //console.log(this.props.friendID);
     return (
       <div style={profileContainer}>
       <div style={profileInfo}>
@@ -77,7 +74,7 @@ class OtherProfile extends Component {
           </center>
       </div>
       <div style={contentContainer}>
-      <OtherBlog />
+      <OtherBlog friendID={this.props.friendID}/>
       </div>
       </div>
     );
