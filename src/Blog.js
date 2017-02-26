@@ -18,10 +18,11 @@ var addBottom = {
 class Blog extends Component {
 
   state = {
-    dataSource: [],
     cardarray: [],
     open: false,
-    blogID: ''
+    blogID: '',
+    post_content: '',
+    post_title: ''
   }
 
   componentDidMount() {
@@ -29,7 +30,7 @@ class Blog extends Component {
     fetch('http://friendzone.azurewebsites.net/API.php/blog/' + localStorage.getItem('userID'), {
       headers: {
         'Authorization': 'Basic ' + localStorage.getItem('usercred')
-      } 
+      }
     })
     .then(function(response) {
       return response.json()})
@@ -49,8 +50,8 @@ class Blog extends Component {
         var arr=[];
         for(let post in postObject) {
           var postAttributes = postObject[post];
-          arr.push({
-            postTitle: postAttributes.postID,
+          arr.unshift({
+            postTitle: postAttributes.title,
             postContent: postAttributes.content
           });
         }
@@ -60,11 +61,11 @@ class Blog extends Component {
         });
       })
       .catch(function(ex) {
-        console.log('parsing failed', ex)})          
+        console.log('parsing failed', ex)})
       })
       .catch(function(ex) {
         console.log('parsing failed', ex)
-      })
+      });
   }
 
   stateButton = {
@@ -79,31 +80,61 @@ class Blog extends Component {
     this.setState({open: false});
   };
 
-  handleUpdateInput = (value) => {
+  handleSubmit = () => {
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/blog_posts/' + self.state.blogID , {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred'),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: self.state.post_title,
+          content: self.state.post_content
+        })
+      })
+      .then(function(response) {
+        return response.json()
+      }).then(function(json) {
+        self.state.cardarray.unshift({
+          postTitle: self.state.post_title,
+          postContent: self.state.post_content
+        });
+        self.setState({
+          cardarray: self.state.cardarray,
+          post_title: '',
+          post_content: ''
+        });
+      }).catch(function(ex) {
+        console.log('parsing failed', ex);
+        // FIXME: Add handling errors.
+      });
+    this.handleClose();
+  }
+
+  handleCancel = () => {
     this.setState({
-      dataSource: [
-        value,
-        value + value,
-        value + value + value,
-      ],
+      post_title: '',
+      post_content: ''
     });
-  };
+    this.handleClose();
+  }
 
   render() {
     const actions = [
       <FlatButton
         label="Cancel"
         primary={true}
-        onTouchTap={this.handleClose}
+        onTouchTap={this.handleCancel.bind(this)}
       />,
       <FlatButton
         label="Submit"
         primary={true}
         keyboardFocused={true}
-        onTouchTap={this.handleClose}
+        onTouchTap={this.handleSubmit.bind(this)}
       />,
     ];
-    
+
     return (
     <div style={addBottom}>
       <div >
@@ -120,17 +151,19 @@ class Blog extends Component {
 
           <TextField
             hintText="Type anything"
-            dataSource={this.state.dataSource}
-            onUpdateInput={this.handleUpdateInput}
-            floatingLabelText="Blog Title"
+            type="text"
+            value={this.state.post_title}
+            onChange={ (event) => { this.setState({ post_title: event.target.value });} }
+            floatingLabelText="Post Title"
             fullWidth={true}
           />
 
           <TextField
             hintText="Type anything"
-            dataSource={this.state.dataSource}
-            onUpdateInput={this.handleUpdateInput}
-            floatingLabelText="Write Your blog here"
+            type="text"
+            value={this.state.post_content}
+            onChange={ (event) => { this.setState({ post_content: event.target.value });} }
+            floatingLabelText="Write Your Post Here"
             fullWidth={true}
           />
 
