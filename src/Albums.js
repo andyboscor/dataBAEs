@@ -3,9 +3,11 @@ import {GridList, GridTile} from 'material-ui/GridList';
 import Subheader from 'material-ui/Subheader';
 import RaisedButton from 'material-ui/RaisedButton';
 import PhotoDesc from './PhotoDesc.js';
+
 var showButtonStyle = {
   marginRight: 10
 }
+
 const styles = {
   root: {
     display: 'flex',
@@ -67,20 +69,22 @@ var onTop ={
   width: '100%',
   backgroundColor: 'white'
 }
+
 var grid = {
   width: '100%',
   maxWidth: '900px',
     height: '100%',
     overflowY: 'scroll',
 }
+
 var closeButtonStyle = {
   marginTop: '20px',
   marginLeft: '20px',
   color: 'white',
   fontColor: 'white'
 }
-class Albums extends Component {
 
+class Albums extends Component {
   constructor(props) {
     super(props);
     this.renderConditionala = this.renderConditionala.bind(this);
@@ -96,21 +100,19 @@ class Albums extends Component {
   handleClose = () => {
    this.setState({open: false});
   };
+
   renderConditionala(){
-    if(this.state.open===true&&this.props.open===true)
-    {
+    if(this.state.open===true&&this.props.open===true){
       return(
         <div style={onTop}>
-        <RaisedButton style={closeButtonStyle} onTouchTap={this.handleClose} label="Close" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
-        <div>
-
-          <div style={styles.root}>
-            <GridList style={grid}
-              cols={2}
-              cellHeight={300}
-              padding={1}
-
-            >
+          <RaisedButton style={closeButtonStyle} onTouchTap={this.handleClose} label="Close" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
+          <div>
+            <div style={styles.root}>
+              <GridList style={grid}
+                cols={2}
+                cellHeight={300}
+                padding={1}
+              >
               {tilesData.map((tile) => (
                 <GridTile
                   key={tile.img}
@@ -122,48 +124,40 @@ class Albums extends Component {
                   cols={tile.featured ? 2 : 1}
                   rows={tile.featured ? 2 : 1}
                 >
-                  <img src={tile.img} role="presentation" />
+                <img src={tile.img} role="presentation" />
+                </GridTile>
+              ))}
+              </GridList>
+            </div>
+          </div>
+        </div>
+      );
+     }
+  }
+
+  render() {
+    return (
+  	  <div>
+        {this.renderConditionala()}
+          <div style={styles.root}>
+            <GridList
+              cellHeight={180}
+              style={styles.gridList}>
+              {tilesData.map((tile) => (
+                <GridTile
+                  key={tile.img}
+                  title={tile.title}
+                  subtitle={<span>by <b>{tile.author}</b></span>}
+                  actionIcon={<RaisedButton style={showButtonStyle} onTouchTap={this.handleOpen}>Show</RaisedButton>}>
+                  <img src={tile.img} role="presentation"/>
                 </GridTile>
               ))}
             </GridList>
           </div>
-
-        </div>
-        </div>
-      );
-
-     }
-
-  }
-  render() {
-
-
-
-    return (
-
-	  <div >
-  {this.renderConditionala()}
-  <div style={styles.root}>
-  <GridList
-    cellHeight={180}
-    style={styles.gridList}
-  >
-
-    {tilesData.map((tile) => (
-      <GridTile
-        key={tile.img}
-        title={tile.title}
-        subtitle={<span>by <b>{tile.author}</b></span>}
-        actionIcon={<RaisedButton style={showButtonStyle} onTouchTap={this.handleOpen}>Show</RaisedButton>}
-      >
-        <img src={tile.img} role="presentation"/>
-      </GridTile>
-    ))}
-  </GridList>
-  </div>
-	  </div>
+  	  </div>
     );
   }
+
 }
 
 export default Albums;
