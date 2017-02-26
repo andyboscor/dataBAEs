@@ -23,6 +23,8 @@ class NewMessageBar extends Component {
   handleNewMessage = () =>{
     console.log(this.state.message);
     this.props.handleSend(this.state.message);
+    this.setState({message:''});
+    this.props.scroll();
   }
   render() {
     return (
@@ -31,6 +33,7 @@ class NewMessageBar extends Component {
     iconElementLeft={<div>
       <TextField hintStyle={hintStyle}
       hintText="Type your message here"
+      value={this.state.message}
       onChange={this.handleMessage}
     /><FlatButton style={sendStyle} label="Send" onTouchTap={this.handleNewMessage} /> </div>}
   />
