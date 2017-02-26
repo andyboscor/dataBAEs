@@ -50,7 +50,7 @@ class Blog extends Component {
         for(let post in postObject) {
           var postAttributes = postObject[post];
           arr.push({
-            postTitle: postAttributes.postID,
+            postTitle: postAttributes.title,
             postContent: postAttributes.content
           });
         }

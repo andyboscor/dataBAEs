@@ -13,11 +13,12 @@ var addBottom = {
 class OtherBlog extends Component {
 
   state = {
-    cardarray: []
+    cardarray: [],
+    friendblogID: ''
   }
   componentDidMount() {
     var self = this;
-    fetch('http://friendzone.azurewebsites.net/API.php/friends/'+ self.props.friendID, {
+    fetch('http://friendzone.azurewebsites.net/API.php/blog/'+ self.props.friendID, {
       headers: {
         'Authorization': 'Basic ' + localStorage.getItem('usercred')
       }
@@ -26,12 +27,10 @@ class OtherBlog extends Component {
       return response.json()})
     .then(function(json) {
       var cardDatabase =json;
-      console.log('hellodjshf', self.props.friendID);
-
       self.setState({
-        blogID: json.blogID})
+        friendblogID: json.blogID})
 
-      fetch('http://friendzone.azurewebsites.net/API.php/blog_posts/' + self.state.blogID, {
+      fetch('http://friendzone.azurewebsites.net/API.php/blog_posts/' + self.state.friendblogID, {
         headers: {
           'Authorization': 'Basic ' + localStorage.getItem('usercred')
         }})
@@ -41,9 +40,10 @@ class OtherBlog extends Component {
         var arr=[];
         for(let post in postObject) {
           var postAttributes = postObject[post];
-          arr.push({
-            postTitle: postAttributes.postID,
-            postContent: postAttributes.blog_content
+          console.log('hellodjshf', postAttributes);
+          arr.unshift({
+            postTitle: postAttributes.title,
+            postContent: postAttributes.content
           });
         }
 

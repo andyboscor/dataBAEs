@@ -6,34 +6,32 @@ var blogCards = {
   marginLeft: '20vw',
   marginRight: '20vw',
   marginTop: '5vh',
-
 }
 
 var headerStyle ={
     backgroundColor: '#80CBC4',
 }
+
 class Post extends Component {
-
-
   render() {
-
     return (
     <div>
-    <Card style={blogCards}>
-    <CardHeader
-      title={this.props.postTitle}
-      actAsExpander={true}
-      titleColor="white"
-      style={headerStyle}
-    />
-    <CardText>
-      {this.props.postContent}
-    </CardText>
-    <CardActions>
-    </CardActions>
+      <Card style={blogCards}>
+        <CardHeader
+          title={this.props.postTitle}
+          actAsExpander={true}
+          titleColor="white"
+          style={headerStyle}
+        />
 
-  </Card>
-      </div>
+        <CardText>
+          {this.props.postContent}
+        </CardText>
+
+        <CardActions>
+        </CardActions>
+      </Card>
+    </div>
     );
   }
 }
