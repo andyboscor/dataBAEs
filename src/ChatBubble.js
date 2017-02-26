@@ -19,7 +19,7 @@ class ChatBubble extends Component {
       <div>
         <Card>
           <CardHeader titleStyle={title} subtitleStyle={message}
-            title={this.props.firstname}
+            title={this.props.sender_name}
             avatar="https://lumiere-a.akamaihd.net/v1/images/07ff8e314e2798d32bfc8c39f82a9601677de34c.jpeg"
             subtitle={this.props.message}
           />

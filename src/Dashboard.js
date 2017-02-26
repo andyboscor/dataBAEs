@@ -159,7 +159,6 @@ class Dashboard extends Component {
           dataSource: results
         });
     }).catch(function(ex) {
-      return;
       console.log('parsing failed', ex)
     })};
 
@@ -197,14 +196,7 @@ class Dashboard extends Component {
   }
 
   renderConditionala(){
-    const { value, suggestions } = this.state;
 
-    // Autosuggest will pass through all these props to the input element.
-    const inputProps = {
-      placeholder: 'Type a name',
-      value,
-      onChange: this.onChange
-    };
 
     if(this.state.loggedin===false)
     {  return(

@@ -51,7 +51,7 @@ class Blog extends Component {
           var postAttributes = postObject[post];
           arr.push({
             postTitle: postAttributes.postID,
-            postContent: postAttributes.blog_content
+            postContent: postAttributes.content
           });
         }
 
