@@ -3,7 +3,13 @@ import Avatar from 'material-ui/Avatar';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
-
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import Dialog from 'material-ui/Dialog';
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
+import AutoComplete from 'material-ui/AutoComplete';
+import MenuItem from 'material-ui/MenuItem';
 var chatlist_style = {
   width: '400px',
   fontWeight: 400,
@@ -80,7 +86,7 @@ var  items = [
 class ChatList extends Component {
   constructor(props) {
     super(props);
-    this.state = {userid: '', users:[]};
+    this.state = {userid: '', users:[], open: false, dataSource: [], newUserID: '', newMessage: ''};
 
     // This binding is necessary to make `this` work in the callback
     this.handleClick = this.handleClick.bind(this);
@@ -110,12 +116,110 @@ class ChatList extends Component {
     this.setState({userid: id});
     this.props.handleResponse(id);
   }
+  handleOpen = () => {
+    this.setState({open: true});
+  };
 
+  handleClose = () => {
+    this.setState({open: false});
+  };
+  handleUpdateInput = (value) => {
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/search/' + value , {
+      headers: {
+        'Authorization': 'Basic ' + localStorage.getItem('usercred')
+      }
+    }).then(function(response) {
+        return response.json()
+    }).then(function(json) {
+      console.log(json);
+      var results = [];
+      json.map(function(item,i){
+        results.push({text: item.first_name + " " + item.last_name, value: (
+        <MenuItem
+          primaryText= {item.first_name + " " + item.last_name}
+          secondaryText="&#9786;"
+          onTouchTap ={() => self.setState({newUserID: item.userID})}
+        />)});
+        })
+
+        self.setState({
+          dataSource: results
+        });
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })};
+    handleSend(){
+      var self = this;
+      fetch('https://friendzone.azurewebsites.net/API.php/messages' , {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic ' + localStorage.getItem('usercred')
+        },
+        body: JSON.stringify({
+         to_user: self.state.newUserID,
+         message_content: self.state.newMessage,
+        })
+      })
+        .then(function(response) {
+          return response.json()
+        }).then(function(json) {
+          console.log('parsed json', json)
+          self.handleClose();
+          self.handleClick(self.state.newUserID);
+        }).catch(function(ex) {
+          console.log('parsing failed', ex)
+        })
+    }
   render() {
+    const actions = [
+      <FlatButton
+        label="Cancel"
+        primary={true}
+        onTouchTap={this.handleClose.bind(this)}
+      />,
+      <FlatButton
+        label="Send"
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={this.handleSend.bind(this)}
+      />,
+    ];
     return (
       <div style={chatlist_style}>
+
       <List>
-      <Subheader>Friend chats</Subheader>
+      <FloatingActionButton onTouchTap={this.handleOpen} backgroundColor='#8088B0'>
+      <ContentAdd/>
+      <Dialog
+        actions={actions}
+        modal={false}
+        open={this.state.open}
+        onRequestClose={this.handleClose}
+        autoScrollBodyContent={true}
+      >
+      <AutoComplete
+          hintText="Search for a user"
+          dataSource={this.state.dataSource}
+          onUpdateInput={this.handleUpdateInput}
+           filter={AutoComplete.noFilter}
+        />
+      <TextField
+        hintText="Type anything"
+        type="text"
+        value={this.state.newMessage}
+        onChange={ (event) => { this.setState({ newMessage: event.target.value });} }
+        floatingLabelText="Message"
+        fullWidth={true}
+      />
+
+
+
+      </Dialog>
+      </FloatingActionButton>
+      Chat with people
+      <Subheader>People chats</Subheader>
       {this.state.users.map(function(item){
             return <ListItem key={item.userID} primaryText={item.first_name + " " + item.last_name} onTouchTap={this.handleClick.bind(this,item.userID)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" />} />
           },this)}
