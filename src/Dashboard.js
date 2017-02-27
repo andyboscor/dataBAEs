@@ -126,6 +126,7 @@ class Dashboard extends Component {
 
   handleLogout = () =>{
     this.setState({loggedin:false});
+    localStorage.setItem('userID','');
   };
 
   showProfile = (value) => {
@@ -135,7 +136,10 @@ class Dashboard extends Component {
   closeProfile = () => {
     this.setState({profile:false});
   };
-
+  componentDidMount(){
+    if(localStorage.getItem('userID')!='')
+    this.setState({loggedin: true});
+  }
   handleUpdateInput = (value) => {
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/search/' + value , {
@@ -164,6 +168,7 @@ class Dashboard extends Component {
   };
 
   renderProfile(){
+
     if(this.state.profile===true)
       return(
         <div style={container}><OtherProfile friendID={this.state.userID} handleClose={this.closeProfile} /> </div>
@@ -197,6 +202,7 @@ class Dashboard extends Component {
   }
 
   renderConditional(){
+
     if(this.state.loggedin===false){
       return(
         <div style={container}>
