@@ -10,6 +10,7 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
+import RaisedButton from 'material-ui/RaisedButton';
 var chatlist_style = {
   width: '400px',
   fontWeight: 400,
@@ -19,6 +20,13 @@ var chatlist_style = {
   borderRight: '1.5px solid #8088B0'
 
 };
+var buttonStyle = {
+  marginLeft: '20px',
+  marginTop: '10px'
+}
+var labelStyle = {
+  color: 'white'
+}
 /*<ListItem
 primaryText={this.title}
 key = {this.id}
@@ -188,10 +196,17 @@ class ChatList extends Component {
     ];
     return (
       <div style={chatlist_style}>
+      <RaisedButton
+     label="New user chat"
+     labelPosition="after"
+     style = {buttonStyle}
+     containerElement="label"
+     backgroundColor='#8088B0'
+     labelStyle={labelStyle}
+     onTouchTap={this.handleOpen}
+       icon={<ContentAdd/>}
+      >
 
-      <List>
-      <FloatingActionButton onTouchTap={this.handleOpen} backgroundColor='#8088B0'>
-      <ContentAdd/>
       <Dialog
         actions={actions}
         modal={false}
@@ -213,12 +228,44 @@ class ChatList extends Component {
         floatingLabelText="Message"
         fullWidth={true}
       />
-
-
-
       </Dialog>
-      </FloatingActionButton>
-      Chat with people
+      </RaisedButton>
+      <RaisedButton
+     label="New circle chat"
+     labelPosition="after"
+     style = {buttonStyle}
+     containerElement="label"
+     backgroundColor='#8088B0'
+     labelStyle={labelStyle}
+     onTouchTap={this.handleOpen}
+       icon={<ContentAdd/>}
+      >
+
+      <Dialog
+        actions={actions}
+        modal={false}
+        open={this.state.open}
+        onRequestClose={this.handleClose}
+        autoScrollBodyContent={true}
+      >
+      <AutoComplete
+          hintText="Search for a user"
+          dataSource={this.state.dataSource}
+          onUpdateInput={this.handleUpdateInput}
+           filter={AutoComplete.noFilter}
+        />
+      <TextField
+        hintText="Type anything"
+        type="text"
+        value={this.state.newMessage}
+        onChange={ (event) => { this.setState({ newMessage: event.target.value });} }
+        floatingLabelText="Message"
+        fullWidth={true}
+      />
+      </Dialog>
+      </RaisedButton>
+
+      <List>
       <Subheader>People chats</Subheader>
       {this.state.users.map(function(item){
             return <ListItem key={item.userID} primaryText={item.first_name + " " + item.last_name} onTouchTap={this.handleClick.bind(this,item.userID)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" />} />
