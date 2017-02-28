@@ -7,6 +7,14 @@ import RaisedButton from 'material-ui/RaisedButton';
 import OtherBlog from './OtherBlog.js';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import {List, ListItem} from 'material-ui/List';
+import ContentInbox from 'material-ui/svg-icons/content/inbox';
+import ActionGrade from 'material-ui/svg-icons/action/grade';
+import ContentSend from 'material-ui/svg-icons/content/send';
+import ContentDrafts from 'material-ui/svg-icons/content/drafts';
+import Divider from 'material-ui/Divider';
+import ActionInfo from 'material-ui/svg-icons/action/info';
+import Subheader from 'material-ui/Subheader';
 
 const style = {
   margin: 5
@@ -16,6 +24,10 @@ const profileInfo ={
   width:'400px',
   backgroundColor: '#393F4B',
   height:'100%'
+}
+
+const dropdownLength ={
+  width:'50%'
 }
 
 const profileContainer = {
@@ -36,10 +48,17 @@ const closeButtonStyle = {
   marginTop: '20px'
 }
 
-const items = [];
-for (let i = 0; i < 100; i++ ) {
+var items = [];
+for (let i = 0; i < 14; i++ ) {
   items.push(<MenuItem value={i} key={i} primaryText={`Item ${i}`} />);
 }
+
+var albums = [];
+for (let i = 0; i < 14; i++ ) {
+  albums.push(<MenuItem value={i} key={i} primaryText={`Album ${i}`} />);
+}
+
+
 
 class PrivacySettings extends Component {
   state = {
@@ -62,7 +81,6 @@ class PrivacySettings extends Component {
   };
 
   render() {
-    //console.log(this.props.friendID);
     return (
       <div style={profileContainer}>
         <div style={profileInfo}>
@@ -78,14 +96,28 @@ class PrivacySettings extends Component {
         </div>
         <div style={contentContainer}>
             <br/>
-            <SelectField
-              floatingLabelText="Photo Albums"
-              value={this.state.value}
-              onChange={this.handleChange}
-              maxHeight={200}
-              >
-              {items}
-            </SelectField>
+            <List>
+              <Subheader>Blog Privacy
+                <br />
+                <SelectField
+                  value={this.state.value}
+                  onChange={this.handleChange}>
+                  {items}
+                </SelectField>
+              </Subheader>
+              <Divider />
+              <Subheader>Photo Albums Privacy </Subheader>
+              <div>
+                <ListItem primaryText={`Album`} rightToggle={
+                  <SelectField
+                    style={dropdownLength}
+                    value={this.state.value}
+                    onChange={this.handleChange}>
+                    {items}
+                  </SelectField>
+                }/>
+              </div>
+            </List>
         </div>
       </div>
     );
