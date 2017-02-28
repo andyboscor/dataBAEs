@@ -53,7 +53,7 @@ var closeButtonStyle = {
   fontColor: 'white'
 }
 var createNewAlbum = {
-  marginBottom:'30px'
+  margin:'30px'
 }
 class Albums extends Component {
   constructor(props) {
@@ -152,7 +152,7 @@ class Albums extends Component {
     .then(function(response) {
       return response.json()
     }).then(function(json) {
-      console.log('parsed json', json)
+      console.log('parsed json get photos', json)
       var results = [];
       json.map(function(item,i)
       {
@@ -269,9 +269,12 @@ upload_image(){
     return (
   	  <div>
         {this.renderConditionala()}
+          <center>
+          <RaisedButton style={createNewAlbum} label="Create new album" onTouchTap={this.handleNewAlbumOpen}/>
+          </center>
           <div style={styles.root}>
 
-            <RaisedButton style={createNewAlbum} label="Create new album" onTouchTap={this.handleNewAlbumOpen}/>
+
             <Dialog
              title="Create new album"
              actions={actions}
