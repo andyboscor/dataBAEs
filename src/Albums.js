@@ -15,12 +15,13 @@ const styles = {
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
-    paddingTop: '70px'
+    paddingTop: '35px'
   },
   gridList: {
     width: 1000,
-    height: 950,
+    height: '100%',
     overflowY: 'auto',
+    paddingBottom: '120px'
   },
   root2: {
     flexWrap: 'wrap',
@@ -28,41 +29,6 @@ const styles = {
     alignItems: 'center',
   }
 };
-
-const tilesData = [
-  {
-    img: 'http://cdn3-www.dogtime.com/assets/uploads/gallery/pembroke-welsh-corgi-dog-breed-pictures/side-6.jpg',
-    title: 'Breakfast',
-    author: 'jill111',
-  },
-  {
-    img: 'http://www.petsionary.com/wp-content/uploads/pe/pembroke-welsh-corgi-black-color-at-green-lawn.jpg',
-    title: 'Tasty burger',
-    author: 'pashminu',
-  },
-  {
-    img: 'https://aos.iacpublishinglabs.com/question/1144fc9f1f837c9774b5351d1b66f231/aq/700px-394px/corgi-puppies-local-rescues_8336131e130fcb88.jpg?domain=cx.aos.ask.com',
-    title: 'Camera',
-    author: 'Danson67',
-    featured: true
-  },
-  {
-    img: 'https://i.ytimg.com/vi/To8oesttqc4/hqdefault.jpg',
-    title: 'Morning',
-    author: 'fancycrave1',
-  },
-  {
-    img: 'http://www.dogster.com/wp-content/uploads/2015/05/shiba-inu-puppies-10.jpg',
-    title: 'Hats',
-    author: 'Hans',
-  },
-  {
-    img: 'http://cdn.skim.gs/images/kqdbg8dxw1r6nd8uaszd/shiba-inu-puppies-shiba-inu-times-two',
-    title: 'Honey',
-    author: 'fancycravel',
-  },
-];
-
 var onTop ={
   position: 'fixed',
   overflowY: 'scroll',
@@ -75,8 +41,9 @@ var onTop ={
 var grid = {
   width: '100%',
   maxWidth: '900px',
-    height: '100%',
-    overflowY: 'scroll',
+  height: '100%',
+  overflowY: 'scroll',
+  paddingBottom: '120px'
 }
 
 var closeButtonStyle = {
@@ -85,18 +52,29 @@ var closeButtonStyle = {
   color: 'white',
   fontColor: 'white'
 }
-
+var createNewAlbum = {
+  margin:'30px'
+}
 class Albums extends Component {
   constructor(props) {
     super(props);
     this.renderConditionala = this.renderConditionala.bind(this);
     this.handleNewAlbum = this.handleNewAlbum.bind(this);
+    this.getAlbum = this.getAlbum.bind(this);
+    this.getPhotos = this.getPhotos.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.upload_image = this.upload_image.bind(this);
   }
   state = {
    open: false,
    createNewAlbum: false,
+   createNewPhoto: false,
    albumTitle: '',
-   description: ''
+   description: '',
+   albums: [],
+   openAlbumID: '',
+   photos: [],
+   photoTitle: ''
   };
 
   handleOpen = () => {
@@ -104,13 +82,19 @@ class Albums extends Component {
   };
 
   handleClose = () => {
-   this.setState({open: false});
+   this.setState({open: false, photos: []});
   };
   handleNewAlbumOpen = () => {
    this.setState({createNewAlbum: true});
   };
   handleNewAlbumClose = () => {
    this.setState({createNewAlbum: false});
+  };
+  handleNewPhotoOpen = () => {
+   this.setState({createNewPhoto: true});
+  };
+  handleNewPhotoClose = () => {
+   this.setState({createNewPhoto: false});
   };
   handleNewAlbum(){
     var self = this;
@@ -121,35 +105,134 @@ class Albums extends Component {
         'Authorization': 'Basic ' + localStorage.getItem('usercred')
       },
       body: JSON.stringify({
-       albumTitle: self.state.albumTitle,
-       description: self.state.description,
+        albumTitle: self.state.albumTitle,
+        description: self.state.description,
       })
     })
-      .then(function(response) {
-        return response.json()
-      }).then(function(json) {
-        console.log('parsed json', json)
-        self.handNewAlbumClose();
-      }).catch(function(ex) {
-        console.log('parsing failed', ex)
-      })
+    .then(function(response) {
+      return response.json()
+    }).then(function(json) {
+      console.log('parsed json', json)
+      self.handleNewAlbumClose();
+      self.getAlbum();
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })
+  }
+  getAlbum() {
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/albums/' + localStorage.getItem('userID') , {
+      headers: {
+        'Authorization': 'Basic ' + localStorage.getItem('usercred')
+      }
+    })
+    .then(function(response) {
+      return response.json()
+    }).then(function(json) {
+      console.log('parsed json', json)
+      var results = [];
+      json.map(function(item,i)
+      {
+        results.push({albumID: item.albumID, albumTitle:item.albumTitle, description:item.description, img: "http://www.designbolts.com/wp-content/uploads/2012/12/White-Gradient-Squares-Seamless-Patterns-For-Website-Backgrounds.jpg"});
+      });
+      self.setState({
+        albums:results
+      });
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })
+  }
+  getPhotos(id){
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/photos/' + id , {
+      headers: {
+        'Authorization': 'Basic ' + localStorage.getItem('usercred')
+      }
+    })
+    .then(function(response) {
+      return response.json()
+    }).then(function(json) {
+      console.log('parsed json get photos', json)
+      var results = [];
+      json.map(function(item,i)
+      {
+      results.push({photoID: item.photoID, annotation:item.annotation, img: "https://friendzone.azurewebsites.net/" + item.url});
+    });
+    self.setState({
+    photos:results
+  });
+}).catch(function(ex) {
+  console.log('parsing failed', ex)
+})
+}
+upload_image(){
+  var input = document.querySelector('input[type="file"]')
+
+  var data = new FormData()
+  data.append('upfile', input.files[0])
+  var self = this;
+  console.log(self.state.openAlbumID);
+  fetch('https://friendzone.azurewebsites.net/API.php/photos/' + self.state.openAlbumID, {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Basic ' + localStorage.getItem('usercred')
+    },
+    body: data
+  }).then(function(response) {
+    return response.json()
+  }).then(function(json) {
+    console.log(json);
+    self.getPhotos(self.state.openAlbumID);
+    self.setState({createNewPhoto:false});
+  });
+}
+  handleClick(id){
+    this.setState({openAlbumID: id, open: true});
+    this.getPhotos(id);
+  }
+  componentDidMount(){
+    this.getAlbum();
   }
   renderConditionala(){
     if(this.state.open===true&&this.props.open===true){
+      const actions = [
+       <FlatButton
+         label="Cancel"
+         primary={true}
+         onTouchTap={this.handleNewPhotoClose}
+       />,
+       <FlatButton
+         label="Upload"
+         primary={true}
+         keyboardFocused={true}
+         onTouchTap={this.upload_image}
+       />,
+     ];
       return(
         <div style={onTop}>
           <RaisedButton style={closeButtonStyle} onTouchTap={this.handleClose} label="Close" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
+          <RaisedButton style={closeButtonStyle} onTouchTap={this.handleNewPhotoOpen} label="Upload Photo" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
+          <Dialog
+           title="Upload a new photo"
+           actions={actions}
+           modal={false}
+           open={this.state.createNewPhoto}
+           onRequestClose={this.handleNewPhotoClose}
+         >
+          <form>
+          <input type="file" />
+          </form>
+          </Dialog>
           <div>
             <div style={styles.root}>
               <GridList style={grid}
                 cols={2}
                 cellHeight={300}
-                padding={1}
               >
-              {tilesData.map((tile) => (
+              {this.state.photos.map((tile) => (
                 <GridTile
-                  key={tile.img}
-                  title={tile.title}
+                  key={tile.photoID}
+                  title=" "
                   actionIcon={<PhotoDesc />}
                   actionPosition="left"
                   titlePosition="top"
@@ -168,22 +251,6 @@ class Albums extends Component {
      }
   }
 
-  upload_image(){
-  var input = document.querySelector('input[type="file"]')
-
-  var data = new FormData()
-  data.append('upfile', input.files[0])
-  data.append('user', 'hubot')
-
-  fetch('https://httpbin.org/post', {
-    method: 'POST',
-    body: data
-  }).then(function(response) {
-      return response.json()
-  }).then(function(json) {
-    console.log(json);
-  });
-  }
 
   render() {
     const actions = [
@@ -202,12 +269,12 @@ class Albums extends Component {
     return (
   	  <div>
         {this.renderConditionala()}
+          <center>
+          <RaisedButton style={createNewAlbum} label="Create new album" onTouchTap={this.handleNewAlbumOpen}/>
+          </center>
           <div style={styles.root}>
-            <form>
-            <input type="file" />
-            <RaisedButton label="Upload" onTouchTap={this.upload_image} />
-            </form>
-            <RaisedButton label="Create new album" onTouchTap={this.handleNewAlbumOpen}/>
+
+
             <Dialog
              title="Create new album"
              actions={actions}
@@ -235,12 +302,12 @@ class Albums extends Component {
             <GridList
               cellHeight={180}
               style={styles.gridList}>
-              {tilesData.map((tile) => (
+              {this.state.albums.map((tile) => (
                 <GridTile
-                  key={tile.img}
-                  title={tile.title}
-                  subtitle={<span>by <b>{tile.author}</b></span>}
-                  actionIcon={<RaisedButton style={showButtonStyle} onTouchTap={this.handleOpen}>Show</RaisedButton>}>
+                  key={tile.albumID}
+                  title={tile.albumTitle}
+                  subtitle={<span>{tile.description}</span>}
+                  actionIcon={<RaisedButton style={showButtonStyle}  onTouchTap={this.handleClick.bind(this, tile.albumID)}>Show</RaisedButton>}>
                   <img src={tile.img} role="presentation"/>
                 </GridTile>
               ))}

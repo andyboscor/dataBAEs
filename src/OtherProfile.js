@@ -5,7 +5,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import OtherBlog from './OtherBlog.js';
-
+import Chat from './Chat.js';
 const style = {margin: 5};
 const profileInfo ={
   width:'400px',
@@ -17,7 +17,8 @@ const profileContainer = {
   height: '100%'
 }
 const contentContainer = {
-  width: '100%'
+  width: '100%',
+  overflowY: 'scroll'
 }
 const closeButtonStyle = {
   marginLeft: '10px',
@@ -31,7 +32,8 @@ class OtherProfile extends Component {
   state = {
     open: false,
     name: '',
-    friendID: ''
+    friendID: '',
+    list:[]
   };
 
   handleOpen = () => {
@@ -74,6 +76,7 @@ class OtherProfile extends Component {
           </center>
       </div>
       <div style={contentContainer}>
+      <Chat {...this.state}/>
       <OtherBlog friendID={this.props.friendID}/>
       </div>
       </div>
