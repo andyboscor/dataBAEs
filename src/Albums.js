@@ -3,7 +3,9 @@ import {GridList, GridTile} from 'material-ui/GridList';
 import Subheader from 'material-ui/Subheader';
 import RaisedButton from 'material-ui/RaisedButton';
 import PhotoDesc from './PhotoDesc.js';
-
+import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
+import TextField from 'material-ui/TextField';
 var showButtonStyle = {
   marginRight: 10
 }
@@ -88,9 +90,13 @@ class Albums extends Component {
   constructor(props) {
     super(props);
     this.renderConditionala = this.renderConditionala.bind(this);
+    this.handleNewAlbum = this.handleNewAlbum.bind(this);
   }
   state = {
    open: false,
+   createNewAlbum: false,
+   albumTitle: '',
+   description: ''
   };
 
   handleOpen = () => {
@@ -100,7 +106,34 @@ class Albums extends Component {
   handleClose = () => {
    this.setState({open: false});
   };
-
+  handleNewAlbumOpen = () => {
+   this.setState({createNewAlbum: true});
+  };
+  handleNewAlbumClose = () => {
+   this.setState({createNewAlbum: false});
+  };
+  handleNewAlbum(){
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/albums' , {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic ' + localStorage.getItem('usercred')
+      },
+      body: JSON.stringify({
+       albumTitle: self.state.albumTitle,
+       description: self.state.description,
+      })
+    })
+      .then(function(response) {
+        return response.json()
+      }).then(function(json) {
+        console.log('parsed json', json)
+        self.handNewAlbumClose();
+      }).catch(function(ex) {
+        console.log('parsing failed', ex)
+      })
+  }
   renderConditionala(){
     if(this.state.open===true&&this.props.open===true){
       return(
@@ -135,11 +168,70 @@ class Albums extends Component {
      }
   }
 
+  upload_image(){
+  var input = document.querySelector('input[type="file"]')
+
+  var data = new FormData()
+  data.append('upfile', input.files[0])
+  data.append('user', 'hubot')
+
+  fetch('https://httpbin.org/post', {
+    method: 'POST',
+    body: data
+  }).then(function(response) {
+      return response.json()
+  }).then(function(json) {
+    console.log(json);
+  });
+  }
+
   render() {
+    const actions = [
+     <FlatButton
+       label="Cancel"
+       primary={true}
+       onTouchTap={this.handleNewAlbumClose}
+     />,
+     <FlatButton
+       label="Submit"
+       primary={true}
+       keyboardFocused={true}
+       onTouchTap={this.handleNewAlbum}
+     />,
+   ];
     return (
   	  <div>
         {this.renderConditionala()}
           <div style={styles.root}>
+            <form>
+            <input type="file" />
+            <RaisedButton label="Upload" onTouchTap={this.upload_image} />
+            </form>
+            <RaisedButton label="Create new album" onTouchTap={this.handleNewAlbumOpen}/>
+            <Dialog
+             title="Create new album"
+             actions={actions}
+             modal={false}
+             open={this.state.createNewAlbum}
+             onRequestClose={this.handleNewAlbumClose}
+           >
+           <TextField
+             hintText="Type anything"
+             type="text"
+             value={this.state.albumTitle}
+             onChange={ (event) => { this.setState({ albumTitle: event.target.value });} }
+             floatingLabelText="Album Title"
+             fullWidth={true}
+           />
+           <TextField
+             hintText="Type anything"
+             type="text"
+             value={this.state.description}
+             onChange={ (event) => { this.setState({ description: event.target.value });} }
+             floatingLabelText="Description"
+             fullWidth={true}
+           />
+           </Dialog>
             <GridList
               cellHeight={180}
               style={styles.gridList}>
