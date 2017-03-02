@@ -84,7 +84,7 @@ leftAvatar={<Avatar src="https://kenanfellows.org/wp-content/uploads/2016/02/bla
 class ChatList extends Component {
   constructor(props) {
     super(props);
-    this.state = {userid: '', users:[], open: false, dataSource: [], newUserID: '', newMessage: '', circleName: '', circleUsers: [], circleUsersToSend: []};
+    this.state = {open2:false, userid: '', users:[], open: false, dataSource: [], newUserID: '', newMessage: '', circleName: '', circleUsers: [], circleUsersToSend: [], newCircleID: '', circles: []};
 
     // This binding is necessary to make `this` work in the callback
     this.handleClick = this.handleClick.bind(this);
@@ -109,10 +109,28 @@ class ChatList extends Component {
         return;
         console.log('parsing failed', ex)
       })
+      fetch('https://friendzone.azurewebsites.net/API.php/circles' , {
+        headers: {
+      'Authorization': 'Basic ' + localStorage.getItem('usercred')
+    }
+      })
+        .then(function(response) {
+          return response.json()
+        }).then(function(json) {
+          console.log('parsed json', json);
+          self.setState({
+            circles: json
+          })
+
+        //console.log(self.state.users)
+        }).catch(function(ex) {
+          return;
+          console.log('parsing failed', ex)
+        })
   }
-  handleClick(id) {
+  handleClick(id, to_circle) {
     this.setState({userid: id});
-    this.props.handleResponse(id);
+    this.props.handleResponse(id, to_circle);
   }
   handleOpen = () => {
     this.setState({open: true});
@@ -120,6 +138,13 @@ class ChatList extends Component {
 
   handleClose = () => {
     this.setState({open: false});
+  };
+  handleOpen2 = () => {
+    this.setState({open2: true});
+  };
+
+  handleClose2 = () => {
+    this.setState({open2: false});
   };
   addUser = () => {
     var users = this.state.circleUsers;
@@ -172,7 +197,30 @@ class ChatList extends Component {
         }).then(function(json) {
           console.log('parsed json', json)
           self.handleClose();
-          self.handleClick(self.state.newUserID);
+          self.handleClick(self.state.newUserID, false);
+        }).catch(function(ex) {
+          console.log('parsing failed', ex)
+        })
+    }
+    sendCircleMessage(){
+      var self = this;
+      fetch('https://friendzone.azurewebsites.net/API.php/messages' , {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic ' + localStorage.getItem('usercred')
+        },
+        body: JSON.stringify({
+         to_circle: self.state.newCircleID,
+         message_content: self.state.newMessage,
+        })
+      })
+        .then(function(response) {
+          return response.json()
+        }).then(function(json) {
+          console.log('parsed json', json)
+          self.handleClose();
+          //self.handleClick(self.state.newUserID);
         }).catch(function(ex) {
           console.log('parsing failed', ex)
         })
@@ -194,6 +242,8 @@ class ChatList extends Component {
           return response.json()
         }).then(function(json) {
           console.log('parsed json', json)
+          self.setState({newCircleID: json});
+          console.log(self.state.newCircleID);
           //self.handleClose();
           //self.handleClick(self.state.newUserID);
         }).catch(function(ex) {
@@ -218,7 +268,7 @@ class ChatList extends Component {
       <FlatButton
         label="Cancel"
         primary={true}
-        onTouchTap={this.handleClose.bind(this)}
+        onTouchTap={this.handleClose2.bind(this)}
       />,
       <FlatButton
         label="Send"
@@ -270,15 +320,15 @@ class ChatList extends Component {
      containerElement="label"
      backgroundColor='#8088B0'
      labelStyle={labelStyle}
-     onTouchTap={this.handleOpen}
+     onTouchTap={this.handleOpen2}
        icon={<ContentAdd/>}
       >
 
       <Dialog
         actions={actions2}
         modal={false}
-        open={this.state.open}
-        onRequestClose={this.handleClose}
+        open={this.state.open2}
+        onRequestClose={this.handleClose2}
         autoScrollBodyContent={true}
       >
       <TextField
@@ -327,10 +377,13 @@ class ChatList extends Component {
       <List>
       <Subheader>People chats</Subheader>
       {this.state.users.map(function(item){
-            return <ListItem key={item.userID} primaryText={item.first_name + " " + item.last_name} onTouchTap={this.handleClick.bind(this,item.userID)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" />} />
+            return <ListItem key={item.userID} primaryText={item.first_name + " " + item.last_name} onTouchTap={this.handleClick.bind(this,item.userID, false)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" />} />
           },this)}
 
-
+      <Subheader>Circle chats</Subheader>
+      {this.state.circles.map(function(item){
+            return <ListItem key={item.circleID} primaryText={item.circleName} onTouchTap={this.handleClick.bind(this,item.circleID, true)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" />} />
+          },this)}
       </List>
       </div>
     );

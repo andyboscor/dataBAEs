@@ -64,7 +64,7 @@ class Chat extends Component {
                 <div style={extra} > </div>
 </div>
         <div style={fixedSend}>
-              <NewMessageBar handleSend={this.props.handleSend} />
+              <NewMessageBar handleSend={this.props.handleSend} {...this.props}/>
         </div>
 
         </div>

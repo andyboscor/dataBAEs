@@ -21,8 +21,11 @@ class NewMessageBar extends Component {
   this.setState({message: event.target.value});
   }
   handleNewMessage = () =>{
-    console.log(this.state.message);
-    this.props.handleSend(this.state.message);
+    //console.log(this.state.message);
+    //console.log("to_circle" + this.props.to_circle);
+    if(this.props.to_circle === false)
+    this.props.handleSend(this.state.message, false);
+    else this.props.handleSend(this.state.message, true);
     this.setState({message:''});
   }
   render() {

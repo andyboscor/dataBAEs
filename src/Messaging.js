@@ -13,17 +13,27 @@ var chatStyle = {
 class Messaging extends Component {
   constructor(props) {
     super(props);
-    this.state = { list: [], exista: false, chat_id: ''};
+    this.state = { list: [], exista: false, chat_id: '', to_circle: false};
 
     // This binding is necessary to make `this` work in the callback
     this.handleResponse = this.handleResponse.bind(this);
     this.handleSend = this.handleSend.bind(this);
   }
-  handleResponse(data) {
+  handleResponse(data, to_circle) {
   //var messagearray = [ {firstname:'Nemo', message:'this', photo:'this'},{firstname:'Hello', message:'this sss', photo:'this'}, {firstname:'jeee', message:'this sss', photo:'this'}];
   this.setState({chat_id: data});
+  var send_to = '';
+  if(to_circle === true)
+  {
+    send_to = "to_circle/";
+    this.setState({to_circle: true});
+  }
+  else {
+    send_to = "to_user/";
+    this.setState({to_circle: false});}
+
   var self = this;
-  fetch('https://friendzone.azurewebsites.net/API.php/messages/to_user/' + data , {
+  fetch('https://friendzone.azurewebsites.net/API.php/messages/' + send_to + data , {
     headers: {
   'Authorization': 'Basic ' + localStorage.getItem('usercred')
 }
@@ -46,7 +56,15 @@ class Messaging extends Component {
       console.log('parsing failed', ex)
     })
   }
-  handleSend(data){
+  handleSend(data, to_circle){
+    var send_to = '';
+    if(to_circle === true)
+    send_to = "to_circle";
+    else send_to = "to_user";
+    var payload = {};
+    payload[send_to] = this.state.chat_id;
+    payload["message_content"] = data;
+    console.log(payload);
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/messages' , {
       method: 'POST',
@@ -54,16 +72,15 @@ class Messaging extends Component {
         'Content-Type': 'application/json',
         'Authorization': 'Basic ' + localStorage.getItem('usercred')
       },
-      body: JSON.stringify({
-       to_user: self.state.chat_id,
-       message_content: data,
-      })
+      body: JSON.stringify(payload)
     })
       .then(function(response) {
         return response.json()
       }).then(function(json) {
         console.log('parsed json', json)
-        self.handleResponse(self.state.chat_id);
+        if(to_circle === false)
+        self.handleResponse(self.state.chat_id, false);
+        else self.handleResponse(self.state.chat_id, true);
       }).catch(function(ex) {
         console.log('parsing failed', ex)
       })
