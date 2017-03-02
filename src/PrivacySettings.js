@@ -58,12 +58,26 @@ for (let i = 0; i < 14; i++ ) {
   albums.push(<MenuItem value={i} key={i} primaryText={`Album ${i}`} />);
 }
 
+var privacyList ={
+  '0': 'Only Me',
+  '1': 'Friends Only',
+  '2': 'Friends of Friends',
+  '3': 'Circles'
+}
+
+var blogPrivacyList = [];
+for (let i=0; i<Object.keys(privacyList).length ;i++) {
+  blogPrivacyList.push(<MenuItem value={i} key={i} primaryText={privacyList[i]} />);
+}
+
 class PrivacySettings extends Component {
   state = {
     open: false,
     name: '',
     friendID: '',
-    value:10
+    value:0,
+    //TODO ^ change this to preference
+    blogSettings: ''
   };
 
   handleChange = (event, index, value) => {
@@ -78,7 +92,27 @@ class PrivacySettings extends Component {
     this.setState({open: false});
   };
 
+  componentDidMount() {
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/privacy/blog' , {
+      headers: {
+        'Authorization': 'Basic ' + localStorage.getItem('usercred')
+      }
+    }).then(function(response) {
+        return response.json()
+    }).then(function(json) {
+      self.setState({
+        blogSettings: json.access_right,
+        value: this.state.blogSettings
+      });
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })
+  }
+
   render() {
+    // console.log('gdfg', this.state.blogSettings)
+    console.log(privacyList['1'])
     return (
       <div style={profileContainer}>
         <div style={profileInfo}>
@@ -100,7 +134,7 @@ class PrivacySettings extends Component {
                 <SelectField
                   value={this.state.value}
                   onChange={this.handleChange}>
-                  {items}
+                  {blogPrivacyList}
                 </SelectField>
               </Subheader>
               <Divider />
