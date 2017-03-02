@@ -133,7 +133,8 @@ class Albums extends Component {
       var results = [];
       json.map(function(item,i)
       {
-        results.push({albumID: item.albumID, albumTitle:item.albumTitle, description:item.description, img: "http://www.designbolts.com/wp-content/uploads/2012/12/White-Gradient-Squares-Seamless-Patterns-For-Website-Backgrounds.jpg"});
+        let url = (item.first_image) ? "https://friendzone.azurewebsites.net/" + item.first_image : "http://www.designbolts.com/wp-content/uploads/2012/12/White-Gradient-Squares-Seamless-Patterns-For-Website-Backgrounds.jpg";
+        results.push({albumID: item.albumID, albumTitle:item.albumTitle, description:item.description, img: url});
       });
       self.setState({
         albums:results
