@@ -89,7 +89,7 @@ class ChatList extends Component {
     // This binding is necessary to make `this` work in the callback
     this.handleClick = this.handleClick.bind(this);
   }
- componentDidMount(){
+  getChatList() {
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/chats' , {
       headers: {
@@ -127,6 +127,9 @@ class ChatList extends Component {
           return;
           console.log('parsing failed', ex)
         })
+  }
+ componentDidMount(){
+    this.getChatList();
   }
   handleClick(id, to_circle) {
     this.setState({userid: id});
@@ -198,6 +201,7 @@ class ChatList extends Component {
           console.log('parsed json', json)
           self.handleClose();
           self.handleClick(self.state.newUserID, false);
+          self.getChatList();
         }).catch(function(ex) {
           console.log('parsing failed', ex)
         })
@@ -357,7 +361,7 @@ class ChatList extends Component {
        icon={<ContentAdd/>}
       />
       {this.state.circleUsers.map(function(item,i){
-        return (<Chip style={chipstyle}>
+        return (<Chip key={item.uID} style={chipstyle}>
            <Avatar src="https://cdn3.iconfinder.com/data/icons/internet-and-web-4/78/internt_web_technology-13-512.png" />
            {item.name}
          </Chip>)
