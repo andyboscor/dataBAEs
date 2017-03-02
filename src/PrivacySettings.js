@@ -58,8 +58,6 @@ for (let i = 0; i < 14; i++ ) {
   albums.push(<MenuItem value={i} key={i} primaryText={`Album ${i}`} />);
 }
 
-
-
 class PrivacySettings extends Component {
   state = {
     open: false,
