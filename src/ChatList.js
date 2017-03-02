@@ -11,6 +11,7 @@ import FlatButton from 'material-ui/FlatButton';
 import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
+import Chip from 'material-ui/Chip';
 var chatlist_style = {
   width: '400px',
   fontWeight: 400,
@@ -26,6 +27,9 @@ var buttonStyle = {
 }
 var labelStyle = {
   color: 'white'
+};
+var chipstyle = {
+  margin: '10px'
 }
 /*<ListItem
 primaryText={this.title}
@@ -76,25 +80,11 @@ leftAvatar={<Avatar src="https://kenanfellows.org/wp-content/uploads/2016/02/bla
     rightIcon={<CommunicationChatBubble />}
     />
 */
-var  items = [
-     {id: 1, title: 'Item 1'},
-     {id: 2, title: 'Item 2'},
-     {id: 3, title: 'Item 3'},
-     {id: 4, title: 'Item 3'},
-     {id: 5, title: 'Item 3'},
-     {id: 6, title: 'Item 3'},
-     {id: 7, title: 'Item 3'},
-     {id: 8, title: 'Item 3'},
-     {id: 9, title: 'Item 3'},
-     {id: 10, title: 'Item 3'},
-     {id: 11, title: 'Item 3'},
-     {id: 12, title: 'Item 3'},
-     {id: 13, title: 'Item 3'}
-   ];
+
 class ChatList extends Component {
   constructor(props) {
     super(props);
-    this.state = {userid: '', users:[], open: false, dataSource: [], newUserID: '', newMessage: ''};
+    this.state = {userid: '', users:[], open: false, dataSource: [], newUserID: '', newMessage: '', circleName: '', circleUsers: [], circleUsersToSend: []};
 
     // This binding is necessary to make `this` work in the callback
     this.handleClick = this.handleClick.bind(this);
@@ -131,6 +121,13 @@ class ChatList extends Component {
   handleClose = () => {
     this.setState({open: false});
   };
+  addUser = () => {
+    var users = this.state.circleUsers;
+    var userIDs = this.state.circleUsersToSend;
+    users.push({name:this.state.newUserName, uID: this.state.newUserID});
+    userIDs.push(this.state.newUserID);
+    this.setState({circleUsers: users, newUserName: '', circleUsersToSend: userIDs});
+  }
   handleUpdateInput = (value) => {
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/search/' + value , {
@@ -147,7 +144,7 @@ class ChatList extends Component {
         <MenuItem
           primaryText= {item.first_name + " " + item.last_name}
           secondaryText="&#9786;"
-          onTouchTap ={() => self.setState({newUserID: item.userID})}
+          onTouchTap ={() => self.setState({newUserID: item.userID, newUserName: item.first_name + " " + item.last_name })}
         />)});
         })
 
@@ -180,6 +177,29 @@ class ChatList extends Component {
           console.log('parsing failed', ex)
         })
     }
+    handleCircleSend(){
+      var self = this;
+      fetch('https://friendzone.azurewebsites.net/API.php/circles' , {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic ' + localStorage.getItem('usercred')
+        },
+        body: JSON.stringify({
+         circleName: self.state.circleName,
+         userIDs: self.state.circleUsersToSend,
+        })
+      })
+        .then(function(response) {
+          return response.json()
+        }).then(function(json) {
+          console.log('parsed json', json)
+          //self.handleClose();
+          //self.handleClick(self.state.newUserID);
+        }).catch(function(ex) {
+          console.log('parsing failed', ex)
+        })
+    }
   render() {
     const actions = [
       <FlatButton
@@ -192,6 +212,19 @@ class ChatList extends Component {
         primary={true}
         keyboardFocused={true}
         onTouchTap={this.handleSend.bind(this)}
+      />,
+    ];
+    const actions2 = [
+      <FlatButton
+        label="Cancel"
+        primary={true}
+        onTouchTap={this.handleClose.bind(this)}
+      />,
+      <FlatButton
+        label="Send"
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={this.handleCircleSend.bind(this)}
       />,
     ];
     return (
@@ -242,18 +275,44 @@ class ChatList extends Component {
       >
 
       <Dialog
-        actions={actions}
+        actions={actions2}
         modal={false}
         open={this.state.open}
         onRequestClose={this.handleClose}
         autoScrollBodyContent={true}
       >
+      <TextField
+        hintText="Type anything"
+        type="text"
+        value={this.state.circleName}
+        onChange={ (event) => { this.setState({ circleName: event.target.value });} }
+        floatingLabelText="Circle name"
+        fullWidth={true}
+      />
       <AutoComplete
           hintText="Search for a user"
           dataSource={this.state.dataSource}
           onUpdateInput={this.handleUpdateInput}
-           filter={AutoComplete.noFilter}
-        />
+          filter={AutoComplete.noFilter}
+          searchText = {this.state.newUserName}
+      />
+      <RaisedButton
+     label="Add to circle"
+     labelPosition="after"
+     style = {buttonStyle}
+     containerElement="label"
+     backgroundColor='#8088B0'
+     labelStyle={labelStyle}
+     onTouchTap={this.addUser}
+       icon={<ContentAdd/>}
+      />
+      {this.state.circleUsers.map(function(item,i){
+        return (<Chip style={chipstyle}>
+           <Avatar src="https://cdn3.iconfinder.com/data/icons/internet-and-web-4/78/internt_web_technology-13-512.png" />
+           {item.name}
+         </Chip>)
+      })}
+
       <TextField
         hintText="Type anything"
         type="text"
