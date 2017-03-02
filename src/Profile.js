@@ -4,18 +4,65 @@ import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
+import Paper from 'material-ui/Paper';
 
+const stylePaper = {
+  height: 100,
+  width: 100,
+  margin: 20,
+  textAlign: 'center',
+  display: 'inline-block',
+};
 
-const style = {margin: 5};
+const style = {
+  margin: 5
+};
+
+const profileInfo ={
+  width:'50%',
+  borderRightWidth:10,
+  backgroundColor:'#ebeced',
+  height:'100%'
+}
+
+const dropdownLength ={
+  width:'50%'
+}
+
+const profileContainer = {
+  display: 'flex',
+  height: '100%'
+}
+
+const friendsListContainer = {
+  display: 'flex',
+  width: '100%'
+}
+
+const friendsList1 = {
+  width: '50%'
+}
+
+const friendsList2 = {
+  width: '50%'
+}
+
+const contentContainer = {
+  width: '100%',
+  height: '100%',
+  marginLeft: '100px'
+}
+
 class Profile extends Component {
 
   state = {
-      open: false,
-      full_name: '',
-      first_name: '',
-      last_name: '',
-      email_address: ''
-    };
+    open: false,
+    full_name: '',
+    first_name: '',
+    last_name: '',
+    email_address: ''
+  };
+
   constructor(props){
     super(props);
     this.handleSubmit=this.handleSubmit.bind(this);
@@ -101,17 +148,18 @@ class Profile extends Component {
     ];
 
     return (
-      <div>
-          <center><h1> {this.state.full_name} </h1>
-      		  <Avatar
+      <div style={profileContainer}>
+        <div style={profileInfo}>
+            <center><h1> {this.state.full_name} </h1>
+              <Avatar
                 src="https://lumiere-a.akamaihd.net/v1/images/07ff8e314e2798d32bfc8c39f82a9601677de34c.jpeg"
                 size={230}
                 style={style}/>
-                <br />
-        		  <TextField type="text" value={this.state.first_name} hintText="First Name" onChange={ (event) => { this.setState({ first_name: event.target.value });} } /><br />
-        		  <TextField type="text" value={this.state.last_name} hintText="Last Name" onChange={ (event) => { this.setState({ last_name: event.target.value });} } /><br />
+              <br />
+              <TextField type="text" value={this.state.first_name} hintText="First Name" onChange={ (event) => { this.setState({ first_name: event.target.value });} } /><br />
+              <TextField type="text" value={this.state.last_name} hintText="Last Name" onChange={ (event) => { this.setState({ last_name: event.target.value });} } /><br />
               <TextField type="text" value={this.state.email_address} hintText="Email" onChange={ (event) => { this.setState({ email_address: event.target.value });} } /><br />
-        	    <br />
+              <br />
               <RaisedButton label="Save Changes" onTouchTap={this.handleOpen} />
               <Dialog
                 title="Dialog With Actions"
@@ -120,10 +168,35 @@ class Profile extends Component {
                 open={this.state.open}
                 onRequestClose={this.handleClose}
               >
-                The actions in this window were passed in as an array of React objects.
+
               </Dialog>
-        		  <br />
-        </center>
+              <br />
+          </center>
+        </div>
+        <div style={contentContainer}>
+          <br/>
+          <h1>Friends Recommendation</h1>
+          <br/>
+          <div style={friendsListContainer}>
+            <div style={friendsList1}>
+              <center>
+                <Paper style={style} zDepth={2} />
+                <Avatar
+                  src="https://pbs.twimg.com/profile_images/773917612648591365/hFl6DSSh.jpg"
+                  size={150}
+                  />
+                <br/>
+                Dory Fish
+                <br/>
+                <RaisedButton label="Add Me!" style={style} />
+              </center>
+            </div>
+
+            <div style={friendsList1}>
+             HELLO FRIENDS LIST ONENENNENENENNENENEN11111
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

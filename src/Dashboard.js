@@ -16,14 +16,15 @@ import Profile from './Profile.js';
 import Messaging from './Messaging.js';
 import LoginPage from './LoginPage.js';
 import OtherProfile from './OtherProfile.js';
+import PrivacySettings from './PrivacySettings.js';
 
 class Login extends Component {
-static muiName = 'FlatButton';
-  render() {
-    return (
-      <FlatButton {...this.props} label="Login" />
-    );
-  }
+  static muiName = 'FlatButton';
+    render() {
+      return (
+        <FlatButton {...this.props} label="Login" />
+      );
+    }
 }
 
 const styles = {
@@ -105,7 +106,8 @@ class Dashboard extends Component {
     value: '',
     dataSource: [],
     profile: false,
-    userSearch: ''
+    userSearch: '',
+    privacySettings: false
   };
 
   handleChange = (event, logged) => {
@@ -126,6 +128,7 @@ class Dashboard extends Component {
 
   handleLogout = () =>{
     this.setState({loggedin:false});
+    localStorage.setItem('userID','');
   };
 
   showProfile = (value) => {
@@ -135,6 +138,19 @@ class Dashboard extends Component {
   closeProfile = () => {
     this.setState({profile:false});
   };
+
+  showPrivacy = () => {
+    this.setState({privacySettings:true});
+  };
+
+  closePrivacy = () => {
+    this.setState({privacySettings:false});
+  };
+
+  componentDidMount(){
+    if(localStorage.getItem('userID')!='')
+    this.setState({loggedin: true});
+  }
 
   handleUpdateInput = (value) => {
     var self = this;
@@ -148,109 +164,113 @@ class Dashboard extends Component {
       var results = [];
       json.map(function(item,i){
         results.push({text: item.first_name + " " + item.last_name, value: (
-        <MenuItem
-          primaryText= {item.first_name + " " + item.last_name}
-          secondaryText="&#9786;"
-          onTouchTap ={() => self.showProfile(item.userID)}
-        />)});
-        })
-
-        self.setState({
-          dataSource: results
+          <MenuItem
+            primaryText= {item.first_name + " " + item.last_name}
+            secondaryText="&#9786;"
+            onTouchTap ={() => self.showProfile(item.userID)}
+          />)
         });
+      })
+    self.setState({
+      dataSource: results
+    });
     }).catch(function(ex) {
       console.log('parsing failed', ex)
-    })};
+    })
+  };
 
   renderProfile(){
+    if(this.state.privacySettings===true)
+      return(
+        <div style={container}><PrivacySettings handleClose={this.closePrivacy} /> </div>
+      );
     if(this.state.profile===true)
       return(
         <div style={container}><OtherProfile friendID={this.state.userID} handleClose={this.closeProfile} /> </div>
       );
     else return (
       <div>
-      <Tabs style={container} contentContainerStyle={scrollable} tabItemContainerStyle={tabColor} inkBarStyle={underlineColor} >
-        <Tab label="Blog" value="a" onClick={this.handleClose} >
-          <div>
-            <Blog />
-          </div>
-        </Tab>
-        <Tab label="Profile" value="b" onClick={this.handleClose}>
-          <div>
-          <Profile />
-          </div>
-        </Tab>
-        <Tab label="Photo Albums" value="c" onClick={this.handleOpen}>
-          <div>
-          <Albums {...this.state}/>
-          </div>
-        </Tab>
-        <Tab label="Messaging" value="d" onClick={this.handleClose}>
-          <div>
-            <Messaging />
-          </div>
-        </Tab>
-      </Tabs>
+        <Tabs style={container} contentContainerStyle={scrollable} tabItemContainerStyle={tabColor} inkBarStyle={underlineColor} >
+          <Tab label="Blog" value="a" onClick={this.handleClose} >
+            <div>
+              <Blog />
+            </div>
+          </Tab>
+          <Tab label="Profile" value="b" onClick={this.handleClose}>
+            <div>
+            <Profile />
+            </div>
+          </Tab>
+          <Tab label="Photo Albums" value="c" onClick={this.handleOpen}>
+            <div>
+            <Albums {...this.state}/>
+            </div>
+          </Tab>
+          <Tab label="Messaging" value="d" onClick={this.handleClose}>
+            <div>
+              <Messaging />
+            </div>
+          </Tab>
+        </Tabs>
       </div>
     );
   }
 
-  renderConditionala(){
-
-
-    if(this.state.loggedin===false)
-    {  return(
+  renderConditional(){
+    if(this.state.loggedin===false){
+      return(
         <div style={container}>
         <LoginPage handleLogin={this.handleLogin} />
         </div>
       );
-    }
-    else return (
+    }else return (
       <div>
-      <AppBar
-      title={<div> </div>}
-      className="appBar"
-      iconElementLeft={<div style={inLiners}>{this.state.title}<div>  <AutoComplete
-          hintText="Type anything"
-          dataSource={this.state.dataSource}
-          onUpdateInput={this.handleUpdateInput}
-           filter={AutoComplete.noFilter}
-        /></div></div>
-      }
-
-      iconStyleLeft={titleStyle}
-        children={<div>   <IconMenu
-
-            iconButtonElement={
-              <IconButton style={iconSize}>
-            <Avatar
-            src="https://lumiere-a.akamaihd.net/v1/images/07ff8e314e2798d32bfc8c39f82a9601677de34c.jpeg"
-            size={50}
-            />
-            </IconButton>
-            }
-            targetOrigin={{horizontal: 'right', vertical: 'top'}}
-            anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-          >
+        <AppBar
+          title={<div> </div>}
+          className="appBar"
+          iconElementLeft={
+            <div style={inLiners}>{this.state.title}
+              <div>
+                <AutoComplete
+                  hintText="Type anything"
+                  dataSource={this.state.dataSource}
+                  onUpdateInput={this.handleUpdateInput}
+                  filter={AutoComplete.noFilter}/>
+              </div>
+            </div>
+          }
+          iconStyleLeft={titleStyle}
+          children={
+            <div>
+            <IconMenu
+              iconButtonElement={
+                <IconButton style={iconSize}>
+                  <Avatar
+                  src="https://lumiere-a.akamaihd.net/v1/images/07ff8e314e2798d32bfc8c39f82a9601677de34c.jpeg"
+                  size={50}
+                  />
+                </IconButton>
+              }
+              targetOrigin={{horizontal: 'right', vertical: 'top'}}
+              anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+            >
             <MenuItem primaryText="Refresh" />
-            <MenuItem primaryText="Profile" />
+            <MenuItem primaryText="Privacy Settings" onTouchTap = {this.showPrivacy}/>
             <MenuItem primaryText="Sign out" onTouchTap={this.handleLogout} />
-          </IconMenu></div>}
-        iconElementRight={<div> </div>
-      }
-      />
-      {this.renderProfile()}
-      </div>
+            </IconMenu></div>
+          }
+          iconElementRight={<div> </div>}
+        />
+        {this.renderProfile()}
+      </div>);
+  }
+
+  render() {
+    return (
+      <div style={container}>{this.renderConditional()}</div>
     );
   }
-    render() {
-      return (
-        <div style={container}>
-          {this.renderConditionala()}
 
-        </div>
-      );
-    }
 }
 
 export default Dashboard;
