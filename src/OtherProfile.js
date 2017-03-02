@@ -1,13 +1,9 @@
 import React, {Component} from 'react';
 import Avatar from 'material-ui/Avatar';
-import TextField from 'material-ui/TextField';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import OtherBlog from './OtherBlog.js';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
 import Chat from './Chat.js';
+import Done from 'material-ui/svg-icons/action/done';
 
 const style = {margin: 5};
 const profileInfo ={
@@ -35,7 +31,7 @@ class OtherProfile extends Component {
   state = {
     open: false,
     name: '',
-    friendID: null,
+    friendID: this.props.friendID,
     friendship_status: false,
     list:[]
   };
@@ -56,7 +52,6 @@ class OtherProfile extends Component {
     .then(function(response) {
       return response.json()})
     .then(function(json) {
-      console.log('parsed json', json)
       self.setState({name: json.first_name + " " + json.last_name})})
     .catch(function(ex) {
       console.log('parsing failed', ex)
@@ -69,20 +64,17 @@ class OtherProfile extends Component {
     .then(function(response) {
       return response.json()})
     .then(function(json) {
-      console.log('parsed json', json)
-      self.setState({friends: json.friendship_status })})
+      self.setState({
+        friendship_status: (json.friendship_status === "true"),
+        friendID: self.props.friendID
+      })})
     .catch(function(ex) {
       console.log('parsing failed', ex)
-    });
-
-    this.setState({
-      friendID: self.props.friendID
     });
   }
 
   submitFriendshiptRequest() {
     var self = this;
-    console.log(self.state.friendID);
     fetch('https://friendzone.azurewebsites.net/API.php/friends', {
         method: 'POST',
         headers: {
@@ -99,7 +91,6 @@ class OtherProfile extends Component {
         self.setState({
           friendship_status: true
         });
-        console.log('parsed json', json)
       }).catch(function(ex) {
         console.log('parsing failed', ex);
         // FIXME: Add handling errors.
@@ -109,9 +100,9 @@ class OtherProfile extends Component {
   render() {
     let friendsButton;
     if (!this.state.friendship_status) {
-      friendsButton = (<RaisedButton style={closeButtonStyle} onTouchTap={this.submitFriendshiptRequest} label="Friends" labelColor="white" backgroundColor="#8088B0"></RaisedButton>);
+      friendsButton = (<RaisedButton style={closeButtonStyle} onTouchTap={this.submitFriendshiptRequest.bind(this)} label="Add Friend" labelColor="white" backgroundColor="#8088B0"></RaisedButton>);
     } else {
-      friendsButton = (<RaisedButton style={closeButtonStyle} disabled={true} label="Friends" labelColor="white" backgroundColor="#8088B0"></RaisedButton>);
+      friendsButton = (<RaisedButton style={closeButtonStyle} disabled={true} icon={<Done />} label="Friends" labelColor="white" backgroundColor="#8088B0"></RaisedButton>);
     }
 
     //console.log(this.props.friendID);
@@ -134,7 +125,7 @@ class OtherProfile extends Component {
       </div>
       <div style={contentContainer}>
       <Chat {...this.state}/>
-      <OtherBlog friendID={this.state.friendID}/>
+      <OtherBlog friendID={this.props.friendID}/>
       </div>
       </div>
     );
