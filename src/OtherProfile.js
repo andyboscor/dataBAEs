@@ -5,7 +5,10 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import OtherBlog from './OtherBlog.js';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
 import Chat from './Chat.js';
+
 const style = {margin: 5};
 const profileInfo ={
   width:'400px',
@@ -32,7 +35,8 @@ class OtherProfile extends Component {
   state = {
     open: false,
     name: '',
-    friendID: '',
+    friendID: null,
+    friendship_status: false,
     list:[]
   };
 
@@ -56,10 +60,60 @@ class OtherProfile extends Component {
       self.setState({name: json.first_name + " " + json.last_name})})
     .catch(function(ex) {
       console.log('parsing failed', ex)
-    })
+    });
+
+    fetch('https://friendzone.azurewebsites.net/API.php/friends/' + self.props.friendID , {
+      headers: {
+        'Authorization': 'Basic ' + localStorage.getItem('usercred')
+      }})
+    .then(function(response) {
+      return response.json()})
+    .then(function(json) {
+      console.log('parsed json', json)
+      self.setState({friends: json.friendship_status })})
+    .catch(function(ex) {
+      console.log('parsing failed', ex)
+    });
+
+    this.setState({
+      friendID: self.props.friendID
+    });
+  }
+
+  submitFriendshiptRequest() {
+    var self = this;
+    console.log(self.state.friendID);
+    fetch('https://friendzone.azurewebsites.net/API.php/friends', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred'),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          friendID: self.state.friendID
+        })
+      })
+      .then(function(response) {
+        return response.json()
+      }).then(function(json) {
+        self.setState({
+          friendship_status: true
+        });
+        console.log('parsed json', json)
+      }).catch(function(ex) {
+        console.log('parsing failed', ex);
+        // FIXME: Add handling errors.
+      });
   }
 
   render() {
+    let friendsButton;
+    if (!this.state.friendship_status) {
+      friendsButton = (<RaisedButton style={closeButtonStyle} onTouchTap={this.submitFriendshiptRequest} label="Friends" labelColor="white" backgroundColor="#8088B0"></RaisedButton>);
+    } else {
+      friendsButton = (<RaisedButton style={closeButtonStyle} disabled={true} label="Friends" labelColor="white" backgroundColor="#8088B0"></RaisedButton>);
+    }
+
     //console.log(this.props.friendID);
     return (
       <div style={profileContainer}>
@@ -74,10 +128,13 @@ class OtherProfile extends Component {
             <RaisedButton style={closeButtonStyle} onTouchTap={this.handleClose} label="Photos" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
             <RaisedButton style={closeButtonStyle} onTouchTap={this.handleClose} label="Message" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
           </center>
+          <center>
+            {friendsButton}
+          </center>
       </div>
       <div style={contentContainer}>
       <Chat {...this.state}/>
-      <OtherBlog friendID={this.props.friendID}/>
+      <OtherBlog friendID={this.state.friendID}/>
       </div>
       </div>
     );
