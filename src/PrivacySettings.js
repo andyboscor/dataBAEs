@@ -48,21 +48,16 @@ const closeButtonStyle = {
   marginTop: '20px'
 }
 
-var items = [];
-for (let i = 0; i < 14; i++ ) {
-  items.push(<MenuItem value={i} key={i} primaryText={`Item ${i}`} />);
-}
-
-var albums = [];
-for (let i = 0; i < 14; i++ ) {
-  albums.push(<MenuItem value={i} key={i} primaryText={`Album ${i}`} />);
-}
-
 var privacyList ={
   '0': 'Only Me',
   '1': 'Friends Only',
   '2': 'Friends of Friends',
   '3': 'Circles'
+}
+
+var items = [];
+for (let i = 0; i < 14; i++ ) {
+  items.push(<MenuItem value={i} key={i} primaryText={`Item ${i}`} />);
 }
 
 var blogPrivacyList = [];
@@ -75,13 +70,16 @@ class PrivacySettings extends Component {
     open: false,
     name: '',
     friendID: '',
-    value:0,
-    //TODO ^ change this to preference
-    blogSettings: ''
+    blogValue:'',
+    albumValue: 0
   };
 
-  handleChange = (event, index, value) => {
+  handleChangeBlog = (event, index, value) => {
     this.setState({value});
+  };
+
+  handleChangeAlbum = (event, index, albumValue) => {
+    this.setState({albumValue});
   };
 
   handleOpen = () => {
@@ -102,8 +100,8 @@ class PrivacySettings extends Component {
         return response.json()
     }).then(function(json) {
       self.setState({
-        blogSettings: json.access_right,
-        value: this.state.blogSettings
+        //blogSettings: json.access_right
+        blogValue: json.access_right
       });
     }).catch(function(ex) {
       console.log('parsing failed', ex)
@@ -111,7 +109,7 @@ class PrivacySettings extends Component {
   }
 
   render() {
-    // console.log('gdfg', this.state.blogSettings)
+     //console.log('gdfg', this.state.value)
     console.log(privacyList['1'])
     return (
       <div style={profileContainer}>
@@ -132,8 +130,8 @@ class PrivacySettings extends Component {
               <Subheader>Blog Privacy
                 <br />
                 <SelectField
-                  value={this.state.value}
-                  onChange={this.handleChange}>
+                  value={parseInt(this.state.blogValue,10)}
+                  onChange={this.handleChangeBlog}>
                   {blogPrivacyList}
                 </SelectField>
               </Subheader>
@@ -143,8 +141,8 @@ class PrivacySettings extends Component {
                 <ListItem primaryText={`Album`} rightToggle={
                   <SelectField
                     style={dropdownLength}
-                    value={this.state.value}
-                    onChange={this.handleChange}>
+                    value={this.state.albumValue}
+                    onChange={this.handleChangeAlbum}>
                     {items}
                   </SelectField>
                 }/>
