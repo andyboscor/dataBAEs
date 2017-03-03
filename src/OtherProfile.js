@@ -43,7 +43,7 @@ class OtherProfile extends Component {
   handleClose = () => {
     this.setState({open: false});
   };
-  componentDidMount(){
+  componentWillMount(){
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/profile/' + self.props.friendID , {
       headers: {

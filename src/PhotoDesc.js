@@ -17,13 +17,11 @@ class Albums extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {chipData: [
-      {key: 0, label: 'Angular'},
-      {key: 1, label: 'JQuery'},
-      {key: 2, label: 'Polymer'},
-      {key: 3, label: 'ReactJS'},
-    ],
-  open: false};
+    this.state = {
+      chipData: [],
+      open: false,
+      photoID: null
+    };
     this.styles = {
       chip: {
         margin: 4,
@@ -35,27 +33,108 @@ class Albums extends Component {
     };
   }
 
+  componentWillMount() {
+    var self = this;
+    this.setState({
+      photoID: self.props.photoID
+    });
+    fetch('https://friendzone.azurewebsites.net/API.php/annotations/' + self.props.photoID, {
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred')
+        }
+      })
+      .then(function(response) {
+        return response.json();
+      }).then(function(json) {
+        let annotations = [];
+        for(let row of json) {
+          annotations.push({
+            annotationID: row.annotationID,
+            annotation: row.annotation
+          });
+        }
+        self.setState({
+          chipData : annotations
+        });
+      }).catch(function(ex) {
+        // FIXME: Add handling errors.
+        console.log('parsing failed', ex)
+        return;
+      });
+  }
+
+  submitNewAnnotaion(value) {
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/annotations/' + self.state.photoID, {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred'),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          annotation: value
+        })
+      })
+      .then(function(response) {
+        return response.json();
+      }).then(function(json) {
+        let annotations = self.state.chipData;
+        annotations.push({
+          annotationID: json,
+          annotation: value
+        });
+        self.setState({
+          chipData : annotations
+        });
+      }).catch(function(ex) {
+        // FIXME: Add handling errors.
+        console.log('parsing failed', ex)
+        return;
+      });
+  }
+
 
   handleRequestDelete = (key) => {
-    if (key === 3) {
-      alert('Why would you want to delete React?! :)');
+    let chipToDelete;
+    for(let chip of this.state.chipData) {
+      if(chip.annotationID === key) {
+        chipToDelete= chip;
+        break;
+      }
+    }
+    if(!chipToDelete) {
       return;
     }
-
-    this.chipData = this.state.chipData;
-    const chipToDelete = this.chipData.map((chip) => chip.key).indexOf(key);
-    this.chipData.splice(chipToDelete, 1);
-    this.setState({chipData: this.chipData});
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/annotations/' + self.state.photoID, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred'),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          annotationID: chipToDelete.annotationID
+        })
+      })
+      .then(function(response) {
+        let index = self.state.chipData.indexOf(chipToDelete);
+        self.state.chipData.splice(index, 1);
+        self.setState({chipData: self.state.chipData});
+      }).catch(function(ex) {
+        // FIXME: Add handling errors.
+        console.log('parsing failed', ex)
+        return;
+      });
   };
 
   renderChip(data) {
     return (
       <Chip
-        key={data.key}
-        onRequestDelete={() => this.handleRequestDelete(data.key)}
+        key={data.annotationID}
+        onRequestDelete={() => this.handleRequestDelete(data.annotationID)}
         style={this.styles.chip}
       >
-        {data.label}
+        {data.annotation}
       </Chip>
     );
   }
@@ -116,9 +195,10 @@ class Albums extends Component {
             </div>
 
             <AutoComplete
-              hintText="Type anything"
+              hintText="Annotate"
               dataSource={this.stateAnnot.dataSource}
               onUpdateInput={this.handleUpdateInput}
+              onNewRequest={this.submitNewAnnotaion.bind(this)}
               floatingLabelText="Add annotations"
               fullWidth={true}
             />
