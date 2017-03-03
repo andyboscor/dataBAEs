@@ -51,6 +51,7 @@ class Blog extends Component {
         for(let post in postObject) {
           var postAttributes = postObject[post];
           arr.unshift({
+            postID: postAttributes.postID,
             postTitle: postAttributes.title,
             postContent: postAttributes.content
           });
@@ -97,6 +98,7 @@ class Blog extends Component {
         return response.json()
       }).then(function(json) {
         self.state.cardarray.unshift({
+          postID: json.toString(),
           postTitle: self.state.post_title,
           postContent: self.state.post_content
         });
@@ -120,6 +122,41 @@ class Blog extends Component {
     this.handleClose();
   }
 
+  handleDeletePost(postID) {
+    let postToDelete;
+    for(let post of this.state.cardarray) {
+      if(post.postID === postID) {
+        postToDelete= post;
+        break;
+      }
+    }
+    if(!postToDelete) {
+      return;
+    }
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/blog_posts', {
+        method: 'DELETE',
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred'),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          postID: postID
+        })
+      })
+      .then(function(response) {
+        let index = self.state.cardarray.indexOf(postToDelete);
+        self.state.cardarray.splice(index, 1);
+        self.setState({
+          cardarray: self.state.cardarray
+        });
+      }).catch(function(ex) {
+        // FIXME: Add handling errors.
+        console.log('parsing failed', ex)
+        return;
+      });
+  }
+
   render() {
     const actions = [
       <FlatButton
@@ -134,6 +171,11 @@ class Blog extends Component {
         onTouchTap={this.handleSubmit.bind(this)}
       />,
     ];
+
+    let posts = [];
+    for(let post of this.state.cardarray) {
+      posts.push(<Post key={post.postID} postID={post.postID} deleteFunction={this.handleDeletePost.bind(this)} {...post} />);
+    }
 
     return (
     <div style={addBottom}>
@@ -171,8 +213,7 @@ class Blog extends Component {
         </FloatingActionButton>
       </center>
       </div>
-      {this.state.cardarray.map(function(item, i){
-        return <Post key={i} {...item} />},this)}
+      {posts}
     </div>
     );
   }

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import AutoComplete from 'material-ui/AutoComplete';
+import TextField from 'material-ui/TextField';
 import Chip from 'material-ui/Chip';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
@@ -11,8 +11,6 @@ var showButtonStyle = {
   marginRight: 10
 }
 
-  var commentarr = [ {firstname:'Nemo', message:'this', photo:'this'},{firstname:'Hello', message:'this sss', photo:'this'}, {firstname:'jeee', message:'this sss', photo:'this'}];
-
 class Albums extends Component {
 
   constructor(props) {
@@ -20,7 +18,10 @@ class Albums extends Component {
     this.state = {
       chipData: [],
       open: false,
-      photoID: null
+      photoID: null,
+      commentarr: [],
+      annotation: '',
+      comment: ''
     };
     this.styles = {
       chip: {
@@ -61,9 +62,38 @@ class Albums extends Component {
         console.log('parsing failed', ex)
         return;
       });
+
+    fetch('https://friendzone.azurewebsites.net/API.php/comments/' + self.props.photoID, {
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred')
+        }
+      })
+      .then(function(response) {
+        return response.json();
+      }).then(function(json) {
+        let comments = [];
+        for(let row of json) {
+          comments.push({
+            commentID: row.commentID,
+            userID: row.userID,
+            firstname: (row.first_name + " " + row.last_name),
+            message: row.description,
+            photo: (row.picture ? ("https://friendzone.azurewebsites.net/" + row.picture) : 'this')
+          });
+        }
+        self.setState({
+          commentarr: comments
+        });
+      }).catch(function(ex) {
+        // FIXME: Add handling errors.
+        console.log('parsing failed', ex)
+        return;
+      });
   }
 
-  submitNewAnnotaion(value) {
+  submitNewAnnotation(e) {
+    e.preventDefault();
+    let value = this.state.annotation;
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/annotations/' + self.state.photoID, {
         method: 'POST',
@@ -84,7 +114,8 @@ class Albums extends Component {
           annotation: value
         });
         self.setState({
-          chipData : annotations
+          chipData : annotations,
+          annotation: ''
         });
       }).catch(function(ex) {
         // FIXME: Add handling errors.
@@ -94,7 +125,7 @@ class Albums extends Component {
   }
 
 
-  handleRequestDelete = (key) => {
+  handleRequestDeleteAnnotation = (key) => {
     let chipToDelete;
     for(let chip of this.state.chipData) {
       if(chip.annotationID === key) {
@@ -127,11 +158,81 @@ class Albums extends Component {
       });
   };
 
+  submitNewComment(e) {
+    e.preventDefault();
+    let value = this.state.comment;
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/comments/' + self.state.photoID, {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred'),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          description: value
+        })
+      })
+      .then(function(response) {
+        return response.json();
+      }).then(function(json) {
+        let row = json[0];
+        let comments = self.state.commentarr;
+        comments.push({
+          commentID: row.commentID,
+          userID: localStorage.getItem('userID'),
+          firstname: row.first_name + " " + row.last_name,
+          message: value,
+          photo: (row.picture ? ("https://friendzone.azurewebsites.net/" + row.picture) : 'this')
+        });
+        self.setState({
+          commentarr : comments,
+          comment: ''
+        });
+      }).catch(function(ex) {
+        // FIXME: Add handling errors.
+        console.log('parsing failed', ex)
+        return;
+      });
+  }
+
+  handleRequestDeleteComment = (commentID) => {
+    let commentToDelete;
+    for(let comment of this.state.commentarr) {
+      if(comment.commentID === commentID) {
+        commentToDelete= comment;
+        break;
+      }
+    }
+    if(!commentToDelete) {
+      return;
+    }
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/comments/' + self.state.photoID, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred'),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          commentID: commentID
+        })
+      })
+      .then(function(response) {
+        let index = self.state.commentarr.indexOf(commentToDelete);
+        self.state.commentarr.splice(index, 1);
+        self.setState({commentarr: self.state.commentarr});
+      }).catch(function(ex) {
+        // FIXME: Add handling errors.
+        console.log('parsing failed', ex)
+        return;
+      });
+  };
+
   renderChip(data) {
     return (
       <Chip
         key={data.annotationID}
-        onRequestDelete={() => this.handleRequestDelete(data.annotationID)}
+        onRequestDelete={() => this.handleRequestDeleteAnnotation(data.annotationID)}
         style={this.styles.chip}
       >
         {data.annotation}
@@ -150,10 +251,6 @@ class Albums extends Component {
   };
 
 // end of popup
-
-  stateAnnot = {
-    dataSource: [],
-  };
 
   handleUpdateInput = (value) => {
     this.setState({
@@ -176,6 +273,11 @@ class Albums extends Component {
       />,
     ];
 
+    let comments = [];
+    for(let comment of this.state.commentarr) {
+      comments.push(<CommentCard key={comment.commentID} deleteFunction={ this.handleRequestDeleteComment.bind(this) } {...comment} />);
+    }
+
     return (
     <div>
     <RaisedButton style={showButtonStyle} onTouchTap={this.handleOpen}>Comment</RaisedButton>
@@ -194,28 +296,29 @@ class Albums extends Component {
               {this.state.chipData.map(this.renderChip, this)}
             </div>
 
-            <AutoComplete
-              hintText="Annotate"
-              dataSource={this.stateAnnot.dataSource}
-              onUpdateInput={this.handleUpdateInput}
-              onNewRequest={this.submitNewAnnotaion.bind(this)}
-              floatingLabelText="Add annotations"
-              fullWidth={true}
-            />
+            <form onSubmit={(e) => this.submitNewAnnotation(e)}>
+              <TextField
+                hintText="Annotate"
+                onChange={(e) => { this.setState({ annotation: e.target.value }) }}
+                value={this.state.annotation}
+                floatingLabelText="Add annotations"
+                fullWidth={true}
+              />
+            </form>
 
-
+            <br />
+            <Divider />
             <h2> Comments </h2>
-            {commentarr.map(function(item, i){
-                return <CommentCard key={i} {...item} />
-              },this)}
-              <AutoComplete
+            {comments}
+            <form onSubmit={(e) => this.submitNewComment(e)}>
+              <TextField
                 hintText="Type anything"
-                dataSource={this.stateAnnot.dataSource}
-                onUpdateInput={this.handleUpdateInput}
+                value={this.state.comment}
+                onChange={(e) => { this.setState({ comment: e.target.value }) }}
                 floatingLabelText="Add new comment"
                 fullWidth={true}
               />
-
+            </form>
         </Dialog>
         </div>
     );
