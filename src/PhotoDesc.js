@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import AutoComplete from 'material-ui/AutoComplete';
+import TextField from 'material-ui/TextField';
 import Chip from 'material-ui/Chip';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
@@ -20,7 +20,8 @@ class Albums extends Component {
       open: false,
       photoID: null,
       commentarr: [],
-      dataSource: []
+      annotation: '',
+      comment: ''
     };
     this.styles = {
       chip: {
@@ -88,7 +89,9 @@ class Albums extends Component {
       });
   }
 
-  submitNewAnnotation(value) {
+  submitNewAnnotation(e) {
+    e.preventDefault();
+    let value = this.state.annotation;
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/annotations/' + self.state.photoID, {
         method: 'POST',
@@ -109,7 +112,8 @@ class Albums extends Component {
           annotation: value
         });
         self.setState({
-          chipData : annotations
+          chipData : annotations,
+          annotation: ''
         });
       }).catch(function(ex) {
         // FIXME: Add handling errors.
@@ -152,7 +156,9 @@ class Albums extends Component {
       });
   };
 
-  submitNewComment(value) {
+  submitNewComment(e) {
+    e.preventDefault();
+    let value = this.state.comment;
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/comments/' + self.state.photoID, {
         method: 'POST',
@@ -176,7 +182,8 @@ class Albums extends Component {
           photo: (row.picture ? ("https://friendzone.azurewebsites.net/" + row.picture) : 'this')
         });
         self.setState({
-          commentarr : comments
+          commentarr : comments,
+          comment: ''
         });
       }).catch(function(ex) {
         // FIXME: Add handling errors.
@@ -248,28 +255,31 @@ class Albums extends Component {
               {this.state.chipData.map(this.renderChip, this)}
             </div>
 
-            <AutoComplete
-              hintText="Annotate"
-              dataSource={this.state.dataSource}
-              onUpdateInput={this.handleUpdateInput}
-              onNewRequest={this.submitNewAnnotation.bind(this)}
-              floatingLabelText="Add annotations"
-              fullWidth={true}
-            />
+            <form onSubmit={(e) => this.submitNewAnnotation(e)}>
+              <TextField
+                hintText="Annotate"
+                onChange={(e) => { this.setState({ annotation: e.target.value }) }}
+                value={this.state.annotation}
+                floatingLabelText="Add annotations"
+                fullWidth={true}
+              />
+            </form>
 
-
+            <br />
+            <Divider />
             <h2> Comments </h2>
             {this.state.commentarr.map(function(item, i){
                 return <CommentCard key={i} {...item} />
               },this)}
-              <AutoComplete
-                hintText="Type anything"
-                dataSource={this.state.dataSource}
-                onUpdateInput={this.handleUpdateInput}
-                onNewRequest={this.submitNewComment.bind(this)}
-                floatingLabelText="Add new comment"
-                fullWidth={true}
-              />
+              <form onSubmit={(e) => this.submitNewComment(e)}>
+                <TextField
+                  hintText="Type anything"
+                  value={this.state.comment}
+                  onChange={(e) => { this.setState({ comment: e.target.value }) }}
+                  floatingLabelText="Add new comment"
+                  fullWidth={true}
+                />
+              </form>
 
         </Dialog>
         </div>
