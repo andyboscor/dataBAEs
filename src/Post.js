@@ -32,7 +32,7 @@ class Post extends Component {
             tooltip="Delete Post"
             tooltipPosition="top-center"
             onTouchTap={() => this.props.deleteFunction(this.state.postID) }>
-            <Clear /> 
+            <Clear />
         </IconButton>
       );
     }

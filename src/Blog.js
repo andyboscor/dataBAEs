@@ -98,7 +98,7 @@ class Blog extends Component {
         return response.json()
       }).then(function(json) {
         self.state.cardarray.unshift({
-          postID: json,
+          postID: json.toString(),
           postTitle: self.state.post_title,
           postContent: self.state.post_content
         });
@@ -172,6 +172,11 @@ class Blog extends Component {
       />,
     ];
 
+    let posts = [];
+    for(let post of this.state.cardarray) {
+      posts.push(<Post key={post.postID} postID={post.postID} deleteFunction={this.handleDeletePost.bind(this)} {...post} />);
+    }
+
     return (
     <div style={addBottom}>
       <div >
@@ -208,8 +213,7 @@ class Blog extends Component {
         </FloatingActionButton>
       </center>
       </div>
-      {this.state.cardarray.map(function(item, i){
-        return <Post key={i} deleteFunction={this.handleDeletePost.bind(this)} {...item} />},this)}
+      {posts}
     </div>
     );
   }
