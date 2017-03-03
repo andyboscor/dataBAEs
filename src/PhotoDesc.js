@@ -11,8 +11,6 @@ var showButtonStyle = {
   marginRight: 10
 }
 
-  var commentarr = [ {firstname:'Nemo', message:'this', photo:'this'},{firstname:'Hello', message:'this sss', photo:'this'}, {firstname:'jeee', message:'this sss', photo:'this'}];
-
 class Albums extends Component {
 
   constructor(props) {
@@ -20,7 +18,9 @@ class Albums extends Component {
     this.state = {
       chipData: [],
       open: false,
-      photoID: null
+      photoID: null,
+      commentarr: [],
+      dataSource: []
     };
     this.styles = {
       chip: {
@@ -61,9 +61,34 @@ class Albums extends Component {
         console.log('parsing failed', ex)
         return;
       });
+
+    fetch('https://friendzone.azurewebsites.net/API.php/comments/' + self.props.photoID, {
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred')
+        }
+      })
+      .then(function(response) {
+        return response.json();
+      }).then(function(json) {
+        let comments = [];
+        for(let row of json) {
+          comments.push({
+            firstname: (row.first_name + " " + row.last_name),
+            message: row.description,
+            photo: (row.picture ? ("https://friendzone.azurewebsites.net/" + row.picture) : 'this')
+          });
+        }
+        self.setState({
+          commentarr: comments
+        });
+      }).catch(function(ex) {
+        // FIXME: Add handling errors.
+        console.log('parsing failed', ex)
+        return;
+      });
   }
 
-  submitNewAnnotaion(value) {
+  submitNewAnnotation(value) {
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/annotations/' + self.state.photoID, {
         method: 'POST',
@@ -127,6 +152,39 @@ class Albums extends Component {
       });
   };
 
+  submitNewComment(value) {
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/comments/' + self.state.photoID, {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred'),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userID: localStorage.getItem('userID'),
+          description: value
+        })
+      })
+      .then(function(response) {
+        return response.json();
+      }).then(function(json) {
+        let row = json[0];
+        let comments = self.state.commentarr;
+        comments.push({
+          firstname: row.first_name + " " + row.last_name,
+          message: value,
+          photo: (row.picture ? ("https://friendzone.azurewebsites.net/" + row.picture) : 'this')
+        });
+        self.setState({
+          commentarr : comments
+        });
+      }).catch(function(ex) {
+        // FIXME: Add handling errors.
+        console.log('parsing failed', ex)
+        return;
+      });
+  }
+
   renderChip(data) {
     return (
       <Chip
@@ -150,10 +208,6 @@ class Albums extends Component {
   };
 
 // end of popup
-
-  stateAnnot = {
-    dataSource: [],
-  };
 
   handleUpdateInput = (value) => {
     this.setState({
@@ -196,22 +250,23 @@ class Albums extends Component {
 
             <AutoComplete
               hintText="Annotate"
-              dataSource={this.stateAnnot.dataSource}
+              dataSource={this.state.dataSource}
               onUpdateInput={this.handleUpdateInput}
-              onNewRequest={this.submitNewAnnotaion.bind(this)}
+              onNewRequest={this.submitNewAnnotation.bind(this)}
               floatingLabelText="Add annotations"
               fullWidth={true}
             />
 
 
             <h2> Comments </h2>
-            {commentarr.map(function(item, i){
+            {this.state.commentarr.map(function(item, i){
                 return <CommentCard key={i} {...item} />
               },this)}
               <AutoComplete
                 hintText="Type anything"
-                dataSource={this.stateAnnot.dataSource}
+                dataSource={this.state.dataSource}
                 onUpdateInput={this.handleUpdateInput}
+                onNewRequest={this.submitNewComment.bind(this)}
                 floatingLabelText="Add new comment"
                 fullWidth={true}
               />
