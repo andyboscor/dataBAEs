@@ -169,7 +169,6 @@ class Albums extends Component {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          userID: localStorage.getItem('userID'),
           description: value
         })
       })

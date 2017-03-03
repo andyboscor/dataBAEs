@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
-import OtherPost from './OtherPost.js';
+import Post from './Post.js';
 import 'whatwg-fetch';
 
 var addBottom = {
@@ -52,7 +52,7 @@ class OtherBlog extends Component {
         });
       })
       .catch(function(ex) {
-        console.log('parsing failed', ex)})          
+        console.log('parsing failed', ex)})
       })
       .catch(function(ex) {
         console.log('parsing failed', ex)
@@ -64,7 +64,7 @@ class OtherBlog extends Component {
     <div style={addBottom}>
     {
       this.state.cardarray.map(function(item, i){
-          return <OtherPost key={i} {...item} />
+          return <Post key={i} {...item} />
         },this)}
       </div>
     );
