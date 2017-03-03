@@ -74,6 +74,8 @@ class Albums extends Component {
         let comments = [];
         for(let row of json) {
           comments.push({
+            commentID: row.commentID,
+            userID: row.userID,
             firstname: (row.first_name + " " + row.last_name),
             message: row.description,
             photo: (row.picture ? ("https://friendzone.azurewebsites.net/" + row.picture) : 'this')
@@ -123,7 +125,7 @@ class Albums extends Component {
   }
 
 
-  handleRequestDelete = (key) => {
+  handleRequestDeleteAnnotation = (key) => {
     let chipToDelete;
     for(let chip of this.state.chipData) {
       if(chip.annotationID === key) {
@@ -177,6 +179,8 @@ class Albums extends Component {
         let row = json[0];
         let comments = self.state.commentarr;
         comments.push({
+          commentID: row.commentID,
+          userID: localStorage.getItem('userID'),
           firstname: row.first_name + " " + row.last_name,
           message: value,
           photo: (row.picture ? ("https://friendzone.azurewebsites.net/" + row.picture) : 'this')
@@ -192,11 +196,44 @@ class Albums extends Component {
       });
   }
 
+  handleRequestDeleteComment = (commentID) => {
+    let commentToDelete;
+    for(let comment of this.state.commentarr) {
+      if(comment.commentID === commentID) {
+        commentToDelete= comment;
+        break;
+      }
+    }
+    if(!commentToDelete) {
+      return;
+    }
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/comments/' + self.state.photoID, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred'),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          commentID: commentID
+        })
+      })
+      .then(function(response) {
+        let index = self.state.commentarr.indexOf(commentToDelete);
+        self.state.commentarr.splice(index, 1);
+        self.setState({commentarr: self.state.commentarr});
+      }).catch(function(ex) {
+        // FIXME: Add handling errors.
+        console.log('parsing failed', ex)
+        return;
+      });
+  };
+
   renderChip(data) {
     return (
       <Chip
         key={data.annotationID}
-        onRequestDelete={() => this.handleRequestDelete(data.annotationID)}
+        onRequestDelete={() => this.handleRequestDeleteAnnotation(data.annotationID)}
         style={this.styles.chip}
       >
         {data.annotation}
@@ -268,9 +305,11 @@ class Albums extends Component {
             <br />
             <Divider />
             <h2> Comments </h2>
-            {this.state.commentarr.map(function(item, i){
-                return <CommentCard key={i} {...item} />
-              },this)}
+            {
+              this.state.commentarr.map(function(item, i){
+                return <CommentCard key={i} deleteFunction={ this.handleRequestDeleteComment.bind(this) }{...item} />
+              },this)
+            }
               <form onSubmit={(e) => this.submitNewComment(e)}>
                 <TextField
                   hintText="Type anything"
