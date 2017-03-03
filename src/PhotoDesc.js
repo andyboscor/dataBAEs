@@ -273,6 +273,11 @@ class Albums extends Component {
       />,
     ];
 
+    let comments = [];
+    for(let comment of this.state.commentarr) {
+      comments.push(<CommentCard key={comment.commentID} deleteFunction={ this.handleRequestDeleteComment.bind(this) } {...comment} />);
+    }
+
     return (
     <div>
     <RaisedButton style={showButtonStyle} onTouchTap={this.handleOpen}>Comment</RaisedButton>
@@ -304,21 +309,16 @@ class Albums extends Component {
             <br />
             <Divider />
             <h2> Comments </h2>
-            {
-              this.state.commentarr.map(function(item, i){
-                return <CommentCard key={i} deleteFunction={ this.handleRequestDeleteComment.bind(this) }{...item} />
-              },this)
-            }
-              <form onSubmit={(e) => this.submitNewComment(e)}>
-                <TextField
-                  hintText="Type anything"
-                  value={this.state.comment}
-                  onChange={(e) => { this.setState({ comment: e.target.value }) }}
-                  floatingLabelText="Add new comment"
-                  fullWidth={true}
-                />
-              </form>
-
+            {comments}
+            <form onSubmit={(e) => this.submitNewComment(e)}>
+              <TextField
+                hintText="Type anything"
+                value={this.state.comment}
+                onChange={(e) => { this.setState({ comment: e.target.value }) }}
+                floatingLabelText="Add new comment"
+                fullWidth={true}
+              />
+            </form>
         </Dialog>
         </div>
     );
