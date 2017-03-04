@@ -67,7 +67,7 @@ class ChatList extends Component {
         .then(function(response) {
           return response.json()
         }).then(function(json) {
-          //console.log('parsed json', json);
+          console.log('parsed json', json);
           self.setState({
             circles: json
           })
@@ -346,7 +346,7 @@ class ChatList extends Component {
 
       <Subheader>Circle chats</Subheader>
       {this.state.circles.map(function(item){
-            return <ListItem key={item.circleID} primaryText={item.circleName} onTouchTap={this.handleClick.bind(this,item.circleID, true)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" />} />
+            return <ListItem key={item.circleID} primaryText={item.circleName} onTouchTap={this.handleClick.bind(this,item.circleID, true)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src="http://kairosinsurancegroup.com/wp-content/uploads/2015/05/Group-Insurance-Icon.png" />} />
           },this)}
       </List>
       </div>
