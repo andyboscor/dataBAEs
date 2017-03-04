@@ -14,11 +14,14 @@ const styles = {
   root: {
     display: 'flex',
     flexWrap: 'wrap',
+    width: '100%',
     justifyContent: 'space-around',
     paddingTop: '35px'
+    //margin: '0 auto'
   },
   gridList: {
-    width: 1000,
+    width: '100%',
+    maxWidth: '1000px',
     height: '100%',
     overflowY: 'auto',
     paddingBottom: '120px'
@@ -37,7 +40,14 @@ var onTop ={
   width: '100%',
   backgroundColor: 'white'
 }
-
+var onTop2 = {
+  position: 'fixed',
+  overflowY: 'scroll',
+  height:'100%',
+  zIndex: '999',
+  width: '80%',
+  backgroundColor: 'white'
+}
 var grid = {
   width: '100%',
   maxWidth: '900px',
@@ -199,6 +209,14 @@ upload_image(){
     {
       this.getAlbum(this.props.friendID);
       this.setState({otherProfile:true});
+      onTop = {
+        position: 'fixed',
+        overflowY: 'scroll',
+        height:'100%',
+        zIndex: '999',
+        width: '80%',
+        backgroundColor: 'white'
+      }
     }
     else this.getAlbum(localStorage.getItem('userID'));
   }
