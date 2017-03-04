@@ -4,6 +4,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import OtherBlog from './OtherBlog.js';
 import Chat from './Chat.js';
 import Done from 'material-ui/svg-icons/action/done';
+import Albums from './Albums.js';
 
 const style = {margin: 5};
 const profileInfo ={
@@ -30,7 +31,7 @@ const closeButtonStyle = {
 
 class OtherProfile extends Component {
   state = {
-    open: false,
+    open: true,
     name: '',
     friendID: this.props.friendID,
     friendship_status: false,
@@ -163,6 +164,9 @@ class OtherProfile extends Component {
   openBlog = () => {
     this.setState({blog:true, photos: false, chat: false});
   }
+  openPhotos = () => {
+    this.setState({blog:false, chat: false, photos: true});
+  }
   render() {
     let friendsButton;
     if (!this.state.friendship_status) {
@@ -178,7 +182,7 @@ class OtherProfile extends Component {
       profileTab = (<OtherBlog friendID={this.props.friendID}/>)
     }
     if(this.state.blog === false && this.state.chat === false && this.state.photos === true) {
-      profileTab = (<Chat {...this.state}  handleSend={this.handleSend}/>)
+      profileTab = (<Albums {...this.state}/>)
     }
     //console.log(this.props.friendID);
     return (
@@ -191,7 +195,7 @@ class OtherProfile extends Component {
           size={230}
           style={style}/>
             <RaisedButton style={closeButtonStyle} onTouchTap={this.openBlog} label="Blog" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
-            <RaisedButton style={closeButtonStyle} onTouchTap={this.handleClose} label="Photos" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
+            <RaisedButton style={closeButtonStyle} onTouchTap={this.openPhotos} label="Photos" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
             <RaisedButton style={closeButtonStyle} onTouchTap={this.openChat} label="Message" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
           </center>
           <center>

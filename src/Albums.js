@@ -74,7 +74,9 @@ class Albums extends Component {
    albums: [],
    openAlbumID: '',
    photos: [],
-   photoTitle: ''
+   photoTitle: '',
+   userID: '',
+   otherProfile: false
   };
 
   handleOpen = () => {
@@ -119,9 +121,9 @@ class Albums extends Component {
       console.log('parsing failed', ex)
     })
   }
-  getAlbum() {
+  getAlbum(id) {
     var self = this;
-    fetch('https://friendzone.azurewebsites.net/API.php/albums/' + localStorage.getItem('userID') , {
+    fetch('https://friendzone.azurewebsites.net/API.php/albums/' + id , {
       headers: {
         'Authorization': 'Basic ' + localStorage.getItem('usercred')
       }
@@ -192,7 +194,19 @@ upload_image(){
     this.getPhotos(id);
   }
   componentDidMount(){
-    this.getAlbum();
+    console.log(this.props.friendID);
+    if(typeof this.props.friendID != "undefined")
+    {
+      this.getAlbum(this.props.friendID);
+      this.setState({otherProfile:true});
+    }
+    else this.getAlbum(localStorage.getItem('userID'));
+  }
+  newAlbumButton(){
+    if(this.state.otherProfile===false)
+    return (  <center>
+      <RaisedButton style={createNewAlbum} label="Create new album" onTouchTap={this.handleNewAlbumOpen}/>
+      </center>);
   }
   renderConditionala(){
     if(this.state.open===true&&this.props.open===true){
@@ -209,10 +223,12 @@ upload_image(){
          onTouchTap={this.upload_image}
        />,
      ];
+     let uploadButton;
+     if(this.state.otherProfile===false) uploadButton = <RaisedButton style={closeButtonStyle} onTouchTap={this.handleNewPhotoOpen} label="Upload Photo" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
       return(
         <div style={onTop}>
           <RaisedButton style={closeButtonStyle} onTouchTap={this.handleClose} label="Close" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
-          <RaisedButton style={closeButtonStyle} onTouchTap={this.handleNewPhotoOpen} label="Upload Photo" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
+          {uploadButton}
           <Dialog
            title="Upload a new photo"
            actions={actions}
@@ -270,9 +286,7 @@ upload_image(){
     return (
   	  <div>
         {this.renderConditionala()}
-          <center>
-          <RaisedButton style={createNewAlbum} label="Create new album" onTouchTap={this.handleNewAlbumOpen}/>
-          </center>
+        {this.newAlbumButton()}
           <div style={styles.root}>
 
 
