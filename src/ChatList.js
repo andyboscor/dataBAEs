@@ -31,62 +31,12 @@ var labelStyle = {
 var chipstyle = {
   margin: '10px'
 }
-/*<ListItem
-primaryText={this.title}
-key = {this.id}
-onClick = {this.handleClick(this.id)}
-leftAvatar={<Avatar src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" />}
-rightIcon={<CommunicationChatBubble />}
-/>
-<ListItem
-primaryText="Eric Hoffman"
-leftAvatar={<Avatar src="https://kenanfellows.org/wp-content/uploads/2016/02/blank-profile-picture-973460_960_720.png" />}
-rightIcon={<CommunicationChatBubble />}
-/>
-<ListItem
-primaryText="Grace Ng"
-leftAvatar={<Avatar src="https://kenanfellows.org/wp-content/uploads/2016/02/blank-profile-picture-973460_960_720.png" />}
-rightIcon={<CommunicationChatBubble />}
-/>
-<ListItem
-primaryText="Kerem Suer"
-leftAvatar={<Avatar src="https://kenanfellows.org/wp-content/uploads/2016/02/blank-profile-picture-973460_960_720.png" />}
-rightIcon={<CommunicationChatBubble />}
-/>
-<ListItem
-primaryText="Raquel Parrado"
-leftAvatar={<Avatar src="https://kenanfellows.org/wp-content/uploads/2016/02/blank-profile-picture-973460_960_720.png" />}
-rightIcon={<CommunicationChatBubble />}
-/>
-</List>
-<Divider />
-<List>
-<Subheader>Circle Chats</Subheader>
-<ListItem
-primaryText="Circle 1"
-leftAvatar={<Avatar src="https://kenanfellows.org/wp-content/uploads/2016/02/blank-profile-picture-973460_960_720.png" />}
-/>
-<ListItem
-primaryText="Circle 2"
-leftAvatar={<Avatar src="https://kenanfellows.org/wp-content/uploads/2016/02/blank-profile-picture-973460_960_720.png" />}
-/>
-
-
-    <ListItem
-    primaryText={this.title}
-    key = {this.id}
-    onClick = {this.handleClick(this.state.id)}
-    leftAvatar={<Avatar src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" />}
-    rightIcon={<CommunicationChatBubble />}
-    />
-*/
 
 class ChatList extends Component {
   constructor(props) {
     super(props);
     this.state = {open2:false, userid: '', users:[], open: false, dataSource: [], newUserID: '', newMessage: '', circleName: '', circleUsers: [], circleUsersToSend: [], newCircleID: '', circles: []};
 
-    // This binding is necessary to make `this` work in the callback
     this.handleClick = this.handleClick.bind(this);
   }
   getChatList() {
@@ -165,7 +115,7 @@ class ChatList extends Component {
     }).then(function(response) {
         return response.json()
     }).then(function(json) {
-      console.log(json);
+      //console.log(json);
       var results = [];
       json.map(function(item,i){
         results.push({text: item.first_name + " " + item.last_name, value: (
@@ -182,6 +132,7 @@ class ChatList extends Component {
     }).catch(function(ex) {
       console.log('parsing failed', ex)
     })};
+
     handleSend(){
       var self = this;
       fetch('https://friendzone.azurewebsites.net/API.php/messages' , {
@@ -223,7 +174,7 @@ class ChatList extends Component {
           return response.json()
         }).then(function(json) {
           console.log('parsed json', json)
-          self.handleClose();
+          //self.handleClose();
           //self.handleClick(self.state.newUserID);
         }).catch(function(ex) {
           console.log('parsing failed', ex)
@@ -247,8 +198,9 @@ class ChatList extends Component {
         }).then(function(json) {
           console.log('parsed json', json)
           self.setState({newCircleID: json});
-          console.log(self.state.newCircleID);
-          //self.handleClose();
+          //console.log(self.state.newCircleID);
+          self.handleClose2();
+          //self.sendCircleMessage();
           //self.handleClick(self.state.newUserID);
         }).catch(function(ex) {
           console.log('parsing failed', ex)
@@ -348,7 +300,7 @@ class ChatList extends Component {
           dataSource={this.state.dataSource}
           onUpdateInput={this.handleUpdateInput}
           filter={AutoComplete.noFilter}
-          searchText = {this.state.newUserName}
+          searchText={this.state.newUserName}
       />
       <RaisedButton
      label="Add to circle"

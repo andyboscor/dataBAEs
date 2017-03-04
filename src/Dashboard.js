@@ -106,8 +106,8 @@ class Dashboard extends Component {
     value: '',
     dataSource: [],
     profile: false,
-    userSearch: '',
-    privacySettings: false
+    privacySettings: false,
+    searchText: ''
   };
 
   handleChange = (event, logged) => {
@@ -146,13 +146,16 @@ class Dashboard extends Component {
   closePrivacy = () => {
     this.setState({privacySettings:false});
   };
-
+  handleNewRequest = () => {
+    this.setState({searchText: ''});
+  }
   componentDidMount(){
     if(localStorage.getItem('userID')!='')
     this.setState({loggedin: true});
   }
 
   handleUpdateInput = (value) => {
+    this.setState({searchText: value});
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/search/' + value , {
       headers: {
@@ -167,7 +170,7 @@ class Dashboard extends Component {
           <MenuItem
             primaryText= {item.first_name + " " + item.last_name}
             secondaryText="&#9786;"
-            onTouchTap ={() => self.showProfile(item.userID)}
+            onTouchTap ={() => {self.showProfile(item.userID); self.setState({searchText: ""})  } }
           />)
         });
       })
@@ -185,9 +188,11 @@ class Dashboard extends Component {
         <div style={container}><PrivacySettings handleClose={this.closePrivacy} /> </div>
       );
     if(this.state.profile===true)
+    {
       return(
         <div style={container}><OtherProfile friendID={this.state.userID} handleClose={this.closeProfile} /> </div>
       );
+    }
     else return (
       <div>
         <Tabs style={container} contentContainerStyle={scrollable} tabItemContainerStyle={tabColor} inkBarStyle={underlineColor} >
@@ -231,11 +236,15 @@ class Dashboard extends Component {
           iconElementLeft={
             <div style={inLiners}>{this.state.title}
               <div>
-                <AutoComplete
-                  hintText="Type anything"
+              <AutoComplete
+                  hintText="Search for a user"
                   dataSource={this.state.dataSource}
                   onUpdateInput={this.handleUpdateInput}
-                  filter={AutoComplete.noFilter}/>
+                  filter={AutoComplete.noFilter}
+                  onNewRequest={this.handleNewRequest}
+                  searchText={this.state.searchText}
+              />
+
               </div>
             </div>
           }

@@ -52,6 +52,7 @@ class Chat extends Component {
     }
   //console.log(this.props.list);
     var arr = this.props.list;
+
     //var arr = [];
     return (
       <div style={maincontainer}>
