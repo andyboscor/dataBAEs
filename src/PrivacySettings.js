@@ -55,10 +55,6 @@ var privacyList ={
   '3': 'Circles'
 }
 
-var items = [];
-for (let i = 0; i < 14; i++ ) {
-  items.push(<MenuItem value={i} key={i} primaryText={`Item ${i}`} />);
-}
 
 var blogPrivacyList = [];
 for (let i=0; i<Object.keys(privacyList).length ;i++) {
@@ -71,15 +67,18 @@ class PrivacySettings extends Component {
     name: '',
     friendID: '',
     blogValue:'',
-    albumValue: 0
+    albumValues:[],
+    albumList: []
   };
 
-  handleChangeBlog = (event, index, value) => {
-    this.setState({value});
+  handleChangeBlog = (event, index, blogValue) => {
+    this.setState({blogValue});
   };
 
-  handleChangeAlbum = (event, index, albumValue) => {
-    this.setState({albumValue});
+  handleChangeAlbum = (index, value) => {
+    let albArr=this.state.albumValues;
+    albArr[index]= value;
+    this.setState({albumValues: albArr});
   };
 
   handleOpen = () => {
@@ -100,8 +99,32 @@ class PrivacySettings extends Component {
         return response.json()
     }).then(function(json) {
       self.setState({
-        //blogSettings: json.access_right
         blogValue: json.access_right
+      });
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/privacy/albums' , {
+      headers: {
+        'Authorization': 'Basic ' + localStorage.getItem('usercred')
+      }
+    }).then(function(response) {
+        return response.json()
+    }).then(function(getAlbumList) {
+      var arr=[];
+      for(let album in getAlbumList) {
+        var postAttributes = getAlbumList[album];
+        arr.unshift({
+          albumAccess: postAttributes.access_right,
+          albumTitle: postAttributes.albumTitle
+        });
+      }
+      self.setState({
+        albumList: arr,
+        albumValues: arr.map((album) => {
+          return album.albumAccess;
+        })
       });
     }).catch(function(ex) {
       console.log('parsing failed', ex)
@@ -109,48 +132,57 @@ class PrivacySettings extends Component {
   }
 
   render() {
-     //console.log('gdfg', this.state.value)
-    console.log(privacyList['1'])
-    return (
-      <div style={profileContainer}>
-        <div style={profileInfo}>
-          <RaisedButton style={closeButtonStyle} onTouchTap={this.props.handleClose} label="Close" labelColor="white" backgroundColor="#FC4D1E"></RaisedButton>
-          <center>
-            <h1> Privacy Settings</h1>
-      		  <Avatar
-                src="http://icons.iconarchive.com/icons/graphicloads/100-flat/256/unlock-icon.png"
-                size={230}
-                style={style}/>
-            <RaisedButton style={closeButtonStyle} onTouchTap={this.handleClose} label="Save Changes" labelColor="white" backgroundColor="#A4D336"></RaisedButton>
-          </center>
-        </div>
-        <div style={contentContainer}>
-            <br/>
-            <List>
-              <Subheader>Blog Privacy
-                <br />
-                <SelectField
-                  value={parseInt(this.state.blogValue,10)}
-                  onChange={this.handleChangeBlog}>
-                  {blogPrivacyList}
-                </SelectField>
-              </Subheader>
-              <Divider />
-              <Subheader>Photo Albums Privacy </Subheader>
-              <div>
-                <ListItem primaryText={`Album`} rightToggle={
-                  <SelectField
-                    style={dropdownLength}
-                    value={this.state.albumValue}
-                    onChange={this.handleChangeAlbum}>
-                    {items}
-                  </SelectField>
-                }/>
-              </div>
-            </List>
-        </div>
+  var albumListDisplay = [];
+    for (let i = 0; i < this.state.albumList.length; i++) {
+    albumListDisplay.push(
+     <ListItem key={`albumTitle${i}`} primaryText={this.state.albumList[i].albumTitle}
+        rightToggle={
+         <SelectField
+           style={dropdownLength}
+           value={parseInt(this.state.albumValues[i],10)}
+           onChange={(event, index, value)=>{
+             this.handleChangeAlbum(i, value);}}
+        >
+         {blogPrivacyList}
+        </SelectField>
+       }
+      />
+    )
+  }
+
+  return (
+    <div style={profileContainer}>
+      <div style={profileInfo}>
+        <RaisedButton style={closeButtonStyle} onTouchTap={this.props.handleClose} label="Close" labelColor="white" backgroundColor="#FC4D1E"></RaisedButton>
+        <center>
+          <h1> Privacy Settings</h1>
+    		  <Avatar
+              src="http://icons.iconarchive.com/icons/graphicloads/100-flat/256/unlock-icon.png"
+              size={230}
+              style={style}/>
+          <RaisedButton style={closeButtonStyle} onTouchTap={this.handleClose} label="Save Changes" labelColor="white" backgroundColor="#A4D336"></RaisedButton>
+        </center>
       </div>
-    );
+      <div style={contentContainer}>
+          <br/>
+          <List>
+            <Subheader>Blog Privacy
+              <br />
+              <SelectField
+                value={parseInt(this.state.blogValue,10)}
+                onChange={this.handleChangeBlog}>
+                {blogPrivacyList}
+              </SelectField>
+            </Subheader>
+            <Divider />
+            <Subheader>Photo Albums Privacy </Subheader>
+            <div>
+              {albumListDisplay}
+            </div>
+          </List>
+      </div>
+    </div>
+  );
   }
 }
 
