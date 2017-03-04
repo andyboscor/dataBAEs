@@ -4,34 +4,34 @@ import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import Paper from 'material-ui/Paper';
 import FontIcon from 'material-ui/FontIcon';
-
-const stylePaper = {
-  height: 100,
-  width: 100,
-  margin: 20,
-  textAlign: 'center',
-  display: 'inline-block',
-};
+import {List, ListItem} from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
+import Divider from 'material-ui/Divider';
+import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
+import Done from 'material-ui/svg-icons/action/done';
 
 const style = {
   margin: 5
 };
 
-const dropdownLength ={
-  width:'50%'
-}
-
 const profileHeader ={
   display: 'flex',
   height:'30%',
-  backgroundColor:'#ebeced',
+  backgroundColor:'#3F4652',
   width:'100%'
 }
 
+const closeButtonStyle = {
+  marginLeft: '10px',
+  marginRight: '20px',
+  color: 'white',
+  fontColor: 'white',
+  marginTop: '20px'
+}
+
 const profilePic ={
-  backgroundColor:'#ebeced',
+  backgroundColor:'#3F4652',
   width:'250px',
   height:'100%',
   marginLeft: '80px'
@@ -39,42 +39,72 @@ const profilePic ={
 
 const profileButton= {
   marginTop: '40px',
-  backgroundColor:'#ebeced',
+  backgroundColor:'#3F4652',
   height:'100%',
   marginLeft:'20px'
 }
 
 const profileDetails ={
-  backgroundColor:'#ebeced',
+  backgroundColor:'#3F4652',
   width:'50%',
   height:'100%',
+  fontColor:'white !important',
   marginLeft:'10px'
 }
 
 const profileContainer = {
-  display: 'flex',
+  backgroundColor:'#EBECED',
   width: '100%',
   height:'100%'
 }
 
-const friendsListContainer = {
-  display: 'flex',
-  width: '100%'
-}
-
-const friendsList1 = {
-  width: '50%'
-}
-
-const friendsList2 = {
-  width: '50%'
-}
-
 const bodyContainer = {
+  display: 'flex',
+  backgroundColor:'#EBECED',
+  width:'100%',
+  height: '100%',
+  marginLeft: '50px'
+}
+
+const friendRecommendContainer ={
+  width:'50%',
+  height:'100%',
+  marginLeft:'10px',
+  marginRight:'10px',
+}
+
+const friendRequestContainer= {
+  height:'100%',
+  width:'50%',
+  marginRight:'60px',
+  marginLeft:'10px'
+}
+
+const goWhite = {
+  color: 'white'
+}
+
+var addFriendsList=[];
+for (let i=0; i<14;i++) {
+  addFriendsList.push(
+    <ListItem key={`addFriendTitle${i}`}
+      primaryText="Mary Poppins"
+      leftAvatar={<Avatar src="https://pbs.twimg.com/profile_images/773917612648591365/hFl6DSSh.jpg" />}
+      //rightIcon={friendsButton} TODO replace with dynamic
+    />);
+}
+
+var friendRequest=[];
+for (let i=0; i<10;i++) {
+  friendRequest.push(
+    <ListItem key={`friendRequest${i}`}
+      primaryText="Dory Fish"
+      leftAvatar={<Avatar src="https://pbs.twimg.com/profile_images/773917612648591365/hFl6DSSh.jpg" />}
+      //rightIcon={friendsButton} TODO replace with dynamic
+    />);
 }
 
 class Profile extends Component {
-
   state = {
     open: false,
     full_name: '',
@@ -121,6 +151,30 @@ class Profile extends Component {
     this.setState({open: false});
   };
 
+  submitFriendshiptRequest() {
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/friends', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred'),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          friendID: self.state.friendID
+        })
+      })
+      .then(function(response) {
+        return response.json()
+      }).then(function(json) {
+        self.setState({
+          friendship_status: true
+        });
+      }).catch(function(ex) {
+        console.log('parsing failed', ex);
+        // FIXME: Add handling errors.
+      });
+  }
+
   handleSubmit() {
     let value = localStorage.getItem('userID');
     var self = this;
@@ -152,6 +206,13 @@ class Profile extends Component {
   }
 
   render() {
+    let friendsButton;
+    if (!this.state.friendship_status) {
+      friendsButton = (<RaisedButton style={closeButtonStyle} onTouchTap={this.submitFriendshiptRequest.bind(this)} label="Add" labelColor="white" backgroundColor="#8088B0"></RaisedButton>);
+    } else {
+      friendsButton = (<RaisedButton style={closeButtonStyle} disabled={true} icon={<Done />} label="Friends" labelColor="white" backgroundColor="#8088B0"></RaisedButton>);
+    }
+
     const actions = [
       <FlatButton
         label="Cancel"
@@ -179,10 +240,10 @@ class Profile extends Component {
           </div>
           <div style={profileDetails}>
             <center>
-              <h1> {this.state.full_name} </h1>
-              <TextField type="text" value={this.state.first_name} hintText="First Name" onChange={ (event) => { this.setState({ first_name: event.target.value });} } /><br />
-              <TextField type="text" value={this.state.last_name} hintText="Last Name" onChange={ (event) => { this.setState({ last_name: event.target.value });} } /><br />
-              <TextField type="text" value={this.state.email_address} hintText="Email" onChange={ (event) => { this.setState({ email_address: event.target.value });} } /><br /><br />
+              <h1 style={goWhite}> {this.state.full_name} </h1>
+              <TextField type="text" value={this.state.first_name} hintText="First Name" inputStyle={goWhite} onChange={ (event) => { this.setState({ first_name: event.target.value });} } /><br />
+              <TextField type="text" value={this.state.last_name} hintText="Last Name" inputStyle={goWhite} onChange={ (event) => { this.setState({ last_name: event.target.value });} } /><br />
+              <TextField type="text" value={this.state.email_address} hintText="Email" inputStyle={goWhite} onChange={ (event) => { this.setState({ email_address: event.target.value });} } /><br /><br />
               <RaisedButton label="Save Changes" onTouchTap={this.handleOpen} labelColor="white" backgroundColor="#A4D336"/>
               <Dialog
                 title="Dialog With Actions"
@@ -196,11 +257,23 @@ class Profile extends Component {
           </div>
           <div style={profileButton}>
           <center>
-            <RaisedButton label="Download Profile" onTouchTap={this.handleOpen} /><br /><br />
+            <RaisedButton label="Download Profile" /><br /><br />
           </center>
           </div>
         </div>
         <div style={bodyContainer}>
+          <div style={friendRecommendContainer}>
+            <List>
+              <Subheader>Recommended Friends</Subheader>
+              {addFriendsList}
+            </List>
+          </div>
+          <div style={friendRequestContainer}>
+            <List>
+              <Subheader>Friend Request</Subheader>
+              {friendRequest}
+            </List>
+          </div>
         </div>
       </div>
     );
