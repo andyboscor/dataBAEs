@@ -218,7 +218,17 @@ upload_image(){
         backgroundColor: 'white'
       }
     }
-    else this.getAlbum(localStorage.getItem('userID'));
+    else {
+          this.getAlbum(localStorage.getItem('userID'));
+          onTop = {
+            position: 'fixed',
+            overflowY: 'scroll',
+            height:'100%',
+            zIndex: '999',
+            width: '100%',
+            backgroundColor: 'white'
+          }
+        }
   }
   newAlbumButton(){
     if(this.state.otherProfile===false)
