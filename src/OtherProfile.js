@@ -17,6 +17,7 @@ const profileContainer = {
 }
 const contentContainer = {
   width: '100%',
+  height: window.innerHeight - 64,
   overflowY: 'scroll'
 }
 const closeButtonStyle = {
@@ -33,7 +34,12 @@ class OtherProfile extends Component {
     name: '',
     friendID: this.props.friendID,
     friendship_status: false,
-    list:[]
+    list:[],
+    chat_id: '',
+    to_circle: false,
+    blog: true,
+    photos: false,
+    chat: false
   };
 
   handleOpen = () => {
@@ -96,7 +102,67 @@ class OtherProfile extends Component {
         // FIXME: Add handling errors.
       });
   }
+  getMessages() {
+  this.setState({chat_id: this.props.friendID});
+  var self = this;
+  fetch('https://friendzone.azurewebsites.net/API.php/messages/to_user/' + self.state.friendID , {
+    headers: {
+  'Authorization': 'Basic ' + localStorage.getItem('usercred')
+    }
+  })
+    .then(function(response) {
+      return response.json()
+    }).then(function(json) {
 
+      var results = [];
+      json.map(function(item,i)
+      {
+        results.push({message:item.message_content, sender_name:item.sender_name});
+    });
+    self.setState({
+      list:results,
+      exista: true
+    });
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })
+  }
+  handleSend = (data, to_circle) => {
+    var send_to = '';
+    if(to_circle === true)
+    send_to = "to_circle";
+    else send_to = "to_user";
+    var payload = {};
+    payload[send_to] = this.state.chat_id;
+    payload["message_content"] = data;
+    console.log(payload);
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/messages' , {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic ' + localStorage.getItem('usercred')
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(function(response) {
+        return response.json()
+      }).then(function(json) {
+        console.log('parsed json', json)
+
+        self.getMessages(self.state.chat_id);
+
+      }).catch(function(ex) {
+        console.log('parsing failed', ex)
+      })
+  }
+  openChat = () => {
+    this.getMessages();
+    this.setState({blog:false, photos:false, chat: true});
+  }
+  openBlog = () => {
+    this.setState({blog:true, photos: false, chat: false});
+  }
   render() {
     let friendsButton;
     if (!this.state.friendship_status) {
@@ -104,7 +170,16 @@ class OtherProfile extends Component {
     } else {
       friendsButton = (<RaisedButton style={closeButtonStyle} disabled={true} icon={<Done />} label="Friends" labelColor="white" backgroundColor="#8088B0"></RaisedButton>);
     }
-
+    let profileTab;
+    if(this.state.blog === false && this.state.photos === false && this.state.chat === true) {
+      profileTab = (<Chat {...this.state}  handleSend={this.handleSend}/>)
+    }
+    if(this.state.chat === false && this.state.photos === false && this.state.blog === true) {
+      profileTab = (<OtherBlog friendID={this.props.friendID}/>)
+    }
+    if(this.state.blog === false && this.state.chat === false && this.state.photos === true) {
+      profileTab = (<Chat {...this.state}  handleSend={this.handleSend}/>)
+    }
     //console.log(this.props.friendID);
     return (
       <div style={profileContainer}>
@@ -115,17 +190,16 @@ class OtherProfile extends Component {
           src="http://www.heragtv.com/wp-content/uploads/2015/02/SM-AR-150-8.jpg"
           size={230}
           style={style}/>
-            <RaisedButton style={closeButtonStyle} onTouchTap={this.handleClose} label="Blog" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
+            <RaisedButton style={closeButtonStyle} onTouchTap={this.openBlog} label="Blog" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
             <RaisedButton style={closeButtonStyle} onTouchTap={this.handleClose} label="Photos" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
-            <RaisedButton style={closeButtonStyle} onTouchTap={this.handleClose} label="Message" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
+            <RaisedButton style={closeButtonStyle} onTouchTap={this.openChat} label="Message" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
           </center>
           <center>
             {friendsButton}
           </center>
       </div>
       <div style={contentContainer}>
-      <Chat {...this.state}/>
-      <OtherBlog friendID={this.props.friendID}/>
+      {profileTab}
       </div>
       </div>
     );
