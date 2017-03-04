@@ -35,7 +35,7 @@ var chipstyle = {
 class ChatList extends Component {
   constructor(props) {
     super(props);
-    this.state = {open2:false, userid: '', users:[], open: false, dataSource: [], newUserID: '', newMessage: '', circleName: '', circleUsers: [], circleUsersToSend: [], newCircleID: '', circles: []};
+    this.state = {open2:false, userid: '', users:[], open: false, dataSource: [], newUserID: '', newMessage: '', circleName: '', circleUsers: [], circleUsersToSend: [], newCircleID: '', circles: [], searchUser: ''};
 
     this.handleClick = this.handleClick.bind(this);
   }
@@ -90,23 +90,28 @@ class ChatList extends Component {
   };
 
   handleClose = () => {
-    this.setState({open: false});
+    this.setState({open: false, newMessage:'',});
   };
   handleOpen2 = () => {
-    this.setState({open2: true});
+    this.setState({open2: true, newMessage: ''});
   };
 
   handleClose2 = () => {
-    this.setState({open2: false});
+    this.setState({open2: false, newMessage:'', circleUsers: [], circleUsersToSend: [], circleName: ''});
   };
   addUser = () => {
     var users = this.state.circleUsers;
     var userIDs = this.state.circleUsersToSend;
-    users.push({name:this.state.newUserName, uID: this.state.newUserID});
-    userIDs.push(this.state.newUserID);
-    this.setState({circleUsers: users, newUserName: '', circleUsersToSend: userIDs});
+    if(this.state.searchUser != '')
+    {
+      users.push({name:this.state.newUserName, uID: this.state.newUserID});
+      userIDs.push(this.state.newUserID);
+      this.setState({circleUsers: users, newUserName: '', circleUsersToSend: userIDs});
+    }
+    this.setState({searchUser: ''});
   }
   handleUpdateInput = (value) => {
+    this.setState({searchUser: value});
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/search/' + value , {
       headers: {
@@ -260,6 +265,7 @@ class ChatList extends Component {
           dataSource={this.state.dataSource}
           onUpdateInput={this.handleUpdateInput}
            filter={AutoComplete.noFilter}
+           searchText={this.state.searchUser}
         />
       <TextField
         hintText="Type anything"
@@ -315,7 +321,7 @@ class ChatList extends Component {
        icon={<ContentAdd/>}
       />
       {this.state.circleUsers.map(function(item,i){
-        return (<Chip key={item.uID} style={chipstyle}>
+        return (<Chip key={item.uID + item.uID} style={chipstyle}>
            <Avatar src="https://cdn3.iconfinder.com/data/icons/internet-and-web-4/78/internt_web_technology-13-512.png" />
            {item.name}
          </Chip>)
