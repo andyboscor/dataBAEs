@@ -67,7 +67,7 @@ class ChatList extends Component {
         .then(function(response) {
           return response.json()
         }).then(function(json) {
-          console.log('parsed json', json);
+          //console.log('parsed json', json);
           self.setState({
             circles: json
           })
@@ -159,6 +159,7 @@ class ChatList extends Component {
     }
     sendCircleMessage(){
       var self = this;
+      console.log(this.state);
       fetch('https://friendzone.azurewebsites.net/API.php/messages' , {
         method: 'POST',
         headers: {
@@ -173,9 +174,9 @@ class ChatList extends Component {
         .then(function(response) {
           return response.json()
         }).then(function(json) {
-          console.log('parsed json', json)
-          //self.handleClose();
-          //self.handleClick(self.state.newUserID);
+          //console.log('parsed json circle ', json)
+          self.handleClose2();
+          self.handleClick(self.state.newCircleID, true);
         }).catch(function(ex) {
           console.log('parsing failed', ex)
         })
@@ -196,11 +197,12 @@ class ChatList extends Component {
         .then(function(response) {
           return response.json()
         }).then(function(json) {
-          console.log('parsed json', json)
-          self.setState({newCircleID: json});
+          //console.log('parsed json', json)
+          self.setState({newCircleID: json.circle_id});
           //console.log(self.state.newCircleID);
-          self.handleClose2();
-          //self.sendCircleMessage();
+          //self.handleClose2();
+          self.sendCircleMessage();
+          self.getChatList();
           //self.handleClick(self.state.newUserID);
         }).catch(function(ex) {
           console.log('parsing failed', ex)
