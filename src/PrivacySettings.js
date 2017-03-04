@@ -20,7 +20,7 @@ const style = {
   margin: 5
 };
 
-const profileInfo ={
+const securityBoard ={
   width:'400px',
   backgroundColor: '#393F4B',
   height:'100%'
@@ -30,14 +30,17 @@ const dropdownLength ={
   width:'50%'
 }
 
-const profileContainer = {
+const securityContainer = {
   display: 'flex',
   height: '100%'
 }
 
-const contentContainer = {
+const securityContent = {
   width: '100%',
-  marginLeft: '100px'
+  marginLeft: '50px',
+  marginRight: '20px',
+  overflowY: 'scroll',
+  marginBottom: '100px'
 }
 
 const closeButtonStyle = {
@@ -151,8 +154,8 @@ class PrivacySettings extends Component {
   }
 
   return (
-    <div style={profileContainer}>
-      <div style={profileInfo}>
+    <div style={securityContainer}>
+      <div style={securityBoard}>
         <RaisedButton style={closeButtonStyle} onTouchTap={this.props.handleClose} label="Close" labelColor="white" backgroundColor="#FC4D1E"></RaisedButton>
         <center>
           <h1> Privacy Settings</h1>
@@ -163,7 +166,7 @@ class PrivacySettings extends Component {
           <RaisedButton style={closeButtonStyle} onTouchTap={this.handleClose} label="Save Changes" labelColor="white" backgroundColor="#A4D336"></RaisedButton>
         </center>
       </div>
-      <div style={contentContainer}>
+      <div style={securityContent}>
           <br/>
           <List>
             <Subheader>Blog Privacy
