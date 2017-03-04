@@ -5,6 +5,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
+import FontIcon from 'material-ui/FontIcon';
 
 const stylePaper = {
   height: 100,
@@ -18,20 +19,42 @@ const style = {
   margin: 5
 };
 
-const profileInfo ={
-  width:'50%',
-  borderRightWidth:10,
-  backgroundColor:'#ebeced',
-  height:'100%'
-}
-
 const dropdownLength ={
   width:'50%'
 }
 
+const profileHeader ={
+  display: 'flex',
+  height:'30%',
+  backgroundColor:'#ebeced',
+  width:'100%'
+}
+
+const profilePic ={
+  backgroundColor:'#ebeced',
+  width:'250px',
+  height:'100%',
+  marginLeft: '80px'
+}
+
+const profileButton= {
+  marginTop: '40px',
+  backgroundColor:'#ebeced',
+  height:'100%',
+  marginLeft:'20px'
+}
+
+const profileDetails ={
+  backgroundColor:'#ebeced',
+  width:'50%',
+  height:'100%',
+  marginLeft:'10px'
+}
+
 const profileContainer = {
   display: 'flex',
-  height: '100%'
+  width: '100%',
+  height:'100%'
 }
 
 const friendsListContainer = {
@@ -47,10 +70,7 @@ const friendsList2 = {
   width: '50%'
 }
 
-const contentContainer = {
-  width: '100%',
-  height: '100%',
-  marginLeft: '100px'
+const bodyContainer = {
 }
 
 class Profile extends Component {
@@ -149,18 +169,21 @@ class Profile extends Component {
 
     return (
       <div style={profileContainer}>
-        <div style={profileInfo}>
-            <center><h1> {this.state.full_name} </h1>
-              <Avatar
-                src="https://lumiere-a.akamaihd.net/v1/images/07ff8e314e2798d32bfc8c39f82a9601677de34c.jpeg"
-                size={230}
-                style={style}/>
-              <br />
+        <div style={profileHeader}>
+          <div style={profilePic}>
+            <Avatar
+              src="https://lumiere-a.akamaihd.net/v1/images/07ff8e314e2798d32bfc8c39f82a9601677de34c.jpeg"
+              size={230}
+              style={style}/>
+            <center><RaisedButton label="Change Picture" labelColor="white" backgroundColor="#A4D336"/></center><br />
+          </div>
+          <div style={profileDetails}>
+            <center>
+              <h1> {this.state.full_name} </h1>
               <TextField type="text" value={this.state.first_name} hintText="First Name" onChange={ (event) => { this.setState({ first_name: event.target.value });} } /><br />
               <TextField type="text" value={this.state.last_name} hintText="Last Name" onChange={ (event) => { this.setState({ last_name: event.target.value });} } /><br />
-              <TextField type="text" value={this.state.email_address} hintText="Email" onChange={ (event) => { this.setState({ email_address: event.target.value });} } /><br />
-              <br />
-              <RaisedButton label="Save Changes" onTouchTap={this.handleOpen} />
+              <TextField type="text" value={this.state.email_address} hintText="Email" onChange={ (event) => { this.setState({ email_address: event.target.value });} } /><br /><br />
+              <RaisedButton label="Save Changes" onTouchTap={this.handleOpen} labelColor="white" backgroundColor="#A4D336"/>
               <Dialog
                 title="Dialog With Actions"
                 actions={actions}
@@ -168,34 +191,16 @@ class Profile extends Component {
                 open={this.state.open}
                 onRequestClose={this.handleClose}
               >
-
               </Dialog>
-              <br />
-          </center>
-        </div>
-        <div style={contentContainer}>
-          <br/>
-          <h1>Friends Recommendation</h1>
-          <br/>
-          <div style={friendsListContainer}>
-            <div style={friendsList1}>
-              <center>
-                <Paper style={style} zDepth={2} />
-                <Avatar
-                  src="https://pbs.twimg.com/profile_images/773917612648591365/hFl6DSSh.jpg"
-                  size={150}
-                  />
-                <br/>
-                Dory Fish
-                <br/>
-                <RaisedButton label="Add Me!" style={style} />
-              </center>
-            </div>
-
-            <div style={friendsList1}>
-             HELLO FRIENDS LIST ONENENNENENENNENENEN11111
-            </div>
+            </center>
           </div>
+          <div style={profileButton}>
+          <center>
+            <RaisedButton label="Download Profile" onTouchTap={this.handleOpen} /><br /><br />
+          </center>
+          </div>
+        </div>
+        <div style={bodyContainer}>
         </div>
       </div>
     );
