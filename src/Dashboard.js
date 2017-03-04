@@ -48,6 +48,12 @@ var underlineColor = {
   backgroundColor: '#80CBC4',
   height:'5px'
 }
+var listStyle = {
+  marginLeft: '15px'
+}
+var searchTextStyle = {
+  color: 'white'
+}
 
 const Logged = (props) => (
   <IconMenu
@@ -237,6 +243,8 @@ class Dashboard extends Component {
             <div style={inLiners}>{this.state.title}
               <div>
               <AutoComplete
+                  style={listStyle}
+                  inputStyle={searchTextStyle}
                   hintText="Search for a user"
                   dataSource={this.state.dataSource}
                   onUpdateInput={this.handleUpdateInput}
