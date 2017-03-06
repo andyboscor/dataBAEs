@@ -14,7 +14,8 @@ class OtherBlog extends Component {
 
   state = {
     cardarray: [],
-    friendblogID: ''
+    friendblogID: '',
+    blog_title: ''
   }
   componentDidMount() {
     var self = this;
@@ -28,7 +29,9 @@ class OtherBlog extends Component {
     .then(function(json) {
       var cardDatabase =json;
       self.setState({
-        friendblogID: json.blogID})
+        friendblogID: json.blogID,
+        blog_title: json.blogName
+      })
 
       fetch('http://friendzone.azurewebsites.net/API.php/blog_posts/' + self.state.friendblogID, {
         headers: {
@@ -62,6 +65,7 @@ class OtherBlog extends Component {
   render() {
     return (
     <div style={addBottom}>
+    <center><h1>{this.state.blog_title}</h1></center>
     {
       this.state.cardarray.map(function(item, i){
           return <Post key={i} {...item} />

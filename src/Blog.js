@@ -7,7 +7,9 @@ import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Post from './Post.js';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import Create from 'material-ui/svg-icons/content/create';
 import TextField from 'material-ui/TextField';
+import IconButton from 'material-ui/IconButton';
 import 'whatwg-fetch';
 
 var addBottom = {
@@ -21,8 +23,10 @@ class Blog extends Component {
     cardarray: [],
     open: false,
     blogID: '',
+    blogTitle: '',
     post_content: '',
-    post_title: ''
+    post_title: '',
+    editTitle: false
   }
 
   componentDidMount() {
@@ -38,7 +42,9 @@ class Blog extends Component {
       var cardDatabase =json;
 
       self.setState({
-        blogID: json.blogID})
+        blogID: json.blogID,
+        blog_title: json.blogName
+      })
 
       fetch('http://friendzone.azurewebsites.net/API.php/blog_posts/' + self.state.blogID, {
         headers: {
@@ -157,6 +163,37 @@ class Blog extends Component {
       });
   }
 
+  sendUpdatedTitle() {
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/blog' , {
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred'),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          blogName: self.state.blog_title
+        })
+      })
+      .then(function(response) {
+        return response.json()
+      }).then(function(json) {
+        self.setState({
+          blog_title: self.state.blog_title
+        });
+      }).catch(function(ex) {
+        console.log('parsing failed', ex);
+        // FIXME: Add handling errors.
+      });
+  }
+
+  async submitNewTitle() {
+    if (this.state.editTitle) {
+      await this.sendUpdatedTitle();
+    }
+    this.setState({ editTitle: !this.state.editTitle });
+  }
+
   render() {
     const actions = [
       <FlatButton
@@ -177,10 +214,39 @@ class Blog extends Component {
       posts.push(<Post key={post.postID} postID={post.postID} deleteFunction={this.handleDeletePost.bind(this)} {...post} />);
     }
 
+    let blogTitle;
+    let editButton = (
+      <IconButton onTouchTap={this.submitNewTitle.bind(this)} tooltip="Edit title" touch={true} tooltipPosition="bottom-right">
+        <Create />
+        </IconButton>);
+    if(!this.state.editTitle) {
+      blogTitle = (
+        <div>
+          <h1 style={{ display: 'inline-block' }}>{this.state.blog_title}</h1>
+          {editButton}
+          <br/>
+        </div>);
+    } else {
+      blogTitle = (
+        <form onSubmit={this.submitNewTitle.bind(this)}>
+          <TextField
+            hintText="Blog Title"
+            onChange={(e) => { this.setState({ blog_title: e.target.value }) }}
+            value={this.state.blog_title}
+            style={{ marginBottom: '10px' }}
+            id="text-field-title"
+          />
+          {editButton}
+          <br />
+        </form>
+      );
+    }
+
     return (
     <div style={addBottom}>
       <div >
       <center>
+        {blogTitle}
         <FloatingActionButton onTouchTap={this.handleOpen} backgroundColor='#8088B0'>
           <ContentAdd/>
           <Dialog
