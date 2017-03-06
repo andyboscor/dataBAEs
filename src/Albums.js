@@ -6,6 +6,11 @@ import PhotoDesc from './PhotoDesc.js';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
+import Clear from 'material-ui/svg-icons/content/clear';
+import IconButton from 'material-ui/IconButton';
+import Create from 'material-ui/svg-icons/content/create';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+
 var showButtonStyle = {
   marginRight: 10
 }
@@ -74,6 +79,7 @@ class Albums extends Component {
     this.getPhotos = this.getPhotos.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.upload_image = this.upload_image.bind(this);
+    this.deletePhoto = this.deletePhoto.bind(this);
   }
   state = {
    open: false,
@@ -86,7 +92,8 @@ class Albums extends Component {
    photos: [],
    photoTitle: '',
    userID: '',
-   otherProfile: false
+   otherProfile: false,
+   editPhotos: false
   };
 
   handleOpen = () => {
@@ -126,7 +133,7 @@ class Albums extends Component {
     }).then(function(json) {
       console.log('parsed json', json)
       self.handleNewAlbumClose();
-      self.getAlbum();
+      self.getAlbum(self.state.userID);
     }).catch(function(ex) {
       console.log('parsing failed', ex)
     })
@@ -139,7 +146,7 @@ class Albums extends Component {
       }
     })
     .then(function(response) {
-      return response.json()
+      return response.json();
     }).then(function(json) {
       console.log('parsed json', json)
       var results = [];
@@ -242,7 +249,46 @@ upload_image(){
       <RaisedButton style={createNewAlbum} label="Create new album" onTouchTap={this.handleNewAlbumOpen}/>
       </center>);
   }
+
+  deletePhoto(photoID) {
+    let photoToDelete;
+    for(let photo of this.state.photos) {
+      if(photo.photoID === photoID) {
+        photoToDelete = photo;
+        break;
+      }
+    }
+    if(!photoToDelete) return;
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/photos/' + self.state.openAlbumID, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred'),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          photoID: photoID
+        })
+      })
+      .then(function(response) {
+        let index = self.state.photos.indexOf(photoToDelete);
+        self.state.photos.splice(index, 1);
+        self.setState({photos: self.state.photos});
+      }).catch(function(ex) {
+        // FIXME: Add handling errors.
+        console.log('parsing failed', ex)
+        return;
+      });
+  }
+
   renderConditionala(){
+    let editButton;
+    if (this.state.userID === localStorage.getItem('userID')) {
+      editButton = (
+        <FloatingActionButton style={{ margin: '20px 20px 0 0', float: 'right' }} onTouchTap={() => this.setState({ editPhotos: !this.state.editPhotos })} mini={true}>
+          <Create />
+        </FloatingActionButton>);
+    }
     if(this.state.open===true&&this.props.open===true){
       const actions = [
        <FlatButton
@@ -263,6 +309,7 @@ upload_image(){
         <div style={onTop}>
           <RaisedButton style={closeButtonStyle} onTouchTap={this.handleClose} label="Close" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
           {uploadButton}
+          {editButton}
           <Dialog
            title="Upload a new photo"
            actions={actions}
@@ -280,19 +327,33 @@ upload_image(){
                 cols={2}
                 cellHeight={300}
               >
-              {this.state.photos.map((tile) => (<GridTile
+              {this.state.photos.map((tile) => {
+                let action;
+                if (this.state.editPhotos) {
+                  action = (
+                    <IconButton
+                        iconStyle={{ color: 'white' }}
+                        tooltip="Delete Photo"
+                        tooltipPosition="bottom-right"
+                        onTouchTap={() => this.deletePhoto(tile.photoID) }>
+                        <Clear />
+                    </IconButton>);
+                } else {
+                  action= (<PhotoDesc userID={this.state.userID} photoID={tile.photoID}/>);
+                }
+                return (<GridTile
                   key={tile.photoID}
                   title=" "
-                  actionIcon={<PhotoDesc userID={this.state.userID} photoID={tile.photoID}/>}
+                  actionIcon={action}
                   actionPosition="left"
                   titlePosition="top"
                   titleBackground="linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.3) 70%,rgba(0,0,0,0) 100%)"
                   cols={tile.featured ? 2 : 1}
                   rows={tile.featured ? 2 : 1}
                 >
-                <img src={tile.img} role="presentation" />
-                </GridTile>
-              ))}
+                  <img src={tile.img} role="presentation" />
+                </GridTile>);
+              })}
               </GridList>
             </div>
           </div>
