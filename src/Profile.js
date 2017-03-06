@@ -110,7 +110,9 @@ class Profile extends Component {
     full_name: '',
     first_name: '',
     last_name: '',
-    email_address: ''
+    email_address: '',
+    picture: localStorage.getItem('picture'),
+    uploadProfilePicture: false
   };
 
   constructor(props){
@@ -205,6 +207,29 @@ class Profile extends Component {
     this.handleClose();
   }
 
+  upload_picture() {
+    var input = document.querySelector('input[type="file"]')
+
+    var data = new FormData()
+    data.append('upfile', input.files[0])
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/profile_pic/', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Basic ' + localStorage.getItem('usercred')
+      },
+      body: data
+    }).then(function(response) {
+      return response.json()
+    }).then(function(json) {
+      localStorage.setItem("picture", ("https://friendzone.azurewebsites.net/" + json.picture));
+      self.setState({
+        uploadProfilePicture:false,
+        picture: ("https://friendzone.azurewebsites.net/" + json.picture)
+      });
+    });
+  }
+
   render() {
     let friendsButton;
     if (!this.state.friendship_status) {
@@ -228,15 +253,42 @@ class Profile extends Component {
       />,
     ];
 
+    const pictureActions = [
+     <FlatButton
+       label="Cancel"
+       secondary={true}
+       onTouchTap={() => { this.setState({ uploadProfilePicture: false })}}
+     />,
+     <FlatButton
+       label="Upload"
+       primary={true}
+       keyboardFocused={true}
+       onTouchTap={this.upload_picture.bind(this)}
+     />,
+   ];
+
     return (
       <div style={profileContainer}>
         <div style={profileHeader}>
           <div style={profilePic}>
             <Avatar
-              src="https://lumiere-a.akamaihd.net/v1/images/07ff8e314e2798d32bfc8c39f82a9601677de34c.jpeg"
+              src={this.state.picture}
               size={230}
               style={style}/>
-            <center><RaisedButton label="Change Picture" labelColor="white" backgroundColor="#A4D336"/></center><br />
+            <center>
+              <RaisedButton onTouchTap={() => { this.setState({ uploadProfilePicture: true })}} label="Change Picture" labelColor="white" backgroundColor="#A4D336"/>
+              <Dialog
+               title="Upload a new profile picture."
+               actions={pictureActions}
+               modal={false}
+               open={this.state.uploadProfilePicture}
+               onRequestClose={() => { this.setState({ uploadProfilePicture: false })}}
+             >
+              <form>
+              <input type="file" />
+              </form>
+              </Dialog>
+            </center><br />
           </div>
           <div style={profileDetails}>
             <center>

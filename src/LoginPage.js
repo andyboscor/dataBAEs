@@ -62,18 +62,18 @@ class LoginPage extends Component {
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/login', {
       headers: {
-    'Authorization': 'Basic ' + window.btoa(unescape(encodeURIComponent(credentials)))
-  }
+        'Authorization': 'Basic ' + window.btoa(unescape(encodeURIComponent(credentials)))
+      }
     })
       .then(function(response) {
         return response.json()
-      }).then(function(json) {
-        localStorage.setItem("userID", json.userID);
+      }).then(async function(json) {
+        await localStorage.setItem("userID", json.userID);
         console.log('parsed json', json)
         self.props.handleLogin();
       }).catch(function(ex) {
         console.log('parsing failed', ex)
-      })
+      });
   }
   handleRegister = (event) => {
     event.preventDefault();

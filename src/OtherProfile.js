@@ -40,7 +40,8 @@ class OtherProfile extends Component {
     to_circle: false,
     blog: true,
     photos: false,
-    chat: false
+    chat: false,
+    picture: ''
   };
 
   handleOpen = () => {
@@ -59,7 +60,10 @@ class OtherProfile extends Component {
     .then(function(response) {
       return response.json()})
     .then(function(json) {
-      self.setState({name: json.first_name + " " + json.last_name})})
+      self.setState({
+        name: (json.first_name + " " + json.last_name),
+        picture: ("https://friendzone.azurewebsites.net/" + json.picture)
+      })})
     .catch(function(ex) {
       console.log('parsing failed', ex)
     });
@@ -191,7 +195,7 @@ class OtherProfile extends Component {
       <RaisedButton style={closeButtonStyle} onTouchTap={this.props.handleClose} label="Close" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
           <center><h1> {this.state.name} </h1>
 		  <Avatar
-          src="http://www.heragtv.com/wp-content/uploads/2015/02/SM-AR-150-8.jpg"
+          src={this.state.picture}
           size={230}
           style={style}/>
             <RaisedButton style={closeButtonStyle} onTouchTap={this.openBlog} label="Blog" labelColor="white" backgroundColor="#8088B0"></RaisedButton>

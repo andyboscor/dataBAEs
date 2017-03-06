@@ -21,7 +21,8 @@ class Albums extends Component {
       photoID: null,
       commentarr: [],
       annotation: '',
-      comment: ''
+      comment: '',
+      userID: this.props.userID
     };
     this.styles = {
       chip: {
@@ -78,7 +79,7 @@ class Albums extends Component {
             userID: row.userID,
             firstname: (row.first_name + " " + row.last_name),
             message: row.description,
-            photo: (row.picture ? ("https://friendzone.azurewebsites.net/" + row.picture) : 'this')
+            picture: ("https://friendzone.azurewebsites.net/" + row.picture)
           });
         }
         self.setState({
@@ -182,7 +183,7 @@ class Albums extends Component {
           userID: localStorage.getItem('userID'),
           firstname: row.first_name + " " + row.last_name,
           message: value,
-          photo: (row.picture ? ("https://friendzone.azurewebsites.net/" + row.picture) : 'this')
+          picture: ("https://friendzone.azurewebsites.net/" + row.picture)
         });
         self.setState({
           commentarr : comments,
@@ -229,6 +230,16 @@ class Albums extends Component {
   };
 
   renderChip(data) {
+    if(this.state.userID !== localStorage.getItem('userID')) {
+      return (<Chip
+        key={data.annotationID}
+        style={this.styles.chip}
+      >
+        {data.annotation}
+      </Chip>
+
+      )
+    }
     return (
       <Chip
         key={data.annotationID}
@@ -278,6 +289,20 @@ class Albums extends Component {
       comments.push(<CommentCard key={comment.commentID} deleteFunction={ this.handleRequestDeleteComment.bind(this) } {...comment} />);
     }
 
+    let annotationForm;
+    if(this.state.userID === localStorage.getItem('userID')) {
+      annotationForm = (
+        <form onSubmit={(e) => this.submitNewAnnotation(e)}>
+          <TextField
+            hintText="Annotate"
+            onChange={(e) => { this.setState({ annotation: e.target.value }) }}
+            value={this.state.annotation}
+            floatingLabelText="Add annotations"
+            fullWidth={true}
+          />
+        </form>);
+    }
+
     return (
     <div>
     <RaisedButton style={showButtonStyle} onTouchTap={this.handleOpen}>Comment</RaisedButton>
@@ -296,15 +321,7 @@ class Albums extends Component {
               {this.state.chipData.map(this.renderChip, this)}
             </div>
 
-            <form onSubmit={(e) => this.submitNewAnnotation(e)}>
-              <TextField
-                hintText="Annotate"
-                onChange={(e) => { this.setState({ annotation: e.target.value }) }}
-                value={this.state.annotation}
-                floatingLabelText="Add annotations"
-                fullWidth={true}
-              />
-            </form>
+            {annotationForm}
 
             <br />
             <Divider />

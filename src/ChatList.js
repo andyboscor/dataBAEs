@@ -35,7 +35,21 @@ var chipstyle = {
 class ChatList extends Component {
   constructor(props) {
     super(props);
-    this.state = {open2:false, userid: '', users:[], open: false, dataSource: [], newUserID: '', newMessage: '', circleName: '', circleUsers: [], circleUsersToSend: [], newCircleID: '', circles: [], searchUser: ''};
+    this.state = {
+      open2:false,
+      userid: '',
+      users:[],
+      open: false,
+      dataSource: [],
+      newUserID: '',
+      newMessage: '',
+      circleName: '',
+      circleUsers: [],
+      circleUsersToSend: [],
+      newCircleID: '',
+      circles: [],
+      searchUser: ''
+    };
 
     this.handleClick = this.handleClick.bind(this);
   }
@@ -50,9 +64,18 @@ class ChatList extends Component {
         return response.json()
       }).then(function(json) {
         //console.log('parsed json', json);
+        let users = [];
+        for(let user of json.users) {
+          users.push({
+            picture: ("https://friendzone.azurewebsites.net/" + user.picture),
+            userID: user.userID,
+            first_name: user.first_name,
+            last_name: user.last_name
+          })
+        }
         self.setState({
-          users: json.users
-        })
+          users: users
+        });
 
       //console.log(self.state.users)
       }).catch(function(ex) {
@@ -341,7 +364,7 @@ class ChatList extends Component {
       <List>
       <Subheader>People chats</Subheader>
       {this.state.users.map(function(item){
-            return <ListItem key={item.userID} primaryText={item.first_name + " " + item.last_name} onTouchTap={this.handleClick.bind(this,item.userID, false)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src="https://organicthemes.com/demo/profile/files/2012/12/profile_img.png" />} />
+            return <ListItem key={item.userID} primaryText={item.first_name + " " + item.last_name} onTouchTap={this.handleClick.bind(this,item.userID, false)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src={item.picture} />} />
           },this)}
 
       <Subheader>Circle chats</Subheader>

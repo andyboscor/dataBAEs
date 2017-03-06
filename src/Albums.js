@@ -204,11 +204,13 @@ upload_image(){
     this.getPhotos(id);
   }
   componentDidMount(){
-    console.log(this.props.friendID);
     if(typeof this.props.friendID != "undefined")
     {
       this.getAlbum(this.props.friendID);
-      this.setState({otherProfile:true});
+      this.setState({
+        otherProfile:true,
+        userID: this.props.friendID
+      });
       onTop = {
         position: 'fixed',
         overflowY: 'scroll',
@@ -219,16 +221,20 @@ upload_image(){
       }
     }
     else {
-          this.getAlbum(localStorage.getItem('userID'));
-          onTop = {
-            position: 'fixed',
-            overflowY: 'scroll',
-            height:'100%',
-            zIndex: '999',
-            width: '100%',
-            backgroundColor: 'white'
-          }
-        }
+      let userID = localStorage.getItem('userID');
+      this.getAlbum(userID);
+      this.setState({
+        userID: userID
+      });
+      onTop = {
+        position: 'fixed',
+        overflowY: 'scroll',
+        height:'100%',
+        zIndex: '999',
+        width: '100%',
+        backgroundColor: 'white'
+      }
+    }
   }
   newAlbumButton(){
     if(this.state.otherProfile===false)
@@ -274,11 +280,10 @@ upload_image(){
                 cols={2}
                 cellHeight={300}
               >
-              {this.state.photos.map((tile) => (
-                <GridTile
+              {this.state.photos.map((tile) => (<GridTile
                   key={tile.photoID}
                   title=" "
-                  actionIcon={<PhotoDesc photoID={tile.photoID}/>}
+                  actionIcon={<PhotoDesc userID={this.state.userID} photoID={tile.photoID}/>}
                   actionPosition="left"
                   titlePosition="top"
                   titleBackground="linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.3) 70%,rgba(0,0,0,0) 100%)"

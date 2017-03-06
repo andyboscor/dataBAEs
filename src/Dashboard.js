@@ -128,7 +128,20 @@ class Dashboard extends Component {
    this.setState({open: false});
   };
 
-  handleLogin = () =>{
+  handleLogin = async () => {
+    var self = this;
+    await fetch('https://friendzone.azurewebsites.net/API.php/profile/' + localStorage.getItem('userID') , {
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred')
+        }
+      })
+      .then(function(response) {
+        return response.json();
+      }).then(function(json) {
+        localStorage.setItem("picture", ("https://friendzone.azurewebsites.net/" + json.picture));
+      }).catch(function(ex) {
+        console.log('parsing failed', ex)
+      });
     this.setState({loggedin:true});
   };
 
@@ -263,7 +276,7 @@ class Dashboard extends Component {
               iconButtonElement={
                 <IconButton style={iconSize}>
                   <Avatar
-                  src="https://lumiere-a.akamaihd.net/v1/images/07ff8e314e2798d32bfc8c39f82a9601677de34c.jpeg"
+                  src={localStorage.getItem('picture')}
                   size={50}
                   />
                 </IconButton>

@@ -46,10 +46,6 @@ class Chat extends Component {
       this.scrollToBottom();
   }
   render() {
-    const message = { firstName: 'Nemo',
-    message: 'Nemo sends a message here.',
-    photo: 'this'
-    }
   //console.log(this.props.list);
     var arr = this.props.list;
 
