@@ -63,6 +63,7 @@ class LoginPage extends Component {
         return response.json()
       }).then(async function(json) {
         await localStorage.setItem("userID", json.userID);
+        await localStorage.setItem("isAdmin", json.isAdmin==="1");
         console.log('parsed json', json)
         self.props.handleLogin();
       }).catch(function(ex) {
