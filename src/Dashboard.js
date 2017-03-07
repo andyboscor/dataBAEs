@@ -17,13 +17,12 @@ import Messaging from './Messaging.js';
 import LoginPage from './LoginPage.js';
 import OtherProfile from './OtherProfile.js';
 import PrivacySettings from './PrivacySettings.js';
+import AdminInterface from './AdminInterface.js';
 
 class Login extends Component {
   static muiName = 'FlatButton';
     render() {
-      return (
-        <FlatButton {...this.props} label="Login" />
-      );
+      return (<FlatButton {...this.props} label="Login" />);
     }
 }
 
@@ -113,7 +112,8 @@ class Dashboard extends Component {
     dataSource: [],
     profile: false,
     privacySettings: false,
-    searchText: ''
+    searchText: '',
+    isAdmin: localStorage.getItem('isAdmin')==="true",
   };
 
   handleChange = (event, logged) => {
@@ -142,7 +142,10 @@ class Dashboard extends Component {
       }).catch(function(ex) {
         console.log('parsing failed', ex)
       });
-    this.setState({loggedin:true});
+    this.setState({
+      loggedin: true,
+      isAdmin: localStorage.getItem('isAdmin')==="true"
+    });
   };
 
   handleLogout = () =>{
@@ -201,7 +204,10 @@ class Dashboard extends Component {
     })
   };
 
-  renderProfile(){
+  renderProfile() {
+    if(this.state.isAdmin===true) {
+      return (<AdminInterface />);
+    }
     if(this.state.privacySettings===true)
       return(
         <div style={container}><PrivacySettings handleClose={this.closePrivacy} /> </div>
@@ -241,6 +247,19 @@ class Dashboard extends Component {
   }
 
   renderConditional(){
+    let searchBar;
+    if (this.state.isAdmin!==true){
+      searchBar = (<AutoComplete
+            style={listStyle}
+            inputStyle={searchTextStyle}
+            hintText="Search for a user"
+            dataSource={this.state.dataSource}
+            onUpdateInput={this.handleUpdateInput}
+            filter={AutoComplete.noFilter}
+            onNewRequest={this.handleNewRequest}
+            searchText={this.state.searchText}
+        />);
+    }
     if(this.state.loggedin===false){
       return(
         <div style={container}>
@@ -248,24 +267,14 @@ class Dashboard extends Component {
         </div>
       );
     }else return (
-      <div>
+      <div style={{ height: '100%', overflowY: 'scroll' }}>
         <AppBar
           title={<div> </div>}
           className="appBar"
           iconElementLeft={
             <div style={inLiners}>{this.state.title}
               <div>
-              <AutoComplete
-                  style={listStyle}
-                  inputStyle={searchTextStyle}
-                  hintText="Search for a user"
-                  dataSource={this.state.dataSource}
-                  onUpdateInput={this.handleUpdateInput}
-                  filter={AutoComplete.noFilter}
-                  onNewRequest={this.handleNewRequest}
-                  searchText={this.state.searchText}
-              />
-
+              {searchBar}
               </div>
             </div>
           }
@@ -284,7 +293,6 @@ class Dashboard extends Component {
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
               anchorOrigin={{horizontal: 'right', vertical: 'top'}}
             >
-            <MenuItem primaryText="Refresh" />
             <MenuItem primaryText="Privacy Settings" onTouchTap = {this.showPrivacy}/>
             <MenuItem primaryText="Sign out" onTouchTap={this.handleLogout} />
             </IconMenu></div>
