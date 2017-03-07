@@ -229,7 +229,24 @@ class Profile extends Component {
       });
     });
   }
-
+  downloadXML(){
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/xml_profile' , {
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred')
+        }
+      })
+      .then(function(response) {
+        return response.json();
+      }).then(function(json) {
+        console.log(json);
+        window.open("https://friendzone.azurewebsites.net/" + json.xml_path, '_blank');
+      }).catch(function(ex) {
+        // FIXME: Add handling errors.
+        console.log('parsing failed', ex)
+        return;
+      });
+  }
   render() {
     let friendsButton;
     if (!this.state.friendship_status) {
@@ -309,7 +326,7 @@ class Profile extends Component {
           </div>
           <div style={profileButton}>
           <center>
-            <RaisedButton label="Download Profile" /><br /><br />
+            <RaisedButton label="Download Profile" onTouchTap={this.downloadXML}/><br /><br />
           </center>
           </div>
         </div>
