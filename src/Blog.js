@@ -1,9 +1,6 @@
 import React, {Component} from 'react';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Post from './Post.js';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -39,8 +36,6 @@ class Blog extends Component {
     .then(function(response) {
       return response.json()})
     .then(function(json) {
-      var cardDatabase =json;
-
       self.setState({
         blogID: json.blogID,
         blog_title: json.blogName

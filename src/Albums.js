@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {GridList, GridTile} from 'material-ui/GridList';
-import Subheader from 'material-ui/Subheader';
 import RaisedButton from 'material-ui/RaisedButton';
 import PhotoDesc from './PhotoDesc.js';
 import FlatButton from 'material-ui/FlatButton';
@@ -45,14 +44,7 @@ var onTop ={
   width: '100%',
   backgroundColor: 'white'
 }
-var onTop2 = {
-  position: 'fixed',
-  overflowY: 'scroll',
-  height:'100%',
-  zIndex: '999',
-  width: '80%',
-  backgroundColor: 'white'
-}
+
 var grid = {
   width: '100%',
   maxWidth: '900px',

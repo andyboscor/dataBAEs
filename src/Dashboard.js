@@ -3,10 +3,7 @@ import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
-import FlatButton from 'material-ui/FlatButton';
-import Toggle from 'material-ui/Toggle';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import AutoComplete from 'material-ui/AutoComplete';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Avatar from 'material-ui/Avatar';
@@ -17,24 +14,6 @@ import Messaging from './Messaging.js';
 import LoginPage from './LoginPage.js';
 import OtherProfile from './OtherProfile.js';
 import PrivacySettings from './PrivacySettings.js';
-
-class Login extends Component {
-  static muiName = 'FlatButton';
-    render() {
-      return (
-        <FlatButton {...this.props} label="Login" />
-      );
-    }
-}
-
-const styles = {
-  headline: {
-    fontSize: 24,
-    paddingTop: 16,
-    marginBottom: 12,
-    fontWeight: 400,
-  },
-};
 
 var iconSize = {
   width: '65px',
@@ -110,7 +89,6 @@ class Dashboard extends Component {
     open: true,
     loggedin: false,
     value: '',
-    dataSource: [],
     profile: false,
     privacySettings: false,
     searchText: ''
@@ -129,7 +107,6 @@ class Dashboard extends Component {
   };
 
   handleLogin = async () => {
-    var self = this;
     await fetch('https://friendzone.azurewebsites.net/API.php/profile/' + localStorage.getItem('userID') , {
         headers: {
           'Authorization': 'Basic ' + localStorage.getItem('usercred')
@@ -169,8 +146,8 @@ class Dashboard extends Component {
     this.setState({searchText: ''});
   }
   componentDidMount(){
-    if(localStorage.getItem('userID')!='')
-    this.setState({loggedin: true});
+    if(localStorage.getItem('userID') !== '')
+      this.setState({loggedin: true});
   }
 
   handleUpdateInput = (value) => {
@@ -187,9 +164,9 @@ class Dashboard extends Component {
       json.map(function(item,i){
         results.push({text: item.first_name + " " + item.last_name, value: (
           <MenuItem
-            primaryText= {item.first_name + " " + item.last_name}
+            primaryText={item.first_name + " " + item.last_name}
             secondaryText="&#9786;"
-            onTouchTap ={() => {self.showProfile(item.userID); self.setState({searchText: ""})  } }
+            onTouchTap={() => {self.showProfile(item.userID); self.setState({searchText: ""})  } }
           />)
         });
       })
@@ -285,7 +262,7 @@ class Dashboard extends Component {
               anchorOrigin={{horizontal: 'right', vertical: 'top'}}
             >
             <MenuItem primaryText="Refresh" />
-            <MenuItem primaryText="Privacy Settings" onTouchTap = {this.showPrivacy}/>
+            <MenuItem primaryText="Privacy Settings" onTouchTap={this.showPrivacy}/>
             <MenuItem primaryText="Sign out" onTouchTap={this.handleLogout} />
             </IconMenu></div>
           }

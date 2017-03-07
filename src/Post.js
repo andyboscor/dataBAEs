@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
 import Clear from 'material-ui/svg-icons/content/clear';
 import IconButton from 'material-ui/IconButton';
 

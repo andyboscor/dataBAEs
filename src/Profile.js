@@ -4,12 +4,10 @@ import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import FontIcon from 'material-ui/FontIcon';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
-import Divider from 'material-ui/Divider';
-import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
-import Done from 'material-ui/svg-icons/action/done';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
 
 const style = {
   margin: 5
@@ -20,14 +18,6 @@ const profileHeader ={
   height:'30%',
   backgroundColor:'#3F4652',
   width:'100%'
-}
-
-const closeButtonStyle = {
-  marginLeft: '10px',
-  marginRight: '20px',
-  color: 'white',
-  fontColor: 'white',
-  marginTop: '20px'
 }
 
 const profilePic ={
@@ -84,16 +74,6 @@ const goWhite = {
   color: 'white'
 }
 
-var addFriendsList=[];
-for (let i=0; i<14;i++) {
-  addFriendsList.push(
-    <ListItem key={`addFriendTitle${i}`}
-      primaryText="Mary Poppins"
-      leftAvatar={<Avatar src="https://pbs.twimg.com/profile_images/773917612648591365/hFl6DSSh.jpg" />}
-      //rightIcon={friendsButton} TODO replace with dynamic
-    />);
-}
-
 var friendRequest=[];
 for (let i=0; i<10;i++) {
   friendRequest.push(
@@ -111,6 +91,7 @@ class Profile extends Component {
     first_name: '',
     last_name: '',
     email_address: '',
+    friendship_status: false,
     picture: localStorage.getItem('picture'),
     uploadProfilePicture: false
   };
@@ -140,6 +121,19 @@ class Profile extends Component {
         });
       }).catch(function(ex) {
         // FIXME: Add handling errors.
+        console.log('parsing failed', ex)
+        return;
+      });
+    fetch('https://friendzone.azurewebsites.net/API.php/friend_recommendation', {
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred')
+        }
+      })
+      .then(function(response) {
+        return response.json();
+      }).then(function(json) {
+        console.log("HELO", json)
+      }).catch(function(ex) {
         console.log('parsing failed', ex)
         return;
       });
@@ -230,7 +224,6 @@ class Profile extends Component {
     });
   }
   downloadXML(){
-    var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/xml_profile' , {
         headers: {
           'Authorization': 'Basic ' + localStorage.getItem('usercred')
@@ -250,9 +243,23 @@ class Profile extends Component {
   render() {
     let friendsButton;
     if (!this.state.friendship_status) {
-      friendsButton = (<RaisedButton style={closeButtonStyle} onTouchTap={this.submitFriendshiptRequest.bind(this)} label="Add" labelColor="white" backgroundColor="#8088B0"></RaisedButton>);
+      friendsButton = (
+        <FloatingActionButton mini={true} onTouchTap={this.submitFriendshiptRequest.bind(this)}><ContentAdd /></FloatingActionButton>);
+        // <FloatingActionButton style={closeButtonStyle} iconClassName={'Done'} onTouchTap={this.submitFriendshiptRequest.bind(this)} labelColor="white" backgroundColor="#8088B0"></FloatingActionButton>);
     } else {
-      friendsButton = (<RaisedButton style={closeButtonStyle} disabled={true} icon={<Done />} label="Friends" labelColor="white" backgroundColor="#8088B0"></RaisedButton>);
+      friendsButton = (
+          <FloatingActionButton mini={true} backgroundColor="#FAFAFA" disabled={false} onTouchTap={this.submitFriendshiptRequest.bind(this)}><ContentAdd/></FloatingActionButton>
+        );
+    }
+
+    var addFriendsList=[];
+    for (let i=0; i<5;i++) {
+      addFriendsList.push(
+        <ListItem key={`addFriendTitle${i}`}
+          primaryText="Mary Poppins"
+          leftAvatar={<Avatar src="https://pbs.twimg.com/profile_images/773917612648591365/hFl6DSSh.jpg" />}
+          rightIconButton={friendsButton}
+        />);
     }
 
     const actions = [

@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
 import Post from './Post.js';
 import 'whatwg-fetch';
 

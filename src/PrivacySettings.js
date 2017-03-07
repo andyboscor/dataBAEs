@@ -127,18 +127,9 @@ class PrivacySettings extends Component {
       .then(function(response) {
         return response.json()
       }).then(function(json) {
-        console.log("response", json);
-
-        // self.state.albumList.unshift({
-        //   postID: json.toString(),
-        //   postTitle: self.state.post_title,
-        //   postContent: self.state.post_content
-        // });
-        // self.setState({
-        //   cardarray: self.state.cardarray,
-        //   post_title: '',
-        //   post_content: ''
-        // });
+        self.setState({
+          access_right: access
+        })
       }).catch(function(ex) {
         console.log('parsing failed', ex);
         // FIXME: Add handling errors.
@@ -160,7 +151,6 @@ class PrivacySettings extends Component {
     }).catch(function(ex) {
       console.log('parsing failed', ex)
     })
-    var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/privacy/albums' , {
       headers: {
         'Authorization': 'Basic ' + localStorage.getItem('usercred')

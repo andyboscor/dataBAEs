@@ -1,15 +1,9 @@
 import React, {Component} from 'react';
-import Avatar from 'material-ui/Avatar';
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import PasswordField from 'material-ui-password-field'
-
-var addBottom = {
-  marginBottom: '50px'
-}
 
 const style = {
   margin: 12,

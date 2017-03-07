@@ -3,7 +3,6 @@ import Avatar from 'material-ui/Avatar';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
@@ -76,11 +75,9 @@ class ChatList extends Component {
         self.setState({
           users: users
         });
-
       //console.log(self.state.users)
       }).catch(function(ex) {
         return;
-        console.log('parsing failed', ex)
       })
       fetch('https://friendzone.azurewebsites.net/API.php/circles' , {
         headers: {
@@ -322,7 +319,7 @@ class ChatList extends Component {
         hintText="Type anything"
         type="text"
         value={this.state.circleName}
-        onChange={ (event) => { this.setState({ circleName: event.target.value });} }
+        onChange={(event) => {this.setState({circleName: event.target.value});} }
         floatingLabelText="Circle name"
         fullWidth={true}
       />
@@ -336,7 +333,7 @@ class ChatList extends Component {
       <RaisedButton
      label="Add to circle"
      labelPosition="after"
-     style = {buttonStyle}
+     style={buttonStyle}
      containerElement="label"
      backgroundColor='#8088B0'
      labelStyle={labelStyle}
