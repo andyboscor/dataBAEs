@@ -80,6 +80,7 @@ class Albums extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.upload_image = this.upload_image.bind(this);
     this.deletePhoto = this.deletePhoto.bind(this);
+    this.deleteAlbum = this.deleteAlbum.bind(this);
   }
   state = {
    open: false,
@@ -93,7 +94,8 @@ class Albums extends Component {
    photoTitle: '',
    userID: '',
    otherProfile: false,
-   editPhotos: false
+   editPhotos: false,
+   editAlbums: false
   };
 
   handleOpen = () => {
@@ -244,10 +246,19 @@ upload_image(){
     }
   }
   newAlbumButton(){
-    if(this.state.otherProfile===false)
-    return (  <center>
-      <RaisedButton style={createNewAlbum} label="Create new album" onTouchTap={this.handleNewAlbumOpen}/>
+    if (this.state.otherProfile===false) {
+      let editButton;
+      if (this.state.userID === localStorage.getItem('userID')) {
+        editButton = (
+          <FloatingActionButton style={{ margin: '20px 20px 0 0', float: 'right' }} onTouchTap={() => this.setState({ editAlbums: !this.state.editAlbums })} mini={true}>
+            <Create />
+          </FloatingActionButton>);
+      }
+      return (<center>
+        <RaisedButton style={createNewAlbum} label="Create new album" onTouchTap={this.handleNewAlbumOpen}/>
+        {editButton}
       </center>);
+    }
   }
 
   deletePhoto(photoID) {
@@ -362,6 +373,37 @@ upload_image(){
      }
   }
 
+  deleteAlbum(albumID) {
+    let albumToDelete;
+    for(let album of this.state.albums) {
+      if(album.albumID === albumID) {
+        albumToDelete = album;
+        break;
+      }
+    }
+    if(!albumToDelete) return;
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/albums', {
+        method: 'DELETE',
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred'),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          albumID: albumID
+        })
+      })
+      .then(function(response) {
+        let index = self.state.albums.indexOf(albumToDelete);
+        self.state.albums.splice(index, 1);
+        self.setState({albums: self.state.albums});
+      }).catch(function(ex) {
+        // FIXME: Add handling errors.
+        console.log('parsing failed', ex)
+        return;
+      });
+  }
+
 
   render() {
     const actions = [
@@ -411,15 +453,28 @@ upload_image(){
             <GridList
               cellHeight={180}
               style={styles.gridList}>
-              {this.state.albums.map((tile) => (
-                <GridTile
+              {this.state.albums.map((tile) => {
+                let action;
+                if (this.state.editAlbums) {
+                  action = (
+                    <IconButton
+                        iconStyle={{ color: 'white' }}
+                        tooltip="Delete Album"
+                        tooltipPosition="top-left"
+                        onTouchTap={() => this.deleteAlbum(tile.albumID) }>
+                        <Clear />
+                    </IconButton>);
+                } else {
+                  action= (<RaisedButton style={showButtonStyle}  onTouchTap={this.handleClick.bind(this, tile.albumID)}>Show</RaisedButton>);
+                }
+                return (<GridTile
                   key={tile.albumID}
                   title={tile.albumTitle}
                   subtitle={<span>{tile.description}</span>}
-                  actionIcon={<RaisedButton style={showButtonStyle}  onTouchTap={this.handleClick.bind(this, tile.albumID)}>Show</RaisedButton>}>
+                  actionIcon={action}>
                   <img src={tile.img} role="presentation"/>
-                </GridTile>
-              ))}
+                </GridTile>);
+              })}
             </GridList>
           </div>
   	  </div>
