@@ -92,6 +92,31 @@ class PrivacySettings extends Component {
     this.setState({open: false});
   };
 
+  handleSubmit = () => {
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/privacy/blog' , {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred'),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          access_right: parseInt(self.state.blogValue)
+        })
+      })
+      .then(function(response) {
+        return response.json()
+      }).then(function(json) {
+          self.setState({
+            access_right: self.state.blogValue
+          })
+      }).catch(function(ex) {
+        console.log('parsing failed', ex);
+        // FIXME: Add handling errors.
+      });
+    this.handleClose();
+  }
+
   componentDidMount() {
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/privacy/blog' , {
@@ -163,7 +188,12 @@ class PrivacySettings extends Component {
               src="http://icons.iconarchive.com/icons/graphicloads/100-flat/256/unlock-icon.png"
               size={230}
               style={style}/>
-          <RaisedButton style={closeButtonStyle} onTouchTap={this.handleClose} label="Save Changes" labelColor="white" backgroundColor="#A4D336"></RaisedButton>
+          <RaisedButton style={closeButtonStyle}
+            onTouchTap={this.handleSubmit.bind(this)}
+            label="Save Changes"
+            labelColor="white"
+            backgroundColor="#A4D336">
+          </RaisedButton>
         </center>
       </div>
       <div style={securityContent}>
