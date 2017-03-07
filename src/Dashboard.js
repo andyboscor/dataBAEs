@@ -4,6 +4,7 @@ import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import FlatButton from 'material-ui/FlatButton';
 import AutoComplete from 'material-ui/AutoComplete';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Avatar from 'material-ui/Avatar';
@@ -32,7 +33,6 @@ const styles = {
   },
 };
 
->>>>>>> origin/master
 var iconSize = {
   width: '65px',
   height: '65px'
@@ -289,12 +289,8 @@ class Dashboard extends Component {
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
               anchorOrigin={{horizontal: 'right', vertical: 'top'}}
             >
-<<<<<<< HEAD
-            <MenuItem primaryText="Refresh" />
-            <MenuItem primaryText="Privacy Settings" onTouchTap={this.showPrivacy}/>
-=======
+
             <MenuItem primaryText="Privacy Settings" onTouchTap = {this.showPrivacy}/>
->>>>>>> origin/master
             <MenuItem primaryText="Sign out" onTouchTap={this.handleLogout} />
             </IconMenu></div>
           }
