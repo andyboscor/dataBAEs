@@ -1,20 +1,11 @@
 import React, {Component} from 'react';
-import Avatar from 'material-ui/Avatar';
-import TextField from 'material-ui/TextField';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import OtherBlog from './OtherBlog.js';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import {List, ListItem} from 'material-ui/List';
-import ContentInbox from 'material-ui/svg-icons/content/inbox';
-import ActionGrade from 'material-ui/svg-icons/action/grade';
-import ContentSend from 'material-ui/svg-icons/content/send';
-import ContentDrafts from 'material-ui/svg-icons/content/drafts';
 import Divider from 'material-ui/Divider';
-import ActionInfo from 'material-ui/svg-icons/action/info';
 import Subheader from 'material-ui/Subheader';
+import Avatar from 'material-ui/Avatar';
 
 const style = {
   margin: 5
@@ -114,7 +105,44 @@ class PrivacySettings extends Component {
         console.log('parsing failed', ex);
         // FIXME: Add handling errors.
       });
+    let i = 0;
+    for(let album of this.state.albumList){
+      this.saveAlbum(album.albumID, this.state.albumValues[i]);
+      i++;
+    }
     this.handleClose();
+  }
+
+  saveAlbum(albumID, access){
+    fetch('https://friendzone.azurewebsites.net/API.php/privacy/albums/'+ albumID , {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred'),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+           access_right: access
+        })
+      })
+      .then(function(response) {
+        return response.json()
+      }).then(function(json) {
+        console.log("response", json);
+
+        // self.state.albumList.unshift({
+        //   postID: json.toString(),
+        //   postTitle: self.state.post_title,
+        //   postContent: self.state.post_content
+        // });
+        // self.setState({
+        //   cardarray: self.state.cardarray,
+        //   post_title: '',
+        //   post_content: ''
+        // });
+      }).catch(function(ex) {
+        console.log('parsing failed', ex);
+        // FIXME: Add handling errors.
+      });
   }
 
   componentDidMount() {
@@ -144,6 +172,7 @@ class PrivacySettings extends Component {
       for(let album in getAlbumList) {
         var postAttributes = getAlbumList[album];
         arr.unshift({
+          albumID: postAttributes.albumID,
           albumAccess: postAttributes.access_right,
           albumTitle: postAttributes.albumTitle
         });
