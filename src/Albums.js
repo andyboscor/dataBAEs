@@ -95,7 +95,9 @@ class Albums extends Component {
    userID: '',
    otherProfile: false,
    editPhotos: false,
-   editAlbums: false
+   editAlbums: false,
+   deleteAlbumDialog: false,
+   albumToDeleteID: null
   };
 
   handleOpen = () => {
@@ -373,8 +375,8 @@ upload_image(){
      }
   }
 
-  deleteAlbum(albumID) {
-    let albumToDelete;
+  deleteAlbum() {
+    let albumToDelete, albumID=this.state.albumToDeleteID;
     for(let album of this.state.albums) {
       if(album.albumID === albumID) {
         albumToDelete = album;
@@ -396,7 +398,11 @@ upload_image(){
       .then(function(response) {
         let index = self.state.albums.indexOf(albumToDelete);
         self.state.albums.splice(index, 1);
-        self.setState({albums: self.state.albums});
+        self.setState({
+          albums: self.state.albums,
+          deleteAlbumDialog: false,
+          albumToDeleteID: null
+        });
       }).catch(function(ex) {
         // FIXME: Add handling errors.
         console.log('parsing failed', ex)
@@ -419,6 +425,19 @@ upload_image(){
        onTouchTap={this.handleNewAlbum}
      />,
    ];
+   const deleteAlbumActions = [
+     <FlatButton
+       label="Cancel"
+       secondary={true}
+       onTouchTap={() => this.setState({ deleteAlbumDialog: false, albumToDeleteID: null })}
+     />,
+     <FlatButton
+       label="Submit"
+       primary={true}
+       keyboardFocused={true}
+       onTouchTap={this.deleteAlbum}
+     />,
+    ];
     return (
   	  <div>
         {this.renderConditionala()}
@@ -450,6 +469,14 @@ upload_image(){
              fullWidth={true}
            />
            </Dialog>
+           <Dialog
+             title="Delete Album"
+             actions={deleteAlbumActions}
+             modal={true}
+             open={this.state.deleteAlbumDialog}
+           >
+             Are you sure you want to delete this album? All photos, annotations and comments will be lost.
+           </Dialog>
             <GridList
               cellHeight={180}
               style={styles.gridList}>
@@ -461,7 +488,7 @@ upload_image(){
                         iconStyle={{ color: 'white' }}
                         tooltip="Delete Album"
                         tooltipPosition="top-left"
-                        onTouchTap={() => this.deleteAlbum(tile.albumID) }>
+                        onTouchTap={() => { this.setState({ deleteAlbumDialog: true, albumToDeleteID: tile.albumID }) } }>
                         <Clear />
                     </IconButton>);
                 } else {
