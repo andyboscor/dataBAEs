@@ -92,6 +92,7 @@ class Profile extends Component {
     last_name: '',
     email_address: '',
     friendship_status: false,
+    recommendArr:[],
     picture: localStorage.getItem('picture'),
     uploadProfilePicture: false
   };
@@ -131,8 +132,18 @@ class Profile extends Component {
       })
       .then(function(response) {
         return response.json();
-      }).then(function(json) {
-        console.log("HELO", json)
+      }).then(function(recFriends) {
+        console.log("HELO", recFriends)
+        var arr =[]
+        for(let recommend of recFriends) {
+          arr.unshift({
+            recommendName: `${recommend.first_name} ${recommend.last_name}`,
+            recommendAvatar: recommend.picture
+          });
+        }
+        self.setState({
+          recommendArr: arr
+        });
       }).catch(function(ex) {
         console.log('parsing failed', ex)
         return;
@@ -155,9 +166,9 @@ class Profile extends Component {
           'Authorization': 'Basic ' + localStorage.getItem('usercred'),
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          friendID: self.state.friendID
-        })
+        // body: JSON.stringify({
+        //   friendID: self.state.friendID
+        // })
       })
       .then(function(response) {
         return response.json()
@@ -241,6 +252,7 @@ class Profile extends Component {
       });
   }
   render() {
+    console.log("sadfgh", this.state.recommendArr)
     let friendsButton;
     if (!this.state.friendship_status) {
       friendsButton = (
@@ -253,11 +265,11 @@ class Profile extends Component {
     }
 
     var addFriendsList=[];
-    for (let i=0; i<5;i++) {
+    for (let i=0; i<this.state.recommendArr.length;i++) {
       addFriendsList.push(
         <ListItem key={`addFriendTitle${i}`}
-          primaryText="Mary Poppins"
-          leftAvatar={<Avatar src="https://pbs.twimg.com/profile_images/773917612648591365/hFl6DSSh.jpg" />}
+          primaryText={this.state.recommendArr[i].recommendName}
+          leftAvatar={<Avatar src={this.state.recommendArr[i].recommendAvatar} />}
           rightIconButton={friendsButton}
         />);
     }
