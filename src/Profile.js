@@ -223,7 +223,7 @@ class Profile extends Component {
       .then(function(response) {
         return response.json()
       }).then(function(json) {
-        self.state.requestArr[index].friendship_status = true;
+        self.state.requestArr[index].requestStatus = true;
         self.setState({
           requestArr: self.state.requestArr
         });
@@ -352,7 +352,6 @@ class Profile extends Component {
     var reqFriendsList=[];
     for (let i=0; i<this.state.requestArr.length;i++) {
       let friendsReqButton;
-      console.log("sddfghjk", this.state.request[i].requestID);
       if (!this.state.requestArr[i].requestStatus) {
         friendsReqButton = (
           <FloatingActionButton mini={true} onTouchTap={() => this.submitRequest(this.state.requestArr[i].requestID, i)}><ContentAdd/></FloatingActionButton>);
