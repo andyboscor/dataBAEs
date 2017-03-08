@@ -56,7 +56,7 @@ class Blog extends Component {
         return response.json()})
       .then(function(postObject) {
         var arr=[];
-        for(let post in postObject) {
+        for(let post of postObject) {
           var postAttributes = postObject[post];
           arr.unshift({
             postID: postAttributes.postID,

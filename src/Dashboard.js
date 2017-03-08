@@ -4,7 +4,6 @@ import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import FlatButton from 'material-ui/FlatButton';
 import AutoComplete from 'material-ui/AutoComplete';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Avatar from 'material-ui/Avatar';
@@ -16,22 +15,6 @@ import LoginPage from './LoginPage.js';
 import OtherProfile from './OtherProfile.js';
 import PrivacySettings from './PrivacySettings.js';
 import AdminInterface from './AdminInterface.js';
-
-class Login extends Component {
-  static muiName = 'FlatButton';
-    render() {
-      return (<FlatButton {...this.props} label="Login" />);
-    }
-}
-
-const styles = {
-  headline: {
-    fontSize: 24,
-    paddingTop: 16,
-    marginBottom: 12,
-    fontWeight: 400,
-  },
-};
 
 var iconSize = {
   width: '65px',
@@ -185,7 +168,7 @@ class Dashboard extends Component {
     }).then(function(json) {
       var results = [];
       json.map(function(item,i){
-        results.push({text: item.first_name + " " + item.last_name, value: (
+        results.push({text: item.first_name + " " + item.last_name, value:(
           <MenuItem
             primaryText={item.first_name + " " + item.last_name}
             secondaryText="&#9786;"
@@ -259,12 +242,12 @@ class Dashboard extends Component {
             onNewRequest={this.handleNewRequest}
             searchText={this.state.searchText}
         />);
-      menu = (<MenuItem primaryText="Privacy Settings" onTouchTap = {this.showPrivacy}/>);
+      menu = (<MenuItem primaryText="Privacy Settings" onTouchTap={this.showPrivacy}/>);
     } else {
       if (this.state.showAdminMessages === false) {
-        menu = (<MenuItem primaryText="Messages" onTouchTap = {() => this.setState({ showAdminMessages: true })}/>);
-      } else {
-        menu = (<MenuItem primaryText="User List" onTouchTap = {() => this.setState({ showAdminMessages: false })}/>);
+        menu=(<MenuItem primaryText="Messages" onTouchTap={() => this.setState({ showAdminMessages: true })}/>);
+      }else{
+        menu= (<MenuItem primaryText="User List" onTouchTap={() => this.setState({ showAdminMessages: false })}/>);
       }
     }
     if(this.state.loggedin===false){

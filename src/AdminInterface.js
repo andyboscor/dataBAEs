@@ -1,23 +1,10 @@
 import React, {Component} from 'react';
 import Avatar from 'material-ui/Avatar';
-import TextField from 'material-ui/TextField';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import FontIcon from 'material-ui/FontIcon';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
-import Divider from 'material-ui/Divider';
-import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
-import Done from 'material-ui/svg-icons/action/done';
 import Create from 'material-ui/svg-icons/content/create';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import OtherProfile from './OtherProfile.js';
-
-
-const style = {
-  margin: 5
-};
 
 const profileHeader ={
   height:'30%',
@@ -30,11 +17,6 @@ const profileContainer = {
   width: '100%',
   height:'30%'
 }
-
-const goWhite = {
-  color: 'white'
-}
-
 
 const listItem = {
   marginLeft:'50px',

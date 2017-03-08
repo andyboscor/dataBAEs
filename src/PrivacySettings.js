@@ -159,7 +159,7 @@ class PrivacySettings extends Component {
         return response.json()
     }).then(function(getAlbumList) {
       var arr=[];
-      for(let album in getAlbumList) {
+      for(let album of getAlbumList) {
         var postAttributes = getAlbumList[album];
         arr.unshift({
           albumID: postAttributes.albumID,
