@@ -30,6 +30,13 @@ var labelStyle = {
 var chipstyle = {
   margin: '10px'
 }
+var chipstyle2 = {
+  margin: '10px',
+  marginLeft: '20px'
+}
+var colored = {
+  backgroundColor: '#B0BEC5'
+}
 
 class ChatList extends Component {
   constructor(props) {
@@ -47,7 +54,9 @@ class ChatList extends Component {
       circleUsersToSend: [],
       newCircleID: '',
       circles: [],
-      searchUser: ''
+      searchUser: '',
+      circlecolor: false,
+      circleMembers: []
     };
 
     this.handleClick = this.handleClick.bind(this);
@@ -101,9 +110,36 @@ class ChatList extends Component {
  componentDidMount(){
     this.getChatList();
   }
+  getCircleMembers = (circle_id) =>{
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/circles/' + circle_id , {
+      headers: {
+        'Authorization': 'Basic ' + localStorage.getItem('usercred')
+      }
+    }).then(function(response) {
+        return response.json()
+    }).then(function(json) {
+      console.log(json);
+      var results = [];
+      json.map(function(item,i){
+        results.push({name:item.first_name + " " + item.last_name, uID: item.userID});
+      });
+        self.setState({
+          circleMembers: results
+        });
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })
+  }
   handleClick(id, to_circle) {
-    this.setState({userid: id});
+    this.setState({userid: id, colorid: id});
     this.props.handleResponse(id, to_circle);
+    if(to_circle === true)
+    {
+      this.setState({circlecolor: true});
+      this.getCircleMembers(id);
+    }
+    else this.setState({circlecolor: false});
   }
   handleOpen = () => {
     this.setState({open: true});
@@ -119,6 +155,23 @@ class ChatList extends Component {
   handleClose2 = () => {
     this.setState({open2: false, newMessage:'', circleUsers: [], circleUsersToSend: [], circleName: ''});
   };
+  handleDeleteCircleMember = (circle_id, user_id) => {
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/circles/' + circle_id + '/' + user_id , {
+      method: 'DELETE',
+      headers: {
+        'Authorization': 'Basic ' + localStorage.getItem('usercred')
+      }
+    }).then(function(response) {
+        return response.json()
+    }).then(function(json) {
+      console.log(json);
+      self.getCircleMembers(circle_id);
+
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })
+  }
   addUser = () => {
     var users = this.state.circleUsers;
     var userIDs = this.state.circleUsersToSend;
@@ -156,7 +209,8 @@ class ChatList extends Component {
         });
     }).catch(function(ex) {
       console.log('parsing failed', ex)
-    })};
+    })
+  };
 
     handleSend(){
       var self = this;
@@ -361,12 +415,30 @@ class ChatList extends Component {
       <List>
       <Subheader>People chats</Subheader>
       {this.state.users.map(function(item){
-            return <ListItem key={item.userID} primaryText={item.first_name + " " + item.last_name} onTouchTap={this.handleClick.bind(this,item.userID, false)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src={item.picture} />} />
+            if(this.state.colorid === item.userID) return <ListItem key={item.userID} style={colored} primaryText={item.first_name + " " + item.last_name} onTouchTap={this.handleClick.bind(this,item.userID, false)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src={item.picture} />} />
+            else return <ListItem key={item.userID} primaryText={item.first_name + " " + item.last_name} onTouchTap={this.handleClick.bind(this,item.userID, false)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src={item.picture} />} />
           },this)}
 
       <Subheader>Circle chats</Subheader>
       {this.state.circles.map(function(item){
-            return <ListItem key={item.circleID} primaryText={item.circleName} onTouchTap={this.handleClick.bind(this,item.circleID, true)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src="http://kairosinsurancegroup.com/wp-content/uploads/2015/05/Group-Insurance-Icon.png" />} />
+            if(this.state.colorid === item.circleID && this.state.circlecolor === true)
+            {
+              var arr = [];
+              var self = this;
+              this.state.circleMembers.map(function(item2,i){
+               arr.push(
+                  <Chip key={item2.uID} style={chipstyle2} onRequestDelete={() => self.handleDeleteCircleMember(item.circleID,item2.uID)}>
+                   <Avatar src="https://cdn3.iconfinder.com/data/icons/internet-and-web-4/78/internt_web_technology-13-512.png" />
+                   {item2.name}
+                 </Chip>)
+
+             });
+
+              return <ListItem key={item.circleID} style={colored} primaryText={item.circleName}
+                    nestedItems={arr}
+                      onTouchTap={this.handleClick.bind(this,item.circleID, true)} leftAvatar={<Avatar src="http://kairosinsurancegroup.com/wp-content/uploads/2015/05/Group-Insurance-Icon.png" />} />
+             }
+            else return <ListItem key={item.circleID} primaryText={item.circleName} onTouchTap={this.handleClick.bind(this,item.circleID, true)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src="http://kairosinsurancegroup.com/wp-content/uploads/2015/05/Group-Insurance-Icon.png" />} />
           },this)}
       </List>
       </div>
