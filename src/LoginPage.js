@@ -53,6 +53,7 @@ class LoginPage extends Component {
     event.preventDefault();
     var credentials = this.state.username + ":" + this.state.password;
     localStorage.setItem("usercred",window.btoa(unescape(encodeURIComponent(credentials))));
+    localStorage.setItem("userpwd", this.state.password);
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/login', {
       headers: {
