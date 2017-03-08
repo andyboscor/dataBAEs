@@ -23,7 +23,9 @@ class Blog extends Component {
     blogTitle: '',
     post_content: '',
     post_title: '',
-    editTitle: false
+    editTitle: false,
+    userID: this.props.userID,
+    isAdmin: this.props.isAdmin
   }
 
   componentDidMount() {
@@ -206,14 +208,20 @@ class Blog extends Component {
 
     let posts = [];
     for(let post of this.state.cardarray) {
-      posts.push(<Post key={post.postID} postID={post.postID} deleteFunction={this.handleDeletePost.bind(this)} {...post} />);
+      if(this.state.userID === localStorage.getItem('userID') || this.state.isAdmin === true) {
+        posts.push(<Post key={post.postID} postID={post.postID} deleteFunction={this.handleDeletePost.bind(this)} {...post} />);
+      } else {
+        posts.push(<Post key={post.postID} postID={post.postID} {...post} />);
+      }
     }
 
     let blogTitle;
-    let editButton = (
-      <IconButton onTouchTap={this.submitNewTitle.bind(this)} tooltip="Edit title" touch={true} tooltipPosition="bottom-right">
-        <Create />
+    let editButton;
+    if(this.state.userID === localStorage.getItem('userID') || this.state.isAdmin === true) {
+      editButton = (<IconButton onTouchTap={this.submitNewTitle.bind(this)} tooltip="Edit title" touch={true} tooltipPosition="bottom-right">
+          <Create />
         </IconButton>);
+    }
     if(!this.state.editTitle) {
       blogTitle = (
         <div>
@@ -237,41 +245,46 @@ class Blog extends Component {
       );
     }
 
+    let newPostButton;
+    if(this.state.userID === localStorage.getItem('userID')) {
+      newPostButton = (<FloatingActionButton onTouchTap={this.handleOpen} backgroundColor='#8088B0'>
+        <ContentAdd/>
+        <Dialog
+          actions={actions}
+          modal={false}
+          open={this.state.open}
+          onRequestClose={this.handleClose}
+          autoScrollBodyContent={true}
+        >
+
+        <TextField
+          hintText="Type anything"
+          type="text"
+          value={this.state.post_title}
+          onChange={ (event) => { this.setState({ post_title: event.target.value });} }
+          floatingLabelText="Post Title"
+          fullWidth={true}
+        />
+
+        <TextField
+          hintText="Type anything"
+          type="text"
+          value={this.state.post_content}
+          onChange={ (event) => { this.setState({ post_content: event.target.value });} }
+          floatingLabelText="Write Your Post Here"
+          fullWidth={true}
+        />
+
+        </Dialog>
+      </FloatingActionButton>);
+    }
+
     return (
     <div style={addBottom}>
       <div >
       <center>
         {blogTitle}
-        <FloatingActionButton onTouchTap={this.handleOpen} backgroundColor='#8088B0'>
-          <ContentAdd/>
-          <Dialog
-            actions={actions}
-            modal={false}
-            open={this.state.open}
-            onRequestClose={this.handleClose}
-            autoScrollBodyContent={true}
-          >
-
-          <TextField
-            hintText="Type anything"
-            type="text"
-            value={this.state.post_title}
-            onChange={ (event) => { this.setState({ post_title: event.target.value });} }
-            floatingLabelText="Post Title"
-            fullWidth={true}
-          />
-
-          <TextField
-            hintText="Type anything"
-            type="text"
-            value={this.state.post_content}
-            onChange={ (event) => { this.setState({ post_content: event.target.value });} }
-            floatingLabelText="Write Your Post Here"
-            fullWidth={true}
-          />
-
-          </Dialog>
-        </FloatingActionButton>
+        {newPostButton}
       </center>
       </div>
       {posts}

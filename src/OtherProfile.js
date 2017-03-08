@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Avatar from 'material-ui/Avatar';
 import RaisedButton from 'material-ui/RaisedButton';
-import OtherBlog from './OtherBlog.js';
+import Blog from './Blog.js';
 import Chat from './Chat.js';
 import Done from 'material-ui/svg-icons/action/done';
 import Albums from './Albums.js';
@@ -184,7 +184,7 @@ class OtherProfile extends Component {
       profileTab = (<Chat {...this.state}  handleSend={this.handleSend}/>)
     }
     if(this.state.chat === false && this.state.photos === false && this.state.blog === true) {
-      profileTab = (<OtherBlog friendID={this.props.friendID}/>)
+      profileTab = (<Blog isAdmin={this.state.isAdmin} userID={this.props.friendID}/>)
     }
     if(this.state.blog === false && this.state.chat === false && this.state.photos === true) {
       profileTab = (<Albums {...this.state}/>)

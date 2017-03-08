@@ -219,7 +219,7 @@ class Dashboard extends Component {
         <Tabs style={container} contentContainerStyle={scrollable} tabItemContainerStyle={tabColor} inkBarStyle={underlineColor} >
           <Tab label="Blog" value="a" onClick={this.handleClose} >
             <div>
-              <Blog />
+              <Blog userID={localStorage.getItem('userID')}/>
             </div>
           </Tab>
           <Tab label="Profile" value="b" onClick={this.handleClose}>
