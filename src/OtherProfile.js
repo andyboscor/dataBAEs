@@ -180,9 +180,9 @@ class OtherProfile extends Component {
   }
   render() {
     let friendsButton;
-    if (!this.state.friendship_status) {
+    if (!this.state.friendship_status && this.state.isAdmin !== true) {
       friendsButton = (<RaisedButton style={closeButtonStyle} onTouchTap={this.submitFriendshiptRequest.bind(this)} label="Add Friend" labelColor="white" backgroundColor="#8088B0"></RaisedButton>);
-    } else {
+    } else if (this.state.isAdmin !== true) {
       friendsButton = (<RaisedButton style={closeButtonStyle} disabled={true} icon={<Done />} label="Friends" labelColor="white" backgroundColor="#8088B0"></RaisedButton>);
     }
     let profileTab;

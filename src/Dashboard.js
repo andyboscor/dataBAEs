@@ -111,6 +111,7 @@ class Dashboard extends Component {
     privacySettings: false,
     searchText: '',
     isAdmin: localStorage.getItem('isAdmin')==="true",
+    showAdminMessages: false
   };
 
   handleChange = (event, logged) => {
@@ -202,6 +203,9 @@ class Dashboard extends Component {
 
   renderProfile() {
     if(this.state.isAdmin===true) {
+      if(this.state.showAdminMessages === true) {
+        return (<Messaging />);
+      }
       return (<AdminInterface />);
     }
     if(this.state.privacySettings===true)
@@ -243,7 +247,7 @@ class Dashboard extends Component {
   }
 
   renderConditional(){
-    let searchBar;
+    let searchBar, menu;
     if (this.state.isAdmin!==true){
       searchBar = (<AutoComplete
             style={listStyle}
@@ -255,6 +259,13 @@ class Dashboard extends Component {
             onNewRequest={this.handleNewRequest}
             searchText={this.state.searchText}
         />);
+      menu = (<MenuItem primaryText="Privacy Settings" onTouchTap = {this.showPrivacy}/>);
+    } else {
+      if (this.state.showAdminMessages === false) {
+        menu = (<MenuItem primaryText="Messages" onTouchTap = {() => this.setState({ showAdminMessages: true })}/>);
+      } else {
+        menu = (<MenuItem primaryText="User List" onTouchTap = {() => this.setState({ showAdminMessages: false })}/>);
+      }
     }
     if(this.state.loggedin===false){
       return(
@@ -289,8 +300,7 @@ class Dashboard extends Component {
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
               anchorOrigin={{horizontal: 'right', vertical: 'top'}}
             >
-
-            <MenuItem primaryText="Privacy Settings" onTouchTap = {this.showPrivacy}/>
+            {menu}
             <MenuItem primaryText="Sign out" onTouchTap={this.handleLogout} />
             </IconMenu></div>
           }
