@@ -130,11 +130,14 @@ class OtherProfile extends Component {
     .then(function(response) {
       return response.json()
     }).then(function(json) {
-
       var results = [];
       json.map(function(item,i)
       {
-        results.push({message:item.message_content, sender_name:item.sender_name});
+        results.push({
+          message: item.message_content,
+          sender_name: item.sender_name,
+          picture: ("https://friendzone.azurewebsites.net/" + item.picture)
+        });
     });
     self.setState({
       list:results,
