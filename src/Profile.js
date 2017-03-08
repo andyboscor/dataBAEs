@@ -8,6 +8,7 @@ import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import Done from 'material-ui/svg-icons/action/done';
 
 const style = {
   margin: 5
@@ -91,7 +92,6 @@ class Profile extends Component {
     first_name: '',
     last_name: '',
     email_address: '',
-    friendship_status: false,
     recommendArr:[],
     picture: localStorage.getItem('picture'),
     uploadProfilePicture: false
@@ -100,6 +100,7 @@ class Profile extends Component {
   constructor(props){
     super(props);
     this.handleSubmit=this.handleSubmit.bind(this);
+    this.submitFriendshiptRequest = this.submitFriendshiptRequest.bind(this);
   }
 
   componentDidMount() {
@@ -137,8 +138,10 @@ class Profile extends Component {
         var arr =[]
         for(let recommend of recFriends) {
           arr.unshift({
+            recommendID: recommend.userID,
             recommendName: `${recommend.first_name} ${recommend.last_name}`,
-            recommendAvatar:"https://friendzone.azurewebsites.net/" + recommend.picture
+            recommendAvatar:"https://friendzone.azurewebsites.net/" + recommend.picture,
+            friendship_status: false
           });
         }
         self.setState({
@@ -158,7 +161,7 @@ class Profile extends Component {
     this.setState({open: false});
   };
 
-  submitFriendshiptRequest() {
+  submitFriendshiptRequest(friendIDInput, index) {
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/friends', {
         method: 'POST',
@@ -166,15 +169,17 @@ class Profile extends Component {
           'Authorization': 'Basic ' + localStorage.getItem('usercred'),
           'Content-Type': 'application/json'
         },
-        // body: JSON.stringify({
-        //   friendID: self.state.friendID
-        // })
+        body: JSON.stringify({
+          friendID: friendIDInput
+        })
       })
       .then(function(response) {
         return response.json()
       }).then(function(json) {
+        console.log("FRIENDSHOP STATUS", json)
+        self.state.recommendArr[index].friendship_status = true;
         self.setState({
-          friendship_status: true
+          recommendArr: self.state.recommendArr
         });
       }).catch(function(ex) {
         console.log('parsing failed', ex);
@@ -252,19 +257,21 @@ class Profile extends Component {
       });
   }
   render() {
-    let friendsButton;
-    if (!this.state.friendship_status) {
-      friendsButton = (
-        <FloatingActionButton mini={true} onTouchTap={this.submitFriendshiptRequest.bind(this)}><ContentAdd /></FloatingActionButton>);
-        // <FloatingActionButton style={closeButtonStyle} iconClassName={'Done'} onTouchTap={this.submitFriendshiptRequest.bind(this)} labelColor="white" backgroundColor="#8088B0"></FloatingActionButton>);
-    } else {
-      friendsButton = (
-          <FloatingActionButton mini={true} backgroundColor="#FAFAFA" disabled={false} onTouchTap={this.submitFriendshiptRequest.bind(this)}><ContentAdd/></FloatingActionButton>
-        );
-    }
+
 
     var addFriendsList=[];
     for (let i=0; i<this.state.recommendArr.length;i++) {
+
+      let friendsButton;
+      if (!this.state.recommendArr[i].friendship_status) {
+        friendsButton = (
+          <FloatingActionButton mini={true} onTouchTap={() => this.submitFriendshiptRequest(this.state.recommendArr[i].recommendID, i)}><ContentAdd/></FloatingActionButton>);
+          // <FloatingActionButton style={closeButtonStyle} iconClassName={'Done'} onTouchTap={this.submitFriendshiptRequest.bind(this)} labelColor="white" backgroundColor="#8088B0"></FloatingActionButton>);
+      } else {
+        friendsButton = (
+            <FloatingActionButton mini={true} disabled={true}><Done/></FloatingActionButton>
+          );
+      }
       addFriendsList.push(
         <ListItem key={`addFriendTitle${i}`}
           primaryText={this.state.recommendArr[i].recommendName}
