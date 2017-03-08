@@ -16,6 +16,12 @@ var addBottom = {
 
 class Blog extends Component {
 
+  constructor(props) {
+    super(props);
+    this.submitNewTitle = this.submitNewTitle.bind(this);
+    this.sendUpdatedTitle = this.sendUpdatedTitle.bind(this);
+  }
+
   state = {
     cardarray: [],
     open: false,
@@ -162,7 +168,7 @@ class Blog extends Component {
 
   sendUpdatedTitle() {
     var self = this;
-    fetch('https://friendzone.azurewebsites.net/API.php/blog' , {
+    fetch('https://friendzone.azurewebsites.net/API.php/blog/' + this.state.userID , {
         method: 'PUT',
         headers: {
           'Authorization': 'Basic ' + localStorage.getItem('usercred'),
@@ -184,7 +190,11 @@ class Blog extends Component {
       });
   }
 
-  async submitNewTitle() {
+  async submitNewTitle(e) {
+    if(e) {
+      e.preventDefault();
+    }
+
     if (this.state.editTitle) {
       await this.sendUpdatedTitle();
     }
@@ -218,7 +228,7 @@ class Blog extends Component {
     let blogTitle;
     let editButton;
     if(this.state.userID === localStorage.getItem('userID') || this.state.isAdmin === true) {
-      editButton = (<IconButton onTouchTap={this.submitNewTitle.bind(this)} tooltip="Edit title" touch={true} tooltipPosition="bottom-right">
+      editButton = (<IconButton onTouchTap={this.submitNewTitle} tooltip="Edit title" touch={true} tooltipPosition="bottom-right">
           <Create />
         </IconButton>);
     }
@@ -230,19 +240,17 @@ class Blog extends Component {
           <br/>
         </div>);
     } else {
-      blogTitle = (
-        <form onSubmit={this.submitNewTitle.bind(this)}>
-          <TextField
-            hintText="Blog Title"
-            onChange={(e) => { this.setState({ blog_title: e.target.value }) }}
-            value={this.state.blog_title}
-            style={{ marginBottom: '10px' }}
-            id="text-field-title"
-          />
-          {editButton}
-          <br />
-        </form>
-      );
+      blogTitle = [
+        <TextField
+          hintText="Blog Title"
+          onChange={(e) => { this.setState({ blog_title: e.target.value }) }}
+          value={this.state.blog_title}
+          style={{ marginBottom: '10px' }}
+          id="text-field-title"
+          key="text-field-title"
+        />,
+        <div key='edit-button'>{editButton}</div>,
+        <br key='br'/>];
     }
 
     let newPostButton;
@@ -283,7 +291,9 @@ class Blog extends Component {
     <div style={addBottom}>
       <div >
       <center>
-        {blogTitle}
+        <form id="titleEdit" onSubmit={(e) => this.submitNewTitle(e)}>
+          {blogTitle}
+        </form>
         {newPostButton}
       </center>
       </div>
