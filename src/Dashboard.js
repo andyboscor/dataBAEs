@@ -211,7 +211,7 @@ class Dashboard extends Component {
     if(this.state.profile===true)
     {
       return(
-        <div style={container}><OtherProfile friendID={this.state.userID} handleClose={this.closeProfile} /> </div>
+        <div style={container}><OtherProfile isAdmin={false} friendID={this.state.userID} handleClose={this.closeProfile} /> </div>
       );
     }
     else return (

@@ -37,11 +37,9 @@ const styles = {
   }
 };
 var onTop ={
-  position: 'fixed',
   overflowY: 'scroll',
   height:'100%',
   zIndex: '999',
-  width: '100%',
   backgroundColor: 'white'
 }
 
@@ -73,24 +71,25 @@ class Albums extends Component {
     this.upload_image = this.upload_image.bind(this);
     this.deletePhoto = this.deletePhoto.bind(this);
     this.deleteAlbum = this.deleteAlbum.bind(this);
+    this.state = {
+     open: false,
+     createNewAlbum: false,
+     createNewPhoto: false,
+     albumTitle: '',
+     description: '',
+     albums: [],
+     openAlbumID: '',
+     photos: [],
+     photoTitle: '',
+     userID: '',
+     otherProfile: false,
+     editPhotos: false,
+     editAlbums: false,
+     deleteAlbumDialog: false,
+     albumToDeleteID: null,
+     isAdmin: this.props.isAdmin
+    };
   }
-  state = {
-   open: false,
-   createNewAlbum: false,
-   createNewPhoto: false,
-   albumTitle: '',
-   description: '',
-   albums: [],
-   openAlbumID: '',
-   photos: [],
-   photoTitle: '',
-   userID: '',
-   otherProfile: false,
-   editPhotos: false,
-   editAlbums: false,
-   deleteAlbumDialog: false,
-   albumToDeleteID: null
-  };
 
   handleOpen = () => {
    this.setState({open: true});
@@ -176,36 +175,39 @@ class Albums extends Component {
     });
     self.setState({
     photos:results
-  });
-}).catch(function(ex) {
-  console.log('parsing failed', ex)
-})
-}
-upload_image(){
-  var input = document.querySelector('input[type="file"]')
+    });
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })
+  }
 
-  var data = new FormData()
-  data.append('upfile', input.files[0])
-  var self = this;
-  console.log(self.state.openAlbumID);
-  fetch('https://friendzone.azurewebsites.net/API.php/photos/' + self.state.openAlbumID, {
-    method: 'POST',
-    headers: {
-      'Authorization': 'Basic ' + localStorage.getItem('usercred')
-    },
-    body: data
-  }).then(function(response) {
-    return response.json()
-  }).then(function(json) {
-    console.log(json);
-    self.getPhotos(self.state.openAlbumID);
-    self.setState({createNewPhoto:false});
-  });
-}
+  upload_image(){
+    var input = document.querySelector('input[type="file"]')
+
+    var data = new FormData()
+    data.append('upfile', input.files[0])
+    var self = this;
+    console.log(self.state.openAlbumID);
+    fetch('https://friendzone.azurewebsites.net/API.php/photos/' + self.state.openAlbumID, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Basic ' + localStorage.getItem('usercred')
+      },
+      body: data
+    }).then(function(response) {
+      return response.json()
+    }).then(function(json) {
+      console.log(json);
+      self.getPhotos(self.state.openAlbumID);
+      self.setState({createNewPhoto:false});
+    });
+  }
+
   handleClick(id){
     this.setState({openAlbumID: id, open: true});
     this.getPhotos(id);
   }
+
   componentDidMount(){
     if(typeof this.props.friendID != "undefined")
     {
@@ -214,14 +216,6 @@ upload_image(){
         otherProfile:true,
         userID: this.props.friendID
       });
-      onTop = {
-        position: 'fixed',
-        overflowY: 'scroll',
-        height:'100%',
-        zIndex: '999',
-        width: '80%',
-        backgroundColor: 'white'
-      }
     }
     else {
       let userID = localStorage.getItem('userID');
@@ -229,29 +223,27 @@ upload_image(){
       this.setState({
         userID: userID
       });
-      onTop = {
-        position: 'fixed',
-        overflowY: 'scroll',
-        height:'100%',
-        zIndex: '999',
-        width: '100%',
-        backgroundColor: 'white'
-      }
     }
   }
+
   newAlbumButton(){
+    let editButton, createButton;
+    if (this.state.userID === localStorage.getItem('userID') || this.state.isAdmin === true) {
+      editButton = (
+        <FloatingActionButton style={{ margin: '20px 20px 0 0', float: 'right' }} onTouchTap={() => this.setState({ editAlbums: !this.state.editAlbums })} mini={true}>
+          <Create />
+        </FloatingActionButton>);
+    }
     if (this.state.otherProfile===false) {
-      let editButton;
-      if (this.state.userID === localStorage.getItem('userID')) {
-        editButton = (
-          <FloatingActionButton style={{ margin: '20px 20px 0 0', float: 'right' }} onTouchTap={() => this.setState({ editAlbums: !this.state.editAlbums })} mini={true}>
-            <Create />
-          </FloatingActionButton>);
-      }
-      return (<center>
-        <RaisedButton style={createNewAlbum} label="Create new album" onTouchTap={this.handleNewAlbumOpen}/>
-        {editButton}
-      </center>);
+      createButton = (<RaisedButton style={createNewAlbum} label="Create new album" onTouchTap={this.handleNewAlbumOpen}/>);
+    }
+    if(editButton !== null || createButton !== null) {
+      return (
+        <center>
+          {createButton}
+          {editButton}
+        </center>
+      );
     }
   }
 
@@ -288,83 +280,81 @@ upload_image(){
 
   renderConditionala(){
     let editButton;
-    if (this.state.userID === localStorage.getItem('userID')) {
+    if (this.state.userID === localStorage.getItem('userID') || this.state.isAdmin === true) {
       editButton = (
         <FloatingActionButton style={{ margin: '20px 20px 0 0', float: 'right' }} onTouchTap={() => this.setState({ editPhotos: !this.state.editPhotos })} mini={true}>
           <Create />
         </FloatingActionButton>);
     }
-    if(this.state.open===true&&this.props.open===true){
-      const actions = [
-       <FlatButton
-         label="Cancel"
-         primary={true}
-         onTouchTap={this.handleNewPhotoClose}
-       />,
-       <FlatButton
-         label="Upload"
-         primary={true}
-         keyboardFocused={true}
-         onTouchTap={this.upload_image}
-       />,
-     ];
-     let uploadButton;
-     if(this.state.otherProfile===false) uploadButton = <RaisedButton style={closeButtonStyle} onTouchTap={this.handleNewPhotoOpen} label="Upload Photo" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
-      return(
-        <div style={onTop}>
-          <RaisedButton style={closeButtonStyle} onTouchTap={this.handleClose} label="Close" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
-          {uploadButton}
-          {editButton}
-          <Dialog
-           title="Upload a new photo"
-           actions={actions}
-           modal={false}
-           open={this.state.createNewPhoto}
-           onRequestClose={this.handleNewPhotoClose}
-         >
-          <form>
-          <input type="file" />
-          </form>
-          </Dialog>
-          <div>
-            <div style={styles.root}>
-              <GridList style={grid}
-                cols={2}
-                cellHeight={300}
+    const actions = [
+     <FlatButton
+       label="Cancel"
+       primary={true}
+       onTouchTap={this.handleNewPhotoClose}
+     />,
+     <FlatButton
+       label="Upload"
+       primary={true}
+       keyboardFocused={true}
+       onTouchTap={this.upload_image}
+     />,
+   ];
+   let uploadButton;
+   if(this.state.otherProfile===false) uploadButton = <RaisedButton style={closeButtonStyle} onTouchTap={this.handleNewPhotoOpen} label="Upload Photo" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
+    return(
+      <div style={onTop}>
+        <RaisedButton style={closeButtonStyle} onTouchTap={this.handleClose} label="Close" labelColor="white" backgroundColor="#8088B0"></RaisedButton>
+        {uploadButton}
+        {editButton}
+        <Dialog
+         title="Upload a new photo"
+         actions={actions}
+         modal={false}
+         open={this.state.createNewPhoto}
+         onRequestClose={this.handleNewPhotoClose}
+       >
+        <form>
+        <input type="file" />
+        </form>
+        </Dialog>
+        <div>
+          <div style={styles.root}>
+            <GridList style={grid}
+              cols={2}
+              cellHeight={300}
+            >
+            {this.state.photos.map((tile) => {
+              let action;
+              if (this.state.editPhotos) {
+                action = (
+                  <IconButton
+                      iconStyle={{ color: 'white' }}
+                      tooltip="Delete Photo"
+                      tooltipPosition="bottom-right"
+                      onTouchTap={() => this.deletePhoto(tile.photoID) }>
+                      <Clear />
+                  </IconButton>);
+              } else {
+                action= (<PhotoDesc isAdmin={this.state.isAdmin} userID={this.state.userID} photoID={tile.photoID}/>);
+              }
+              return (<GridTile
+                key={tile.photoID}
+                title=" "
+                actionIcon={action}
+                actionPosition="left"
+                titlePosition="top"
+                titleBackground="linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.3) 70%,rgba(0,0,0,0) 100%)"
+                cols={tile.featured ? 2 : 1}
+                rows={tile.featured ? 2 : 1}
               >
-              {this.state.photos.map((tile) => {
-                let action;
-                if (this.state.editPhotos) {
-                  action = (
-                    <IconButton
-                        iconStyle={{ color: 'white' }}
-                        tooltip="Delete Photo"
-                        tooltipPosition="bottom-right"
-                        onTouchTap={() => this.deletePhoto(tile.photoID) }>
-                        <Clear />
-                    </IconButton>);
-                } else {
-                  action= (<PhotoDesc userID={this.state.userID} photoID={tile.photoID}/>);
-                }
-                return (<GridTile
-                  key={tile.photoID}
-                  title=" "
-                  actionIcon={action}
-                  actionPosition="left"
-                  titlePosition="top"
-                  titleBackground="linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.3) 70%,rgba(0,0,0,0) 100%)"
-                  cols={tile.featured ? 2 : 1}
-                  rows={tile.featured ? 2 : 1}
-                >
-                  <img src={tile.img} role="presentation" />
-                </GridTile>);
-              })}
-              </GridList>
-            </div>
+                <img src={tile.img} role="presentation" />
+              </GridTile>);
+            })}
+            </GridList>
           </div>
         </div>
-      );
-     }
+      </div>
+    );
   }
 
   deleteAlbum() {
@@ -430,9 +420,12 @@ upload_image(){
        onTouchTap={this.deleteAlbum}
      />,
     ];
+
+    if(this.state.open===true&&this.props.open===true){
+      return this.renderConditionala();
+    }
     return (
   	  <div>
-        {this.renderConditionala()}
         {this.newAlbumButton()}
           <div style={styles.root}>
 

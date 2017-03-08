@@ -20,13 +20,14 @@ class CommentCard extends Component {
     super(props);
     this.state = {
       commentID: this.props.commentID,
-      userID: this.props.userID
+      userID: this.props.userID,
+      isAdmin: this.props.isAdmin
     };
   }
 
   render() {
     let deleteButton;
-    if (this.state.userID === localStorage.getItem('userID')) {
+    if (this.state.userID === localStorage.getItem('userID') || this.state.isAdmin === true) {
       deleteButton = (
         <IconButton
             style={{ float: 'right' }}

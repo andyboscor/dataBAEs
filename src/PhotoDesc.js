@@ -22,7 +22,8 @@ class Albums extends Component {
       commentarr: [],
       annotation: '',
       comment: '',
-      userID: this.props.userID
+      userID: this.props.userID,
+      isAdmin: this.props.isAdmin
     };
     this.styles = {
       chip: {
@@ -230,7 +231,7 @@ class Albums extends Component {
   };
 
   renderChip(data) {
-    if(this.state.userID !== localStorage.getItem('userID')) {
+    if(this.state.userID !== localStorage.getItem('userID') && this.state.isAdmin !== true) {
       return (<Chip
         key={data.annotationID}
         style={this.styles.chip}
@@ -286,11 +287,11 @@ class Albums extends Component {
 
     let comments = [];
     for(let comment of this.state.commentarr) {
-      comments.push(<CommentCard key={comment.commentID} deleteFunction={ this.handleRequestDeleteComment.bind(this) } {...comment} />);
+      comments.push(<CommentCard key={comment.commentID} isAdmin={this.state.isAdmin} deleteFunction={ this.handleRequestDeleteComment.bind(this) } {...comment} />);
     }
 
     let annotationForm;
-    if(this.state.userID === localStorage.getItem('userID')) {
+    if(this.state.userID === localStorage.getItem('userID') || this.state.isAdmin === true) {
       annotationForm = (
         <form onSubmit={(e) => this.submitNewAnnotation(e)}>
           <TextField

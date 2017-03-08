@@ -41,7 +41,8 @@ class OtherProfile extends Component {
     blog: true,
     photos: false,
     chat: false,
-    picture: ''
+    picture: '',
+    isAdmin: this.props.isAdmin
   };
 
   handleOpen = () => {
