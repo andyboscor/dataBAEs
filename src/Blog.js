@@ -30,7 +30,7 @@ class Blog extends Component {
 
   componentDidMount() {
     var self = this;
-    fetch('http://friendzone.azurewebsites.net/API.php/blog/' + localStorage.getItem('userID'), {
+    fetch('http://friendzone.azurewebsites.net/API.php/blog/' + this.state.userID, {
       headers: {
         'Authorization': 'Basic ' + localStorage.getItem('usercred')
       }
