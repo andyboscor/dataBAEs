@@ -138,7 +138,7 @@ class Profile extends Component {
         for(let recommend of recFriends) {
           arr.unshift({
             recommendName: `${recommend.first_name} ${recommend.last_name}`,
-            recommendAvatar: recommend.picture
+            recommendAvatar:"https://friendzone.azurewebsites.net/" + recommend.picture
           });
         }
         self.setState({
@@ -252,7 +252,6 @@ class Profile extends Component {
       });
   }
   render() {
-    console.log("sadfgh", this.state.recommendArr)
     let friendsButton;
     if (!this.state.friendship_status) {
       friendsButton = (
