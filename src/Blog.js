@@ -143,7 +143,7 @@ class Blog extends Component {
       return;
     }
     var self = this;
-    fetch('https://friendzone.azurewebsites.net/API.php/blog_posts', {
+    fetch('https://friendzone.azurewebsites.net/API.php/blog_posts/' + this.state.blogID, {
         method: 'DELETE',
         headers: {
           'Authorization': 'Basic ' + localStorage.getItem('usercred'),
@@ -249,7 +249,7 @@ class Blog extends Component {
           id="text-field-title"
           key="text-field-title"
         />,
-        <div key='edit-button'>{editButton}</div>,
+        <div key='edit-button' style={{ display: 'inline-block' }}>{editButton}</div>,
         <br key='br'/>];
     }
 

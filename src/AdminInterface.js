@@ -41,6 +41,13 @@ const listItem = {
   marginRight:'50px'
 }
 
+const container = {
+ height:'100%',
+ width:'100%',
+ position:'fixed',
+ overflowY:'hidden'
+};
+
 class AdminInterface extends Component {
   state = {
     users: [],
@@ -80,7 +87,7 @@ class AdminInterface extends Component {
 
   render() {
     if(this.state.currentUser !== null) {
-      return (<OtherProfile isAdmin={true} friendID={this.state.currentUser} handleClose={this.closeProfile.bind(this)} />)
+      return (<div style={container}><OtherProfile isAdmin={true} friendID={this.state.currentUser} handleClose={this.closeProfile.bind(this)} /></div>);
     }
 
     return (
