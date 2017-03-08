@@ -52,7 +52,7 @@ class OtherProfile extends Component {
   handleClose = () => {
     this.setState({open: false});
   };
-  componentWillMount(){
+  getProfileInfo = () => {
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/profile/' + self.props.friendID , {
       headers: {
@@ -84,7 +84,13 @@ class OtherProfile extends Component {
       console.log('parsing failed', ex)
     });
   }
-
+  componentWillMount(){
+    this.getProfileInfo();
+  }
+  componentWillReceiveProps(){
+    this.getProfileInfo();
+    console.log("update");
+  }
   submitFriendshiptRequest() {
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/friends', {
