@@ -84,12 +84,17 @@ class OtherProfile extends Component {
       console.log('parsing failed', ex)
     });
   }
-  componentWillMount(){
+  componentDidMount(){
+    this.setState({friendID: this.props.friendID});
     this.getProfileInfo();
   }
   componentWillReceiveProps(){
-    this.getProfileInfo();
-    console.log("update");
+    if(this.state.friendID!=this.props.friendID)
+    {
+      this.setState({friendID: this.props.friendID, blog:true});
+      this.getProfileInfo();
+    }
+    //console.log(this.props.friendID);
   }
   submitFriendshiptRequest() {
     var self = this;
@@ -190,7 +195,7 @@ class OtherProfile extends Component {
       profileTab = (<Chat {...this.state}  handleSend={this.handleSend}/>)
     }
     if(this.state.chat === false && this.state.photos === false && this.state.blog === true) {
-      profileTab = (<Blog isAdmin={this.state.isAdmin} userID={this.props.friendID}/>)
+      profileTab = (<Blog isAdmin={this.state.isAdmin} userID={this.state.friendID}/>)
     }
     if(this.state.blog === false && this.state.chat === false && this.state.photos === true) {
       profileTab = (<Albums {...this.state}/>)

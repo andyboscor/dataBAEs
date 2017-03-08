@@ -33,8 +33,7 @@ class Blog extends Component {
     userID: this.props.userID,
     isAdmin: this.props.isAdmin
   }
-
-  componentDidMount() {
+  getBlog = () =>{
     var self = this;
     fetch('http://friendzone.azurewebsites.net/API.php/blog/' + this.state.userID, {
       headers: {
@@ -77,7 +76,17 @@ class Blog extends Component {
         console.log('parsing failed', ex)
       });
   }
-
+  componentDidMount() {
+    this.setState({userID: this.props.userID});
+    this.getBlog();
+  }
+  componentWillReceiveProps() {
+    if(this.state.userID!=this.props.userID)
+    {
+      this.setState({userID: this.props.userID});
+      this.getBlog();
+    }
+  }
   stateButton = {
     open: false,
   };

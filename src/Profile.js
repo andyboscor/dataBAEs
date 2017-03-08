@@ -94,7 +94,8 @@ class Profile extends Component {
     email_address: '',
     recommendArr:[],
     picture: localStorage.getItem('picture'),
-    uploadProfilePicture: false
+    uploadProfilePicture: false,
+    newXMLprofile: false
   };
 
   constructor(props){
@@ -160,7 +161,12 @@ class Profile extends Component {
   handleClose = () => {
     this.setState({open: false});
   };
-
+  handleNewXMLProfileClose = () => {
+    this.setState({newXMLprofile: false});
+  }
+  handleNewXMLProfileOpen = () => {
+    this.setState({newXMLprofile: true});
+  }
   submitFriendshiptRequest(friendIDInput, index) {
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/friends', {
@@ -222,6 +228,7 @@ class Profile extends Component {
 
     var data = new FormData()
     data.append('upfile', input.files[0])
+
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/profile_pic/', {
       method: 'POST',
@@ -256,8 +263,27 @@ class Profile extends Component {
         return;
       });
   }
-  render() {
+  upload_xml(){
+    var input = document.querySelector('input[type="file"]')
 
+    var data = new FormData()
+    data.append('upfile', input.files[0])
+
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/xml_profile', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Basic ' + localStorage.getItem('usercred')
+      },
+      body: data
+    }).then(function(response) {
+      return response.json()
+    }).then(function(json) {
+      console.log(json);
+    });
+  }
+
+  render() {
 
     var addFriendsList=[];
     for (let i=0; i<this.state.recommendArr.length;i++) {
@@ -308,7 +334,19 @@ class Profile extends Component {
        onTouchTap={this.upload_picture.bind(this)}
      />,
    ];
-
+   const actionsXML = [
+    <FlatButton
+      label="Cancel"
+      primary={true}
+      onTouchTap={this.handleNewXMLProfileClose}
+    />,
+    <FlatButton
+      label="Upload"
+      primary={true}
+      keyboardFocused={true}
+      onTouchTap={this.upload_xml.bind(this)}
+    />,
+  ];
     return (
       <div style={profileContainer}>
         <div style={profileHeader}>
@@ -353,6 +391,20 @@ class Profile extends Component {
           <center>
             <RaisedButton label="Download Profile" onTouchTap={this.downloadXML}/><br /><br />
           </center>
+          <center>
+            <RaisedButton label="Upload Profile" onTouchTap={this.handleNewXMLProfileOpen}/><br /><br />
+          </center>
+          <Dialog
+           title="Upload an XML profile"
+           actions={actionsXML}
+           modal={false}
+           open={this.state.newXMLprofile}
+           onRequestClose={this.handleNewXMLProfileClose}
+         >
+          <form>
+          <input type="file" />
+          </form>
+          </Dialog>
           </div>
         </div>
         <div style={bodyContainer}>
