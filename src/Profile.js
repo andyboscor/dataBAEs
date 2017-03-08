@@ -237,31 +237,31 @@ class Profile extends Component {
       },
       body: data
     }).then(function(response) {
-      return response.json()
+        return response.json()
     }).then(function(json) {
-      localStorage.setItem("picture", ("https://friendzone.azurewebsites.net/" + json.picture));
-      self.setState({
-        uploadProfilePicture:false,
-        picture: ("https://friendzone.azurewebsites.net/" + json.picture)
-      });
+        localStorage.setItem("picture", ("https://friendzone.azurewebsites.net/" + json.picture));
+        self.setState({
+          uploadProfilePicture:false,
+          picture: ("https://friendzone.azurewebsites.net/" + json.picture)
+        });
     });
   }
   downloadXML(){
     fetch('https://friendzone.azurewebsites.net/API.php/xml_profile' , {
-        headers: {
-          'Authorization': 'Basic ' + localStorage.getItem('usercred')
-        }
-      })
-      .then(function(response) {
+      headers: {
+        'Authorization': 'Basic ' + localStorage.getItem('usercred')
+      }
+    })
+    .then(function(response) {
         return response.json();
-      }).then(function(json) {
+    }).then(function(json) {
         console.log(json);
         window.open("https://friendzone.azurewebsites.net/" + json.xml_path, '_blank');
-      }).catch(function(ex) {
+    }).catch(function(ex) {
         // FIXME: Add handling errors.
         console.log('parsing failed', ex)
-        return;
-      });
+      return;
+    });
   }
   upload_xml(){
     var input = document.querySelector('input[type="file"]')
@@ -279,7 +279,16 @@ class Profile extends Component {
     }).then(function(response) {
       return response.json()
     }).then(function(json) {
-      console.log(json);
+        console.log(json);
+        self.handleNewXMLProfileClose();
+        self.setState({
+          full_name: json[0].first_name + " " + json[0].last_name,
+          first_name: json[0].first_name,
+          last_name: json[0].last_name,
+          email_address: json[0].email_address,
+        })
+        var credentials = json[0].email_address + ":" + localStorage.getItem("userpwd");
+        localStorage.setItem("usercred",window.btoa(unescape(encodeURIComponent(credentials))));
     });
   }
 
