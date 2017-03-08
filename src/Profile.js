@@ -75,16 +75,6 @@ const goWhite = {
   color: 'white'
 }
 
-var friendRequest=[];
-for (let i=0; i<10;i++) {
-  friendRequest.push(
-    <ListItem key={`friendRequest${i}`}
-      primaryText="Dory Fish"
-      leftAvatar={<Avatar src="https://pbs.twimg.com/profile_images/773917612648591365/hFl6DSSh.jpg" />}
-      //rightIcon={friendsButton} TODO replace with dynamic
-    />);
-}
-
 class Profile extends Component {
   state = {
     open: false,
@@ -93,6 +83,7 @@ class Profile extends Component {
     last_name: '',
     email_address: '',
     recommendArr:[],
+    requestArr:[],
     picture: localStorage.getItem('picture'),
     uploadProfilePicture: false,
     newXMLprofile: false
@@ -101,7 +92,7 @@ class Profile extends Component {
   constructor(props){
     super(props);
     this.handleSubmit=this.handleSubmit.bind(this);
-    this.submitFriendshiptRequest = this.submitFriendshiptRequest.bind(this);
+    this.submitRecommend = this.submitRecommend.bind(this);
   }
 
   componentDidMount() {
@@ -135,7 +126,6 @@ class Profile extends Component {
       .then(function(response) {
         return response.json();
       }).then(function(recFriends) {
-        console.log("HELO", recFriends)
         var arr =[]
         for(let recommend of recFriends) {
           arr.unshift({
@@ -152,6 +142,31 @@ class Profile extends Component {
         console.log('parsing failed', ex)
         return;
       });
+      fetch('https://friendzone.azurewebsites.net/API.php/friend_requests', {
+          headers: {
+            'Authorization': 'Basic ' + localStorage.getItem('usercred')
+          }
+        })
+        .then(function(response) {
+          return response.json();
+        }).then(function(reqFriends) {
+          console.log("HELssO", reqFriends)
+          var arr =[]
+          for(let requestFriend of reqFriends) {
+            arr.unshift({
+              requestID: requestFriend.userID,
+              requestName: `${requestFriend.first_name} ${requestFriend.last_name}`,
+              requestAvatar:"https://friendzone.azurewebsites.net/" + requestFriend.picture,
+              requestStatus: false
+            });
+          }
+          self.setState({
+            requestArr: arr
+          });
+        }).catch(function(ex) {
+          console.log('parsing failed', ex)
+          return;
+      });
   }
 
   handleOpen = () => {
@@ -167,7 +182,8 @@ class Profile extends Component {
   handleNewXMLProfileOpen = () => {
     this.setState({newXMLprofile: true});
   }
-  submitFriendshiptRequest(friendIDInput, index) {
+
+  submitRecommend(friendIDInput, index) {
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/friends', {
         method: 'POST',
@@ -182,10 +198,34 @@ class Profile extends Component {
       .then(function(response) {
         return response.json()
       }).then(function(json) {
-        console.log("FRIENDSHOP STATUS", json)
         self.state.recommendArr[index].friendship_status = true;
         self.setState({
           recommendArr: self.state.recommendArr
+        });
+      }).catch(function(ex) {
+        console.log('parsing failed', ex);
+        // FIXME: Add handling errors.
+      });
+  }
+
+  submitRequest(friendIDInput, index) {
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/friends', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred'),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          friendID: friendIDInput
+        })
+      })
+      .then(function(response) {
+        return response.json()
+      }).then(function(json) {
+        self.state.requestArr[index].friendship_status = true;
+        self.setState({
+          requestArr: self.state.requestArr
         });
       }).catch(function(ex) {
         console.log('parsing failed', ex);
@@ -225,7 +265,6 @@ class Profile extends Component {
 
   upload_picture() {
     var input = document.querySelector('input[type="file"]')
-
     var data = new FormData()
     data.append('upfile', input.files[0])
 
@@ -265,11 +304,9 @@ class Profile extends Component {
   }
   upload_xml(){
     var input = document.querySelector('input[type="file"]')
-
     var data = new FormData()
     data.append('upfile', input.files[0])
 
-    var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/xml_profile', {
       method: 'POST',
       headers: {
@@ -284,15 +321,12 @@ class Profile extends Component {
   }
 
   render() {
-
     var addFriendsList=[];
     for (let i=0; i<this.state.recommendArr.length;i++) {
-
       let friendsButton;
       if (!this.state.recommendArr[i].friendship_status) {
         friendsButton = (
-          <FloatingActionButton mini={true} onTouchTap={() => this.submitFriendshiptRequest(this.state.recommendArr[i].recommendID, i)}><ContentAdd/></FloatingActionButton>);
-          // <FloatingActionButton style={closeButtonStyle} iconClassName={'Done'} onTouchTap={this.submitFriendshiptRequest.bind(this)} labelColor="white" backgroundColor="#8088B0"></FloatingActionButton>);
+          <FloatingActionButton mini={true} onTouchTap={() => this.submitRecommend(this.state.recommendArr[i].recommendID, i)}><ContentAdd/></FloatingActionButton>);
       } else {
         friendsButton = (
             <FloatingActionButton mini={true} disabled={true}><Done/></FloatingActionButton>
@@ -303,6 +337,26 @@ class Profile extends Component {
           primaryText={this.state.recommendArr[i].recommendName}
           leftAvatar={<Avatar src={this.state.recommendArr[i].recommendAvatar} />}
           rightIconButton={friendsButton}
+        />);
+    }
+
+    var reqFriendsList=[];
+    for (let i=0; i<this.state.requestArr.length;i++) {
+      let friendsReqButton;
+      console.log("sddfghjk", this.state.request[i].requestID);
+      if (!this.state.requestArr[i].requestStatus) {
+        friendsReqButton = (
+          <FloatingActionButton mini={true} onTouchTap={() => this.submitRequest(this.state.requestArr[i].requestID, i)}><ContentAdd/></FloatingActionButton>);
+      } else {
+        friendsReqButton = (
+            <FloatingActionButton mini={true} disabled={true}><Done/></FloatingActionButton>
+          );
+      }
+      reqFriendsList.push(
+        <ListItem key={`addFriendTitle${i}`}
+          primaryText={this.state.requestArr[i].requestName}
+          leftAvatar={<Avatar src={this.state.requestArr[i].requestAvatar} />}
+          rightIconButton={friendsReqButton}
         />);
     }
 
@@ -417,7 +471,7 @@ class Profile extends Component {
           <div style={friendRequestContainer}>
             <List>
               <Subheader>Friend Request</Subheader>
-              {friendRequest}
+              {reqFriendsList}
             </List>
           </div>
         </div>

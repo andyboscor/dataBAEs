@@ -6,6 +6,8 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Divider from 'material-ui/Divider';
 import CommentCard from './CommentCard.js';
+import IconButton from 'material-ui/IconButton';
+
 var showButtonStyle = {
   marginLeft: 10,
   marginRight: 10
@@ -247,7 +249,9 @@ class Albums extends Component {
         onRequestDelete={() => this.handleRequestDeleteAnnotation(data.annotationID)}
         style={this.styles.chip}
       >
-        {data.annotation}
+      {data.annotation}
+      <IconButton style={{ marginLeft:'-25px', zIndex:'15', position: 'fixed' }}tooltip="bottom-right" touch={true} tooltipPosition="bottom-right">
+        </IconButton>
       </Chip>
     );
   }
