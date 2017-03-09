@@ -28,26 +28,29 @@ const profilePic ={
   marginLeft: '80px'
 }
 
-const profileButton= {
-  marginTop: '40px',
-  backgroundColor:'#3F4652',
-  height:'100%',
-  marginLeft:'20px'
-}
-
-const profileDetails ={
-  backgroundColor:'#3F4652',
-  width:'50%',
-  height:'100%',
-  fontColor:'white !important',
-  marginLeft:'10px'
-}
 
 const profileContainer = {
   backgroundColor:'#EBECED',
   width: '100%',
   height:'100%'
 }
+
+const profileButton= {
+  marginTop: '40px',
+  backgroundColor:'#3F4652',
+  height:'30%',
+  marginLeft:'20px'
+}
+
+const profileDetails ={
+  backgroundColor:'#3F4652',
+  width:'50%',
+  height:'30%',
+  fontColor:'white !important',
+  marginLeft:'10px'
+}
+
+
 
 const bodyContainer = {
   display: 'flex',
@@ -360,6 +363,7 @@ class Profile extends Component {
             <FloatingActionButton mini={true} disabled={true}><Done/></FloatingActionButton>
           );
       }
+
       reqFriendsList.push(
         <ListItem key={`addFriendTitle${i}`}
           primaryText={this.state.requestArr[i].requestName}

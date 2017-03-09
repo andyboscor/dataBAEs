@@ -204,14 +204,14 @@ class Dashboard extends Component {
     else return (
       <div>
         <Tabs style={container} contentContainerStyle={scrollable} tabItemContainerStyle={tabColor} inkBarStyle={underlineColor} >
-          <Tab label="Blog" value="a" onClick={this.handleClose} >
+          <Tab label="Profile" value="a" onClick={this.handleClose}>
             <div>
-              <Blog userID={localStorage.getItem('userID')}/>
+            <Profile/>
             </div>
           </Tab>
-          <Tab label="Profile" value="b" onClick={this.handleClose}>
+          <Tab label="Blog" value="b" onClick={this.handleClose} >
             <div>
-            <Profile />
+              <Blog userID={localStorage.getItem('userID')}/>
             </div>
           </Tab>
           <Tab label="Photo Albums" value="c" onClick={this.handleOpen}>

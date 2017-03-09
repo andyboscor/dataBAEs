@@ -127,9 +127,7 @@ class PrivacySettings extends Component {
       .then(function(response) {
         return response.json()
       }).then(function(json) {
-        self.setState({
-          access_right: access
-        })
+        
       }).catch(function(ex) {
         console.log('parsing failed', ex);
         // FIXME: Add handling errors.
@@ -160,11 +158,12 @@ class PrivacySettings extends Component {
     }).then(function(getAlbumList) {
       var arr=[];
       for(let album of getAlbumList) {
+        console.log("GHJKL:KJFGJKL", album)
         var postAttributes = getAlbumList[album];
         arr.unshift({
-          albumID: postAttributes.albumID,
-          albumAccess: postAttributes.access_right,
-          albumTitle: postAttributes.albumTitle
+          albumID: album.albumID,
+          albumAccess: album.access_right,
+          albumTitle: album.albumTitle
         });
       }
       self.setState({
