@@ -71,7 +71,6 @@ class ChatList extends Component {
       .then(function(response) {
         return response.json()
       }).then(function(json) {
-        //console.log('parsed json', json);
         let users = [];
         for(let user of json.users) {
           users.push({
@@ -84,7 +83,6 @@ class ChatList extends Component {
         self.setState({
           users: users
         });
-      //console.log(self.state.users)
       }).catch(function(ex) {
         return;
       })
@@ -101,10 +99,9 @@ class ChatList extends Component {
             circles: json
           })
 
-        //console.log(self.state.users)
         }).catch(function(ex) {
-          return;
           console.log('parsing failed', ex)
+          return;
         })
   }
  componentDidMount(){
@@ -119,11 +116,10 @@ class ChatList extends Component {
     }).then(function(response) {
         return response.json()
     }).then(function(json) {
-      console.log(json);
-      var results = [];
-      json.map(function(item,i){
-        results.push({name:item.first_name + " " + item.last_name, uID: item.userID});
-      });
+        var results = [];
+        json.map(function(item,i){
+          results.push({name:item.first_name + " " + item.last_name, uID: item.userID});
+        });
         self.setState({
           circleMembers: results
         });
@@ -191,7 +187,7 @@ class ChatList extends Component {
   addUser = () => {
     var users = this.state.circleUsers;
     var userIDs = this.state.circleUsersToSend;
-    if(this.state.searchUser != '')
+    if(this.state.searchUser !== '')
     {
       users.push({name:this.state.newUserName, uID: this.state.newUserID});
       userIDs.push(this.state.newUserID);
@@ -214,9 +210,9 @@ class ChatList extends Component {
       json.map(function(item,i){
         results.push({text: item.first_name + " " + item.last_name, value: (
         <MenuItem
-          primaryText= {item.first_name + " " + item.last_name}
+          primaryText={item.first_name + " " + item.last_name}
           secondaryText="&#9786;"
-          onTouchTap ={() => self.setState({newUserID: item.userID, newUserName: item.first_name + " " + item.last_name })}
+          onTouchTap={() => self.setState({newUserID: item.userID, newUserName: item.first_name + " " + item.last_name })}
         />)});
         })
 
@@ -332,139 +328,184 @@ class ChatList extends Component {
     ];
     return (
       <div style={chatlist_style}>
-      <RaisedButton
-     label="New user chat"
-     labelPosition="after"
-     style = {buttonStyle}
-     containerElement="label"
-     backgroundColor='#8088B0'
-     labelStyle={labelStyle}
-     onTouchTap={this.handleOpen}
-       icon={<ContentAdd/>}
-      >
+        <RaisedButton
+          label="New user chat"
+          labelPosition="after"
+          style={buttonStyle}
+          containerElement="label"
+          backgroundColor='#8088B0'
+          labelStyle={labelStyle}
+          onTouchTap={this.handleOpen}
+          icon={<ContentAdd/>}
+          >
 
-      <Dialog
-        actions={actions}
-        modal={false}
-        open={this.state.open}
-        onRequestClose={this.handleClose}
-        autoScrollBodyContent={true}
-      >
-      <AutoComplete
-          hintText="Search for a user"
-          dataSource={this.state.dataSource}
-          onUpdateInput={this.handleUpdateInput}
-           filter={AutoComplete.noFilter}
-           searchText={this.state.searchUser}
-        />
-      <TextField
-        hintText="Type anything"
-        type="text"
-        value={this.state.newMessage}
-        onChange={ (event) => { this.setState({ newMessage: event.target.value });} }
-        floatingLabelText="Message"
-        fullWidth={true}
-      />
-      </Dialog>
-      </RaisedButton>
-      <RaisedButton
-     label="New circle chat"
-     labelPosition="after"
-     style = {buttonStyle}
-     containerElement="label"
-     backgroundColor='#8088B0'
-     labelStyle={labelStyle}
-     onTouchTap={this.handleOpen2}
-       icon={<ContentAdd/>}
-      >
+          <Dialog
+            actions={actions}
+            modal={false}
+            open={this.state.open}
+            onRequestClose={this.handleClose}
+            autoScrollBodyContent={true}
+            >
+            <AutoComplete
+              hintText="Search for a user"
+              dataSource={this.state.dataSource}
+              onUpdateInput={this.handleUpdateInput}
+              filter={AutoComplete.noFilter}
+              searchText={this.state.searchUser}
+              />
+            <TextField
+              hintText="Type anything"
+              type="text"
+              value={this.state.newMessage}
+              onChange={ (event) => { this.setState({ newMessage: event.target.value });} }
+              floatingLabelText="Message"
+              fullWidth={true}
+              />
+          </Dialog>
+        </RaisedButton>
+        <RaisedButton
+          label="New circle chat"
+          labelPosition="after"
+          style={buttonStyle}
+          containerElement="label"
+          backgroundColor='#8088B0'
+          labelStyle={labelStyle}
+          onTouchTap={this.handleOpen2}
+          icon={<ContentAdd/>}
+          >
 
-      <Dialog
-        actions={actions2}
-        modal={false}
-        open={this.state.open2}
-        onRequestClose={this.handleClose2}
-        autoScrollBodyContent={true}
-      >
-      <TextField
-        hintText="Type anything"
-        type="text"
-        value={this.state.circleName}
-        onChange={(event) => {this.setState({circleName: event.target.value});} }
-        floatingLabelText="Circle name"
-        fullWidth={true}
-      />
-      <AutoComplete
-          hintText="Search for a user"
-          dataSource={this.state.dataSource}
-          onUpdateInput={this.handleUpdateInput}
-          filter={AutoComplete.noFilter}
-          searchText={this.state.newUserName}
-      />
-      <RaisedButton
-     label="Add to circle"
-     labelPosition="after"
-     style={buttonStyle}
-     containerElement="label"
-     backgroundColor='#8088B0'
-     labelStyle={labelStyle}
-     onTouchTap={this.addUser}
-       icon={<ContentAdd/>}
-      />
-      {this.state.circleUsers.map(function(item,i){
-        return (<Chip key={item.uID + item.uID} style={chipstyle}>
-           <Avatar src="https://cdn3.iconfinder.com/data/icons/internet-and-web-4/78/internt_web_technology-13-512.png" />
-           {item.name}
-         </Chip>)
-      })}
+          <Dialog
+            actions={actions2}
+            modal={false}
+            open={this.state.open2}
+            onRequestClose={this.handleClose2}
+            autoScrollBodyContent={true}
+            >
+            <TextField
+              hintText="Type anything"
+              type="text"
+              value={this.state.circleName}
+              onChange={(event) => {this.setState({circleName: event.target.value});} }
+              floatingLabelText="Circle name"
+              fullWidth={true}
+              />
+            <AutoComplete
+              hintText="Search for a user"
+              dataSource={this.state.dataSource}
+              onUpdateInput={this.handleUpdateInput}
+              filter={AutoComplete.noFilter}
+              searchText={this.state.newUserName}
+              />
+            <RaisedButton
+              label="Add to circle"
+              labelPosition="after"
+              style={buttonStyle}
+              containerElement="label"
+              backgroundColor='#8088B0'
+              labelStyle={labelStyle}
+              onTouchTap={this.addUser}
+              icon={<ContentAdd/>}
+              />
+            {this.state.circleUsers.map(function(item,i){
+              return (
+                <Chip key={item.uID + item.uID} style={chipstyle}>
+                  <Avatar src="https://cdn3.iconfinder.com/data/icons/internet-and-web-4/78/internt_web_technology-13-512.png" />
+                  {item.name}
+                </Chip>
+              )
+            })}
+            <TextField
+              hintText="Type anything"
+              type="text"
+              value={this.state.newMessage}
+              onChange={ (event) => { this.setState({ newMessage: event.target.value });} }
+              floatingLabelText="Message"
+              fullWidth={true}
+              />
+          </Dialog>
+        </RaisedButton>
 
-      <TextField
-        hintText="Type anything"
-        type="text"
-        value={this.state.newMessage}
-        onChange={ (event) => { this.setState({ newMessage: event.target.value });} }
-        floatingLabelText="Message"
-        fullWidth={true}
-      />
-      </Dialog>
-      </RaisedButton>
+        <List>
+          <Subheader>
+            People chats
+          </Subheader>
+          {this.state.users.map(function(item){
+            if(this.state.colorid === item.userID) return <ListItem
+              key={item.userID}
+              style={colored}
+              primaryText={item.first_name + " " + item.last_name}
+              onTouchTap={this.handleClick.bind(this,item.userID, false)}
+              rightIcon={
+                <CommunicationChatBubble />
+              }
+              leftAvatar={
+                <Avatar src={item.picture} />
+              } />
+              else return <ListItem
+                key={item.userID}
+                primaryText={item.first_name + " " + item.last_name}
+                onTouchTap={this.handleClick.bind(this,item.userID, false)}
+                rightIcon={
+                  <CommunicationChatBubble />
+                }
+                leftAvatar={
+                  <Avatar src={item.picture} />
+                } />
+              },this)}
 
-      <List>
-      <Subheader>People chats</Subheader>
-      {this.state.users.map(function(item){
-            if(this.state.colorid === item.userID) return <ListItem key={item.userID} style={colored} primaryText={item.first_name + " " + item.last_name} onTouchTap={this.handleClick.bind(this,item.userID, false)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src={item.picture} />} />
-            else return <ListItem key={item.userID} primaryText={item.first_name + " " + item.last_name} onTouchTap={this.handleClick.bind(this,item.userID, false)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src={item.picture} />} />
-          },this)}
-
-      <Subheader>Circle chats</Subheader>
-      {this.state.circles.map(function(item,i){
-            if(this.state.colorid === item.circleID && this.state.circlecolor === true)
-            {
-              var arr = [];
-              var self = this;
-              arr.push(<RaisedButton
-              key={i}
-             label="Delete circle"
-             labelPosition="after"
-             style = {buttonStyle}
-             containerElement="label"
-             backgroundColor='#8088B0'
-             labelStyle={labelStyle}
-             onTouchTap={() => {self.deleteCircle(item.circleID)}}
-              />);
-              this.state.circleMembers.map(function(item2,i){
-               arr.push(
-                  <Chip key={item2.uID} style={chipstyle2} onRequestDelete={() => self.handleDeleteCircleMember(item.circleID,item2.uID)}>
-                   <Avatar src="https://cdn3.iconfinder.com/data/icons/internet-and-web-4/78/internt_web_technology-13-512.png" />
-                   {item2.name}
-                 </Chip>)
-               });
-              return <ListItem key={item.circleID} style={colored} primaryText={item.circleName}
+              <Subheader>
+                Circle chats
+              </Subheader>
+              {this.state.circles.map(function(item,i){
+                if(this.state.colorid === item.circleID && this.state.circlecolor === true)
+                {
+                  var arr = [];
+                  var self = this;
+                  arr.push(
+                    <RaisedButton
+                      key={i}
+                      label="Delete circle"
+                      labelPosition="after"
+                      style={buttonStyle}
+                      containerElement="label"
+                      backgroundColor='#8088B0'
+                      labelStyle={labelStyle}
+                      onTouchTap={() => {self.deleteCircle(item.circleID)}}
+                      />
+                  );
+                  this.state.circleMembers.map(function(item2,i){
+                    arr.push(
+                      <Chip
+                        key={item2.uID}
+                        style={chipstyle2}
+                        onRequestDelete={() => self.handleDeleteCircleMember(item.circleID,item2.uID)}>
+                        <Avatar src="https://cdn3.iconfinder.com/data/icons/internet-and-web-4/78/internt_web_technology-13-512.png" />
+                        {item2.name}
+                      </Chip>
+                    )
+                  });
+                  return <ListItem
+                    key={item.circleID}
+                    style={colored}
+                    primaryText={item.circleName}
                     nestedItems={arr}
-                      onTouchTap={this.handleClick.bind(this,item.circleID, true)} leftAvatar={<Avatar src="http://kairosinsurancegroup.com/wp-content/uploads/2015/05/Group-Insurance-Icon.png" />} />
+                    onTouchTap={this.handleClick.bind(this,item.circleID, true)}
+                    leftAvatar={
+                      <Avatar src="http://kairosinsurancegroup.com/wp-content/uploads/2015/05/Group-Insurance-Icon.png" />
+                    } />
+                  }
+                  else return <ListItem
+                    key={item.circleID}
+                    primaryText={item.circleName}
+                    onTouchTap={this.handleClick.bind(this,item.circleID, true)}
+                    rightIcon={
+                      <CommunicationChatBubble />
                     }
-              else return <ListItem key={item.circleID} primaryText={item.circleName} onTouchTap={this.handleClick.bind(this,item.circleID, true)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src="http://kairosinsurancegroup.com/wp-content/uploads/2015/05/Group-Insurance-Icon.png" />} />
-            },this)}
-      </List>
+                    leftAvatar={
+                      <Avatar src="http://kairosinsurancegroup.com/wp-content/uploads/2015/05/Group-Insurance-Icon.png" />
+                    } />
+                  },this)}
+          </List>
       </div>
     );
   }
