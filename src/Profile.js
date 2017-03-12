@@ -127,7 +127,7 @@ class Profile extends Component {
       .then(function(response) {
         return response.json();
       }).then(function(json) {
-        console.log(json);
+        //console.log(json);
         self.setState({
           full_name : json.first_name + " " + json.last_name,
           first_name: json.first_name,
@@ -171,7 +171,7 @@ class Profile extends Component {
         .then(function(response) {
           return response.json();
         }).then(function(reqFriends) {
-          console.log("HELssO", reqFriends)
+          //console.log("HELssO", reqFriends)
           var arr =[]
           for(let requestFriend of reqFriends) {
             arr.unshift({
@@ -196,7 +196,7 @@ class Profile extends Component {
         .then(function(response) {
           return response.json();
         }).then(function(reqFriends) {
-          console.log("HELssO", reqFriends)
+          //console.log("HELssO", reqFriends)
           var arr =[]
           for(let friend of reqFriends) {
             arr.unshift({
@@ -300,7 +300,7 @@ class Profile extends Component {
         self.setState({
           full_name: self.state.first_name + " " + self.state.last_name
         });
-        console.log('parsed json', json)
+        //console.log('parsed json', json)
       }).catch(function(ex) {
         console.log('parsing failed', ex);
         // FIXME: Add handling errors.
@@ -339,7 +339,7 @@ class Profile extends Component {
     .then(function(response) {
         return response.json();
     }).then(function(json) {
-        console.log(json);
+        //console.log(json);
         window.open("https://friendzone.azurewebsites.net/" + json.xml_path, '_blank');
     }).catch(function(ex) {
         // FIXME: Add handling errors.
@@ -361,7 +361,7 @@ class Profile extends Component {
     }).then(function(response) {
       return response.json()
     }).then(function(json) {
-        console.log(json);
+        //console.log(json);
         self.handleNewXMLProfileClose();
         self.setState({
           full_name: json[0].first_name + " " + json[0].last_name,

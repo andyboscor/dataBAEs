@@ -127,7 +127,7 @@ class Albums extends Component {
     .then(function(response) {
       return response.json()
     }).then(function(json) {
-      console.log('parsed json', json)
+      //console.log('parsed json', json)
       self.handleNewAlbumClose();
       self.getAlbum(self.state.userID);
     }).catch(function(ex) {
@@ -149,7 +149,7 @@ class Albums extends Component {
       });
       return response.json();
     }).then(function(json) {
-      console.log('parsed json', json)
+      //console.log('parsed json', json)
       var results = [];
       json.map(function(item,i)
       {
@@ -179,7 +179,7 @@ class Albums extends Component {
     .then(function(response) {
       return response.json()
     }).then(function(json) {
-      console.log('parsed json get photos', json)
+      //console.log('parsed json get photos', json)
       var results = [];
       json.map(function(item,i)
       {
@@ -199,7 +199,7 @@ class Albums extends Component {
     var data = new FormData()
     data.append('upfile', input.files[0])
     var self = this;
-    console.log(self.state.openAlbumID);
+    //console.log(self.state.openAlbumID);
     fetch('https://friendzone.azurewebsites.net/API.php/photos/' + self.state.openAlbumID, {
       method: 'POST',
       headers: {
@@ -209,7 +209,7 @@ class Albums extends Component {
     }).then(function(response) {
       return response.json()
     }).then(function(json) {
-      console.log(json);
+      //console.log(json);
       self.getPhotos(self.state.openAlbumID);
       self.setState({createNewPhoto:false});
     });

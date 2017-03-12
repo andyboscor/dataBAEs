@@ -23,7 +23,6 @@ class Messaging extends Component {
     this.handleSend = this.handleSend.bind(this);
   }
   componentDidMount(){
-    console.log("wat" + this.props.isAdmin);
     if(this.props.isAdmin===true)
     chatStyle = {
       display:'flex',
