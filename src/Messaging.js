@@ -19,29 +19,28 @@ class Messaging extends Component {
       to_circle: false
     };
 
-    // This binding is necessary to make `this` work in the callback
     this.handleResponse = this.handleResponse.bind(this);
     this.handleSend = this.handleSend.bind(this);
   }
   handleResponse(data, to_circle) {
-  //var messagearray = [ {firstname:'Nemo', message:'this', photo:'this'},{firstname:'Hello', message:'this sss', photo:'this'}, {firstname:'jeee', message:'this sss', photo:'this'}];
-  this.setState({chat_id: data});
-  var send_to = '';
-  if(to_circle === true)
-  {
-    send_to = "to_circle/";
-    this.setState({to_circle: true});
-  }
-  else {
-    send_to = "to_user/";
-    this.setState({to_circle: false});}
 
-  var self = this;
-  fetch('https://friendzone.azurewebsites.net/API.php/messages/' + send_to + data , {
-    headers: {
-  'Authorization': 'Basic ' + localStorage.getItem('usercred')
-}
-  })
+    this.setState({chat_id: data});
+    var send_to = '';
+    if(to_circle === true)
+    {
+      send_to = "to_circle/";
+      this.setState({to_circle: true});
+    }
+    else {
+      send_to = "to_user/";
+      this.setState({to_circle: false});}
+
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/messages/' + send_to + data , {
+      headers: {
+        'Authorization': 'Basic ' + localStorage.getItem('usercred')
+      }
+    })
     .then(function(response) {
       return response.json()
     }).then(function(json) {
@@ -54,24 +53,24 @@ class Messaging extends Component {
           sender_name: item.sender_name,
           picture: ("https://friendzone.azurewebsites.net/" + item.picture)
         });
-    });
-    self.setState({
-      list:results,
-      exista: true
-    });
+      });
+      self.setState({
+        list:results,
+        exista: true
+      });
     }).catch(function(ex) {
       console.log('parsing failed', ex)
     })
   }
   handleSend(data, to_circle){
     var send_to = '';
-    if(to_circle === true)
-    send_to = "to_circle";
+
+    if(to_circle === true) send_to = "to_circle";
     else send_to = "to_user";
+
     var payload = {};
     payload[send_to] = this.state.chat_id;
     payload["message_content"] = data;
-    console.log(payload);
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/messages' , {
       method: 'POST',
