@@ -72,7 +72,7 @@ class LoginPage extends Component {
       });
   }
   handleRegister = (event) => {
-    event.preventDefault();
+    event.persist();
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/register', {
       method: 'POST',
@@ -89,7 +89,7 @@ class LoginPage extends Component {
       .then(function(response) {
         return response.json()
       }).then(function(json) {
-        console.log('parsed json', json)
+        self.handleLogin(event);
       }).catch(function(ex) {
         console.log('parsing failed', ex)
       })

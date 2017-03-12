@@ -128,7 +128,6 @@ class OtherProfile extends Component {
     }
   })
     .then(function(response) {
-      console.log(response);
       return response.json()
     }).then(function(json) {
       var results = [];

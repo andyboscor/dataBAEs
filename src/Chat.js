@@ -3,32 +3,20 @@ import ChatBubble from './ChatBubble.js';
 import NewMessageBar from './NewMessageBar.js';
 
 var fixedSend = {
-  //flexGrow: '1',
   position: 'absolute',
   bottom: '0',
   height: '64px',
-  //width: window.innerWidth - 400
   width: '100%',
-
 }
 var stickyContainer={
-  //display:'flex',
-  //flexDirection: 'column',
   width: '100%',
   height: '100%',
-  //height: window.innerHeight - 64,
-   overflowY: 'scroll',
-
-  //marginBottom: '-64px'
-  //flex: '1 0 auto'
+  overflowY: 'scroll',
 }
 var maincontainer={
   width: '100%',
   height:'100%',
   position: 'relative'
-  //display:'flex'
-  //minHeight: '100%',
-  //position:'absolute'
 }
 var extra = {
   height:' 64px'
@@ -46,27 +34,21 @@ class Chat extends Component {
       this.scrollToBottom();
   }
   render() {
-  //console.log(this.props.list);
     var arr = this.props.list;
-
-    //var arr = [];
     return (
       <div style={maincontainer}>
-      <div style={stickyContainer} id="scrolling_div">
+        <div style={stickyContainer} id="scrolling_div">
             {
               arr.map(function(item, i){
                   return <ChatBubble key={i} {...item} />
                 },this)}
-                <div id="element_within_div" style= {{height:'1px', width:'1px'}} ref={(el) => { this.messagesEnd = el; }}> </div>
+                <div id="element_within_div" style={{height:'1px', width:'1px'}} ref={(el) => { this.messagesEnd = el; }}> </div>
                 <div style={extra} > </div>
-</div>
+        </div>
         <div style={fixedSend}>
               <NewMessageBar handleSend={this.props.handleSend} {...this.props}/>
         </div>
-
-        </div>
-
-
+      </div>
     );
   }
 }
