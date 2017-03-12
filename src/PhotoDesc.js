@@ -6,7 +6,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Divider from 'material-ui/Divider';
 import CommentCard from './CommentCard.js';
-import IconButton from 'material-ui/IconButton';
+import Tooltip from 'material-ui/internal/Tooltip';
 
 var showButtonStyle = {
   marginLeft: 10,
@@ -25,7 +25,8 @@ class Albums extends Component {
       annotation: '',
       comment: '',
       userID: this.props.userID,
-      isAdmin: this.props.isAdmin
+      isAdmin: this.props.isAdmin,
+      showTooltip: []
     };
     this.styles = {
       chip: {
@@ -36,6 +37,8 @@ class Albums extends Component {
         flexWrap: 'wrap',
       },
     };
+    this.onMouseOver = this.onMouseOver.bind(this);
+    this.onMouseOut = this.onMouseOut.bind(this);
   }
 
   componentWillMount() {
@@ -55,6 +58,8 @@ class Albums extends Component {
         for(let row of json) {
           annotations.push({
             annotationID: row.annotationID,
+            userID: row.userID,
+            name: row.first_name + " " + row.last_name,
             annotation: row.annotation
           });
         }
@@ -75,8 +80,9 @@ class Albums extends Component {
       .then(function(response) {
         return response.json();
       }).then(function(json) {
-        let comments = [];
+        let comments = [], tooltip = [];
         for(let row of json) {
+          tooltip.push(false);
           comments.push({
             commentID: row.commentID,
             userID: row.userID,
@@ -86,7 +92,8 @@ class Albums extends Component {
           });
         }
         self.setState({
-          commentarr: comments
+          commentarr: comments,
+          showTooltip: tooltip
         });
       }).catch(function(ex) {
         // FIXME: Add handling errors.
@@ -113,9 +120,12 @@ class Albums extends Component {
         return response.json();
       }).then(function(json) {
         let annotations = self.state.chipData;
+        let annotation = json[0];
         annotations.push({
-          annotationID: json,
-          annotation: value
+          annotationID: annotation.annotationID,
+          userID: annotation.userID,
+          name: annotation.first_name + " " + annotation.last_name,
+          annotation: annotation.annotation
         });
         self.setState({
           chipData : annotations,
@@ -232,12 +242,29 @@ class Albums extends Component {
       });
   };
 
-  renderChip(data) {
-    if(this.state.userID !== localStorage.getItem('userID') && this.state.isAdmin !== true) {
+  onMouseOver(index) {
+    this.state.showTooltip[index] = true;
+    this.setState({
+      showTooltip: this.state.showTooltip
+    });
+  }
+
+  onMouseOut(index) {
+    this.state.showTooltip[index] = false;
+    this.setState({
+      showTooltip: this.state.showTooltip
+    });
+  }
+
+  renderChip(data, index) {
+    if(data.userID !== localStorage.getItem('userID') && this.state.isAdmin !== true) {
       return (<Chip
         key={data.annotationID}
         style={this.styles.chip}
+        onMouseOver={() => this.onMouseOver(index)}
+        onMouseOut={() => this.onMouseOut(index)}
       >
+        <Tooltip show={this.state.showTooltip[index]} label={data.name} horizontalPosition="center" verticalPosition="top" touch={false} />
         {data.annotation}
       </Chip>
 
@@ -248,10 +275,11 @@ class Albums extends Component {
         key={data.annotationID}
         onRequestDelete={() => this.handleRequestDeleteAnnotation(data.annotationID)}
         style={this.styles.chip}
+        onMouseOver={() => this.onMouseOver(index)}
+        onMouseOut={() => this.onMouseOut(index)}
       >
-      {data.annotation}
-      <IconButton style={{ marginLeft:'-25px', zIndex:'15', position: 'fixed' }}tooltip="bottom-right" touch={true} tooltipPosition="bottom-right">
-        </IconButton>
+        <Tooltip show={this.state.showTooltip[index]} label={data.name} horizontalPosition="center" verticalPosition="top" touch={false} />
+        {data.annotation}
       </Chip>
     );
   }
@@ -294,20 +322,6 @@ class Albums extends Component {
       comments.push(<CommentCard key={comment.commentID} isAdmin={this.state.isAdmin} deleteFunction={ this.handleRequestDeleteComment.bind(this) } {...comment} />);
     }
 
-    let annotationForm;
-    if(this.state.userID === localStorage.getItem('userID') || this.state.isAdmin === true) {
-      annotationForm = (
-        <form onSubmit={(e) => this.submitNewAnnotation(e)}>
-          <TextField
-            hintText="Annotate"
-            onChange={(e) => { this.setState({ annotation: e.target.value }) }}
-            value={this.state.annotation}
-            floatingLabelText="Add annotations"
-            fullWidth={true}
-          />
-        </form>);
-    }
-
     return (
     <div>
     <RaisedButton style={showButtonStyle} onTouchTap={this.handleOpen}>Comment</RaisedButton>
@@ -326,7 +340,15 @@ class Albums extends Component {
               {this.state.chipData.map(this.renderChip, this)}
             </div>
 
-            {annotationForm}
+            <form onSubmit={(e) => this.submitNewAnnotation(e)}>
+              <TextField
+                hintText="Annotate"
+                onChange={(e) => { this.setState({ annotation: e.target.value }) }}
+                value={this.state.annotation}
+                floatingLabelText="Add annotations"
+                fullWidth={true}
+              />
+            </form>
 
             <br />
             <Divider />
