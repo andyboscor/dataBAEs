@@ -87,7 +87,8 @@ class Albums extends Component {
      editAlbums: false,
      deleteAlbumDialog: false,
      albumToDeleteID: null,
-     isAdmin: this.props.isAdmin
+     isAdmin: this.props.isAdmin,
+     errorMessage: ''
     };
   }
 
@@ -141,6 +142,11 @@ class Albums extends Component {
       }
     })
     .then(function(response) {
+      if(response.status===404)
+      self.setState({
+        errorMessage: "Seems like there's nothing here.",
+        albums: []
+      });
       return response.json();
     }).then(function(json) {
       console.log('parsed json', json)
@@ -150,9 +156,15 @@ class Albums extends Component {
         let url = (item.first_image) ? "https://friendzone.azurewebsites.net/" + item.first_image : "http://www.designbolts.com/wp-content/uploads/2012/12/White-Gradient-Squares-Seamless-Patterns-For-Website-Backgrounds.jpg";
         results.push({albumID: item.albumID, albumTitle:item.albumTitle, description:item.description, img: url});
       });
-      self.setState({
-        albums:results
-      });
+      if(results.length===0)
+        self.setState({
+          errorMessage: "Seems like there's nothing here."
+        });
+      else
+        self.setState({
+          albums:results
+        });
+
     }).catch(function(ex) {
       console.log('parsing failed', ex)
     })
@@ -426,10 +438,10 @@ class Albums extends Component {
     }
     return (
   	  <div>
+
         {this.newAlbumButton()}
           <div style={styles.root}>
-
-
+          <h1>{this.state.errorMessage}</h1>
             <Dialog
              title="Create new album"
              actions={actions}

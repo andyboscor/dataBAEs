@@ -33,14 +33,21 @@ class Blog extends Component {
     userID: this.props.userID,
     isAdmin: this.props.isAdmin
   }
-  getBlog = () =>{
+  getBlog = (userID) =>{
     var self = this;
-    fetch('http://friendzone.azurewebsites.net/API.php/blog/' + this.state.userID, {
+    fetch('http://friendzone.azurewebsites.net/API.php/blog/' + userID, {
       headers: {
         'Authorization': 'Basic ' + localStorage.getItem('usercred')
       }
     })
     .then(function(response) {
+      console.log(response);
+      if(response.status===403)
+      self.setState({
+        blogID: '',
+        blog_title: "Seems like you don't have the rights to view this.",
+        cardarray: []
+      });
       return response.json()})
     .then(function(json) {
       self.setState({
@@ -78,13 +85,13 @@ class Blog extends Component {
   }
   componentDidMount() {
     this.setState({userID: this.props.userID});
-    this.getBlog();
+    this.getBlog(this.props.userID);
   }
   componentWillReceiveProps() {
-    if(this.state.userID!=this.props.userID)
+    if(this.state.userID!==this.props.userID)
     {
       this.setState({userID: this.props.userID});
-      this.getBlog();
+      this.getBlog(this.props.userID);
     }
   }
   stateButton = {
