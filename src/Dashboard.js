@@ -33,7 +33,10 @@ var listStyle = {
   color: 'white'
 }
 var searchTextStyle = {
-  color: 'red'
+  color: 'white'
+}
+var goWhite = {
+  color: '#CECECE'
 }
 
 const Logged = (props) => (
@@ -231,6 +234,7 @@ class Dashboard extends Component {
     if (this.state.isAdmin!==true){
       searchBar = (<AutoComplete
             style={listStyle}
+            hintStyle={goWhite}
             inputStyle={searchTextStyle}
             hintText="Search for a user"
             dataSource={this.state.dataSource}

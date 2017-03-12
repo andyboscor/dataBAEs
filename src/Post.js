@@ -10,7 +10,7 @@ var blogCards = {
 }
 
 var headerStyle ={
-    backgroundColor: '#80CBC4',
+    backgroundColor: '#A61C24',
 }
 
 class Post extends Component {

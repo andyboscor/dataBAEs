@@ -23,6 +23,9 @@ var responsiveImg = {
 var goWhite = {
   color: 'white'
 }
+var goFadeWhite ={
+  color: '#CECECE'
+}
 class LoginPage extends Component {
   state = {
     open: false,
@@ -117,12 +120,14 @@ class LoginPage extends Component {
           <form onSubmit={this.handleLogin}>
             <TextField
               hintText="Email"
+              hintStyle={goFadeWhite}
               inputStyle={goWhite}
               onChange={this.handleUsername}
             /><br />
             <PasswordField
               style={maxPass}
               inputStyle={goWhite}
+              floatingLabelStyle={goFadeWhite}
               disableButton={false}
               onChange={this.handlePassword}
               floatingLabelText="Enter your password"
@@ -149,6 +154,7 @@ class LoginPage extends Component {
               /><br />
               <TextField
                 hintText="Last Name"
+
                   onChange={this.handleLastName}
               /><br />
               <TextField
