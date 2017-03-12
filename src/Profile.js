@@ -16,7 +16,9 @@ const style = {
 
 const profileHeader ={
   display: 'flex',
-  height:'30%',
+  height:'50%',
+  minHeight: '290px',
+  maxHeight: '300px',
   backgroundColor:'#3F4652',
   width:'100%'
 }
@@ -24,7 +26,7 @@ const profileHeader ={
 const profilePic ={
   backgroundColor:'#3F4652',
   width:'250px',
-  height:'100%',
+  height:'90%',
   marginLeft: '80px'
 }
 
@@ -32,7 +34,8 @@ const profilePic ={
 const profileContainer = {
   backgroundColor:'#EBECED',
   width: '100%',
-  height:'100%'
+  height: window.innerHeight - 112,
+  overflowY: 'hidden'
 }
 
 const profileButton= {
@@ -62,16 +65,18 @@ const bodyContainer = {
 
 const friendRecommendContainer ={
   width:'50%',
-  height:'100%',
+  height:window.innerHeight - 400,
   marginLeft:'10px',
   marginRight:'10px',
+  overflowY: 'scroll'
 }
 
 const friendRequestContainer= {
-  height:'100%',
+  height:window.innerHeight - 400,
   width:'50%',
   marginRight:'60px',
-  marginLeft:'10px'
+  marginLeft:'10px',
+  overflowY: 'scroll'
 }
 
 const goWhite = {
