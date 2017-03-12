@@ -89,7 +89,7 @@ class OtherProfile extends Component {
     this.getProfileInfo();
   }
   componentWillReceiveProps(){
-    if(this.state.friendID!=this.props.friendID)
+    if(this.state.friendID!==this.props.friendID)
     {
       this.setState({friendID: this.props.friendID, blog:true});
       this.getProfileInfo();

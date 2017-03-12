@@ -36,10 +36,6 @@ class AdminInterface extends Component {
     currentUser: null
   }
 
-  constructor(props){
-    super(props);
-  }
-
   componentDidMount() {
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/users' , {

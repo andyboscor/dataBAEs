@@ -221,7 +221,7 @@ class Albums extends Component {
   }
 
   componentDidMount(){
-    if(typeof this.props.friendID != "undefined")
+    if(typeof this.props.friendID !== "undefined")
     {
       this.getAlbum(this.props.friendID);
       this.setState({

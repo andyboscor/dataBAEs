@@ -101,7 +101,7 @@ class PrivacySettings extends Component {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          access_right: parseInt(self.state.blogValue)
+          access_right: parseInt(self.state.blogValue, 10)
         })
       })
       .then(function(response) {
@@ -168,8 +168,7 @@ class PrivacySettings extends Component {
     }).then(function(getAlbumList) {
       var arr=[];
       for(let album of getAlbumList) {
-        console.log("GHJKL:KJFGJKL", album)
-        var postAttributes = getAlbumList[album];
+
         arr.unshift({
           albumID: album.albumID,
           albumAccess: album.access_right,

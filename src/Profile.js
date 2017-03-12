@@ -449,7 +449,7 @@ class Profile extends Component {
               <TextField type="text" value={this.state.email_address} hintText="Email" inputStyle={goWhite} onChange={ (event) => { this.setState({ email_address: event.target.value });} } /><br /><br />
               <RaisedButton label="Save Changes" onTouchTap={this.handleOpen} labelColor="white" backgroundColor="#A4D336"/>
               <Dialog
-                title="Dialog With Actions"
+                title="Do you want to save changes?"
                 actions={actions}
                 modal={false}
                 open={this.state.open}
