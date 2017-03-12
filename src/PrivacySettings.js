@@ -43,7 +43,6 @@ const closeButtonStyle = {
   marginTop: '20px'
 }
 
-
 var privacyList ={
   '0': 'Only Me',
   '1': 'Friends Only',
@@ -51,6 +50,9 @@ var privacyList ={
   '3': 'Circles'
 }
 
+var goWhite = {
+  color: 'white'
+}
 
 var blogPrivacyList = [];
 for (let i=0; i<Object.keys(privacyList).length ;i++) {
@@ -210,7 +212,7 @@ class PrivacySettings extends Component {
       <div style={securityBoard}>
         <RaisedButton style={closeButtonStyle} onTouchTap={this.props.handleClose} label="Close" labelColor="white" backgroundColor="#FC4D1E"></RaisedButton>
         <center>
-          <h1> Privacy Settings</h1>
+          <h1 style={goWhite}> Privacy Settings</h1>
     		  <Avatar
               src="http://icons.iconarchive.com/icons/graphicloads/100-flat/256/unlock-icon.png"
               size={230}
