@@ -183,7 +183,7 @@ class Dashboard extends Component {
   renderProfile() {
     if(this.state.isAdmin===true) {
       if(this.state.showAdminMessages === true) {
-        return (<Messaging />);
+        return (<Messaging isAdmin={true}/>);
       }
       return (<AdminInterface />);
     }

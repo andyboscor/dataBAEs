@@ -22,6 +22,24 @@ class Messaging extends Component {
     this.handleResponse = this.handleResponse.bind(this);
     this.handleSend = this.handleSend.bind(this);
   }
+  componentDidMount(){
+    console.log("wat" + this.props.isAdmin);
+    if(this.props.isAdmin===true)
+    chatStyle = {
+      display:'flex',
+      flexDirection: 'row',
+      overflowY:'scroll',
+      height: window.innerHeight - 64,
+      width:'100%'
+    };
+    else chatStyle = {
+            display:'flex',
+            flexDirection: 'row',
+            overflowY:'scroll',
+            height: window.innerHeight - 112,
+            width:'100%'
+          };
+  }
   handleResponse(data, to_circle) {
 
     this.setState({chat_id: data});
