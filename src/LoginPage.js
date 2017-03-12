@@ -20,6 +20,9 @@ var responsiveImg = {
   maxHeight:'300px',
   height:'20vw'
 }
+var goWhite = {
+  color: 'white'
+}
 class LoginPage extends Component {
   state = {
     open: false,
@@ -114,17 +117,19 @@ class LoginPage extends Component {
           <form onSubmit={this.handleLogin}>
             <TextField
               hintText="Email"
+              inputStyle={goWhite}
               onChange={this.handleUsername}
             /><br />
             <PasswordField
               style={maxPass}
+              inputStyle={goWhite}
               disableButton={false}
               onChange={this.handlePassword}
               floatingLabelText="Enter your password"
             />
             <RaisedButton type="submit" label="Login" style={style} />
           </form>
-            <h3>Not registered yet?</h3>
+            <h3 style={goWhite}>Not registered yet?</h3>
             <RaisedButton label="Register" onTouchTap={this.handleOpen} />
             <form onSubmit={this.handleRegister}>
             <Dialog

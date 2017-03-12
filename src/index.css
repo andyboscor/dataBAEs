@@ -5,7 +5,7 @@ html, body {
   height:100%;
 }
 .backgroundLogin{
-  background: linear-gradient(to bottom, #80CBC4 , #9FA8DA);
+  background: linear-gradient(to bottom, #EB5757 , #000000);
 }
 .appBar{
   background: linear-gradient(to bottom, #80CBC4 , #80CBC4) ;
