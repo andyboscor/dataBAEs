@@ -41,7 +41,6 @@ class Blog extends Component {
       }
     })
     .then(function(response) {
-      console.log(response);
       if(response.status===403)
       self.setState({
         blogID: '',
