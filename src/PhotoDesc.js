@@ -232,9 +232,10 @@ class Albums extends Component {
         })
       })
       .then(function(response) {
-        let index = self.state.commentarr.indexOf(commentToDelete);
-        self.state.commentarr.splice(index, 1);
-        self.setState({commentarr: self.state.commentarr});
+        let commments = self.state.commentarr;
+        let index = commments.indexOf(commentToDelete);
+        commments.splice(index, 1);
+        self.setState({commentarr: commments});
       }).catch(function(ex) {
         // FIXME: Add handling errors.
         console.log('parsing failed', ex)
