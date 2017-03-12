@@ -9,7 +9,7 @@ const muiTheme = getMuiTheme({
   palette: {
     primary1Color: "#A61C24",
     primary2Color: "#202020",
-    accent1Color: "#202020",
+    accent1Color: "#474646",
     textColor: "#000000"
   },
 }, {
