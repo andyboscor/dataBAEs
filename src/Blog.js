@@ -270,7 +270,7 @@ class Blog extends Component {
 
     let newPostButton;
     if(this.state.userID === localStorage.getItem('userID')) {
-      newPostButton = (<FloatingActionButton onTouchTap={this.handleOpen} backgroundColor='#8088B0'>
+      newPostButton = (<FloatingActionButton onTouchTap={this.handleOpen} backgroundColor='#A61C24'>
         <ContentAdd/>
         <Dialog
           actions={actions}

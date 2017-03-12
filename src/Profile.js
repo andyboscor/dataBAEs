@@ -20,17 +20,15 @@ const profileHeader ={
   height:'50%',
   minHeight: '290px',
   maxHeight: '300px',
-  backgroundColor:'#3F4652',
+  backgroundColor:'#202020',
   width:'100%'
 }
 
 const profilePic ={
-  backgroundColor:'#3F4652',
   width:'250px',
   height:'90%',
   marginLeft: '80px'
 }
-
 
 const profileContainer = {
   backgroundColor:'#EBECED',
@@ -41,19 +39,16 @@ const profileContainer = {
 
 const profileButton= {
   marginTop: '40px',
-  backgroundColor:'#3F4652',
   height:'30%',
   marginLeft:'20px'
 }
 
 const profileDetails ={
-  backgroundColor:'#3F4652',
   width:'50%',
   height:'30%',
   fontColor:'white !important',
   marginLeft:'10px'
 }
-
 
 
 const bodyContainer = {
@@ -531,7 +526,7 @@ class Profile extends Component {
               size={230}
               style={style}/>
             <center>
-              <RaisedButton onTouchTap={() => { this.setState({ uploadProfilePicture: true })}} label="Change Picture" labelColor="white" backgroundColor="#A4D336"/>
+              <RaisedButton onTouchTap={() => { this.setState({ uploadProfilePicture: true })}} label="Change Picture" labelColor="white" backgroundColor="#A61C24"/>
               <Dialog
                title="Upload a new profile picture."
                actions={pictureActions}
@@ -551,7 +546,7 @@ class Profile extends Component {
               <TextField type="text" value={this.state.first_name} hintText="First Name" inputStyle={goWhite} onChange={ (event) => { this.setState({ first_name: event.target.value });} } /><br />
               <TextField type="text" value={this.state.last_name} hintText="Last Name" inputStyle={goWhite} onChange={ (event) => { this.setState({ last_name: event.target.value });} } /><br />
               <TextField type="text" value={this.state.email_address} hintText="Email" inputStyle={goWhite} onChange={ (event) => { this.setState({ email_address: event.target.value });} } /><br /><br />
-              <RaisedButton label="Save Changes" onTouchTap={this.handleOpen} labelColor="white" backgroundColor="#A4D336"/>
+              <RaisedButton label="Save Changes" onTouchTap={this.handleOpen} labelColor="white" backgroundColor="#A61C24"/>
               <Dialog
                 title="Do you want to save changes?"
                 actions={actions}

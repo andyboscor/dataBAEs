@@ -8,8 +8,8 @@ html, body {
   background: linear-gradient(to bottom, #EB5757 , #000000);
 }
 .appBar{
-  background: linear-gradient(to bottom, #80CBC4 , #80CBC4) ;
+  background: linear-gradient(to bottom, #202020, #202020) ;
 }
 .tabBar {
-  background: linear-gradient(to bottom, #3F51B5 , #3F51B5) ;
+  background: linear-gradient(to bottom, #DDB110 , #DDB110) ;
 }

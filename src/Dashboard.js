@@ -22,17 +22,18 @@ var iconSize = {
 }
 
 var tabColor = {
-  backgroundColor: '#8088B0'
+  backgroundColor: '#A61C24'
 }
 var underlineColor = {
-  backgroundColor: '#80CBC4',
+  backgroundColor: '#E5D5C5',
   height:'5px'
 }
 var listStyle = {
-  marginLeft: '15px'
+  marginLeft: '15px',
+  color: 'white'
 }
 var searchTextStyle = {
-  color: 'white'
+  color: 'red'
 }
 
 const Logged = (props) => (
