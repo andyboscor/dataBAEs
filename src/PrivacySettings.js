@@ -214,14 +214,14 @@ class PrivacySettings extends Component {
         <center>
           <h1 style={goWhite}> Privacy Settings</h1>
     		  <Avatar
-              src="http://icons.iconarchive.com/icons/graphicloads/100-flat/256/unlock-icon.png"
+              src="http://design.orionoptics.co.uk/Resources/Lock-icon.png"
               size={230}
               style={style}/>
           <RaisedButton style={closeButtonStyle}
             onTouchTap={this.handleSubmit.bind(this)}
             label="Save Changes"
             labelColor="white"
-            backgroundColor="#A4D336">
+            backgroundColor="#A61C24">
               <Snackbar
                 open={this.state.openSnackbar}
                 message="Privacy saved!"
