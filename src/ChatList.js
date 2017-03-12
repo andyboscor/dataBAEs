@@ -94,7 +94,7 @@ class ChatList extends Component {
         .then(function(response) {
           return response.json()
         }).then(function(json) {
-          console.log('parsed json', json);
+          //console.log('parsed json', json);
           self.setState({
             circles: json
           })
@@ -161,7 +161,7 @@ class ChatList extends Component {
     }).then(function(response) {
         return response.json()
     }).then(function(json) {
-      console.log(json);
+      //console.log(json);
       self.getCircleMembers(circle_id);
 
     }).catch(function(ex) {
@@ -240,7 +240,7 @@ class ChatList extends Component {
         .then(function(response) {
           return response.json()
         }).then(function(json) {
-          console.log('parsed json', json)
+          //console.log('parsed json', json)
           self.handleClose();
           self.handleClick(self.state.newUserID, false);
           self.getChatList();

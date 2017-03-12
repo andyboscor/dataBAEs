@@ -30,17 +30,25 @@ class NewMessageBar extends Component {
   render() {
     return (
       <div>
-      <AppBar style={barStyle}
-      iconElementLeft={<div>
-      <form onSubmit={(e) => {e.preventDefault(); this.handleNewMessage();}}>
-      <TextField hintStyle={hintStyle}
-      hintText="Type your message here"
-      value={this.state.message}
-      onChange={this.handleMessage}
-      inputStyle={sendStyle}/>
-      <FlatButton style={sendStyle} label="Send" onTouchTap={this.handleNewMessage} />
-      </form> </div>}
-  />
+        <AppBar
+          style={barStyle}
+          iconElementLeft={
+            <div>
+              <form onSubmit={(e) => {e.preventDefault(); this.handleNewMessage();}}>
+                <TextField
+                  hintStyle={hintStyle}
+                  hintText="Type your message here"
+                  value={this.state.message}
+                  onChange={this.handleMessage}
+                  inputStyle={sendStyle}/>
+                <FlatButton
+                  style={sendStyle}
+                  label="Send"
+                  onTouchTap={this.handleNewMessage} />
+              </form>
+            </div>
+          }
+          />
       </div>
     );
   }

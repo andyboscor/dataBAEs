@@ -45,7 +45,7 @@ class Messaging extends Component {
     .then(function(response) {
       return response.json()
     }).then(function(json) {
-      console.log('parsed json', json)
+      //console.log('parsed json', json)
       var results = [];
       json.map(function(item,i)
       {
@@ -55,7 +55,6 @@ class Messaging extends Component {
           picture: ("https://friendzone.azurewebsites.net/" + item.picture)
         });
     });
-    console.log("here");
     self.setState({
       list:results,
       exista: true
@@ -85,7 +84,7 @@ class Messaging extends Component {
       .then(function(response) {
         return response.json()
       }).then(function(json) {
-        console.log('parsed json', json)
+        //console.log('parsed json', json)
         if(to_circle === false)
         self.handleResponse(self.state.chat_id, false);
         else self.handleResponse(self.state.chat_id, true);
@@ -101,16 +100,11 @@ class Messaging extends Component {
   }
 
   render() {
-
     return (
-
         <div style={chatStyle}>
           <ChatList handleResponse={this.handleResponse} />
           {this.renderConditionala()}
-
         </div>
-
-
     );
   }
 }
