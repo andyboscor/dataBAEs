@@ -314,7 +314,7 @@ class Profile extends Component {
     var input = document.querySelector('input[type="file"]')
     var data = new FormData()
     data.append('upfile', input.files[0])
-
+    var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/xml_profile', {
       method: 'POST',
       headers: {

@@ -19,7 +19,7 @@ const styles = {
     display: 'flex',
     flexWrap: 'wrap',
     width: '100%',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     paddingTop: '35px'
     //margin: '0 auto'
   },
