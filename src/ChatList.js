@@ -457,15 +457,13 @@ class ChatList extends Component {
                    <Avatar src="https://cdn3.iconfinder.com/data/icons/internet-and-web-4/78/internt_web_technology-13-512.png" />
                    {item2.name}
                  </Chip>)
-
-             });
-
+               });
               return <ListItem key={item.circleID} style={colored} primaryText={item.circleName}
                     nestedItems={arr}
                       onTouchTap={this.handleClick.bind(this,item.circleID, true)} leftAvatar={<Avatar src="http://kairosinsurancegroup.com/wp-content/uploads/2015/05/Group-Insurance-Icon.png" />} />
-             }
-            else return <ListItem key={item.circleID} primaryText={item.circleName} onTouchTap={this.handleClick.bind(this,item.circleID, true)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src="http://kairosinsurancegroup.com/wp-content/uploads/2015/05/Group-Insurance-Icon.png" />} />
-          },this)}
+                    }
+              else return <ListItem key={item.circleID} primaryText={item.circleName} onTouchTap={this.handleClick.bind(this,item.circleID, true)} rightIcon={<CommunicationChatBubble />} leftAvatar={<Avatar src="http://kairosinsurancegroup.com/wp-content/uploads/2015/05/Group-Insurance-Icon.png" />} />
+            },this)}
       </List>
       </div>
     );

@@ -11,7 +11,6 @@ var barStyle = {
 }
 var sendStyle = {
   color:'white',
-
 }
 class NewMessageBar extends Component {
   state = {
@@ -32,12 +31,15 @@ class NewMessageBar extends Component {
     return (
       <div>
       <AppBar style={barStyle}
-    iconElementLeft={<div>
+      iconElementLeft={<div>
+      <form onSubmit={(e) => {e.preventDefault(); this.handleNewMessage();}}>
       <TextField hintStyle={hintStyle}
       hintText="Type your message here"
       value={this.state.message}
       onChange={this.handleMessage}
-    /><FlatButton style={sendStyle} label="Send" onTouchTap={this.handleNewMessage} /> </div>}
+      inputStyle={sendStyle}/>
+      <FlatButton style={sendStyle} label="Send" onTouchTap={this.handleNewMessage} />
+      </form> </div>}
   />
       </div>
     );
