@@ -6,6 +6,7 @@ import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import Subheader from 'material-ui/Subheader';
 import Avatar from 'material-ui/Avatar';
+import Snackbar from 'material-ui/Snackbar';
 
 const style = {
   margin: 5
@@ -42,6 +43,7 @@ const closeButtonStyle = {
   marginTop: '20px'
 }
 
+
 var privacyList ={
   '0': 'Only Me',
   '1': 'Friends Only',
@@ -62,7 +64,8 @@ class PrivacySettings extends Component {
     friendID: '',
     blogValue:'',
     albumValues:[],
-    albumList: []
+    albumList: [],
+    openSnackbar: false
   };
 
   handleChangeBlog = (event, index, blogValue) => {
@@ -83,6 +86,12 @@ class PrivacySettings extends Component {
     this.setState({open: false});
   };
 
+  snackbarClose = () => {
+    this.setState({
+      openSnackbar: false,
+    });
+  };  
+
   handleSubmit = () => {
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/privacy/blog' , {
@@ -99,7 +108,8 @@ class PrivacySettings extends Component {
         return response.json()
       }).then(function(json) {
           self.setState({
-            access_right: self.state.blogValue
+            access_right: self.state.blogValue,
+            openSnackbar: true
           })
       }).catch(function(ex) {
         console.log('parsing failed', ex);
@@ -211,6 +221,12 @@ class PrivacySettings extends Component {
             label="Save Changes"
             labelColor="white"
             backgroundColor="#A4D336">
+              <Snackbar
+                open={this.state.openSnackbar}
+                message="Privacy saved!"
+                autoHideDuration={2000}
+                onRequestClose={this.snackbarClose}
+              />                        
           </RaisedButton>
         </center>
       </div>
