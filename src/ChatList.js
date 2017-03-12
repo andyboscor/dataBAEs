@@ -172,6 +172,22 @@ class ChatList extends Component {
       console.log('parsing failed', ex)
     })
   }
+  deleteCircle = (circle_id) => {
+    var self=this;
+    fetch('https://friendzone.azurewebsites.net/API.php/circles/' + circle_id, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': 'Basic ' + localStorage.getItem('usercred')
+      }
+    }).then(function(response) {
+        return response.json()
+    }).then(function(json) {
+      //console.log(json);
+      self.getChatList();
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })
+  }
   addUser = () => {
     var users = this.state.circleUsers;
     var userIDs = this.state.circleUsersToSend;
@@ -420,11 +436,21 @@ class ChatList extends Component {
           },this)}
 
       <Subheader>Circle chats</Subheader>
-      {this.state.circles.map(function(item){
+      {this.state.circles.map(function(item,i){
             if(this.state.colorid === item.circleID && this.state.circlecolor === true)
             {
               var arr = [];
               var self = this;
+              arr.push(<RaisedButton
+              key={i}
+             label="Delete circle"
+             labelPosition="after"
+             style = {buttonStyle}
+             containerElement="label"
+             backgroundColor='#8088B0'
+             labelStyle={labelStyle}
+             onTouchTap={() => {self.deleteCircle(item.circleID)}}
+              />);
               this.state.circleMembers.map(function(item2,i){
                arr.push(
                   <Chip key={item2.uID} style={chipstyle2} onRequestDelete={() => self.handleDeleteCircleMember(item.circleID,item2.uID)}>
