@@ -9,6 +9,7 @@ import Subheader from 'material-ui/Subheader';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import Done from 'material-ui/svg-icons/action/done';
+import Clear from 'material-ui/svg-icons/content/clear';
 
 const style = {
   margin: 5
@@ -64,7 +65,7 @@ const bodyContainer = {
 }
 
 const friendRecommendContainer ={
-  width:'50%',
+  width:'33%',
   height:window.innerHeight - 400,
   marginLeft:'10px',
   marginRight:'10px',
@@ -73,7 +74,15 @@ const friendRecommendContainer ={
 
 const friendRequestContainer= {
   height:window.innerHeight - 400,
-  width:'50%',
+  width:'33%',
+  marginRight:'10px',
+  marginLeft:'10px',
+  overflowY: 'scroll'
+}
+
+const friendListContainer= {
+  height:window.innerHeight - 400,
+  width:'33%',
   marginRight:'60px',
   marginLeft:'10px',
   overflowY: 'scroll'
@@ -92,6 +101,9 @@ class Profile extends Component {
     email_address: '',
     recommendArr:[],
     requestArr:[],
+    friendList:[],
+    friendToDelete: null,
+    deleteFriendDialog: false,
     picture: localStorage.getItem('picture'),
     uploadProfilePicture: false,
     newXMLprofile: false
@@ -101,6 +113,7 @@ class Profile extends Component {
     super(props);
     this.handleSubmit=this.handleSubmit.bind(this);
     this.submitRecommend = this.submitRecommend.bind(this);
+    this.handleCloseDeleteFriendDialog = this.handleCloseDeleteFriendDialog.bind(this);
   }
 
   componentDidMount() {
@@ -170,6 +183,30 @@ class Profile extends Component {
           }
           self.setState({
             requestArr: arr
+          });
+        }).catch(function(ex) {
+          console.log('parsing failed', ex)
+          return;
+      });
+      fetch('https://friendzone.azurewebsites.net/API.php/friends', {
+          headers: {
+            'Authorization': 'Basic ' + localStorage.getItem('usercred')
+          }
+        })
+        .then(function(response) {
+          return response.json();
+        }).then(function(reqFriends) {
+          console.log("HELssO", reqFriends)
+          var arr =[]
+          for(let friend of reqFriends) {
+            arr.unshift({
+              friendID: friend.userID,
+              friendName: `${friend.first_name} ${friend.last_name}`,
+              friendAvatar:"https://friendzone.azurewebsites.net/" + friend.picture
+            });
+          }
+          self.setState({
+            friendList: arr
           });
         }).catch(function(ex) {
           console.log('parsing failed', ex)
@@ -337,6 +374,49 @@ class Profile extends Component {
     });
   }
 
+  handleCloseDeleteFriendDialog() {
+    this.setState({
+      deleteFriendDialog: false,
+      friendToDelete: null
+    });
+  }
+
+  deleteFriend() {
+    if(this.state.friendToDelete === null) return;
+    let friendToDelete;
+    for(let friend of this.state.friendList) {
+      if(friend.friendID === this.state.friendToDelete) {
+        friendToDelete = friend;
+        break;
+      }
+    }
+    if(!friendToDelete) return;
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/friends', {
+        method: 'DELETE',
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred'),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          friendID: this.state.friendToDelete
+        })
+      })
+      .then(function(response) {
+        let index = self.state.friendList.indexOf(friendToDelete);
+        self.state.friendList.splice(index, 1);
+        self.setState({
+          friendList: self.state.friendList,
+          deleteFriendDialog: false,
+          friendToDelete: null
+        });
+      }).catch(function(ex) {
+        // FIXME: Add handling errors.
+        console.log('parsing failed', ex)
+        return;
+      });
+  }
+
   render() {
     var addFriendsList=[];
     for (let i=0; i<this.state.recommendArr.length;i++) {
@@ -374,6 +454,16 @@ class Profile extends Component {
           primaryText={this.state.requestArr[i].requestName}
           leftAvatar={<Avatar src={this.state.requestArr[i].requestAvatar} />}
           rightIconButton={friendsReqButton}
+        />);
+    }
+
+    let myFriends = [];
+    for (let friend of this.state.friendList) {
+      myFriends.push(
+        <ListItem key={`friend${friend.friendID}`}
+          primaryText={friend.friendName}
+          leftAvatar={<Avatar src={friend.friendAvatar} />}
+          rightIconButton={<FloatingActionButton secondary={true} mini={true} onTouchTap={() => this.setState({ deleteFriendDialog: true, friendToDelete: friend.friendID })}><Clear/></FloatingActionButton>}
         />);
     }
 
@@ -416,6 +506,20 @@ class Profile extends Component {
       primary={true}
       keyboardFocused={true}
       onTouchTap={this.upload_xml.bind(this)}
+    />,
+  ];
+
+  const deleteFriendActions = [
+    <FlatButton
+      label="Cancel"
+      secondary={true}
+      onTouchTap={this.handleCloseDeleteFriendDialog}
+    />,
+    <FlatButton
+      label="Delete"
+      primary={true}
+      keyboardFocused={true}
+      onTouchTap={this.deleteFriend.bind(this)}
     />,
   ];
     return (
@@ -491,7 +595,20 @@ class Profile extends Component {
               {reqFriendsList}
             </List>
           </div>
+          <div style={friendListContainer}>
+            <List>
+              <Subheader>My Friends</Subheader>
+              {myFriends}
+            </List>
+          </div>
         </div>
+        <Dialog
+          title="Are you sure you want to delete your friendship?"
+          actions={deleteFriendActions}
+          modal={false}
+          open={this.state.deleteFriendDialog}
+          onRequestClose={this.handleCloseDeleteFriendDialog}
+        />
       </div>
     );
   }
