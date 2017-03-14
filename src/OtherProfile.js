@@ -6,7 +6,7 @@ import Chat from './Chat.js';
 import Done from 'material-ui/svg-icons/action/done';
 import Albums from './Albums.js';
 import {List, ListItem} from 'material-ui/List';
-
+import AutoComplete from 'material-ui/AutoComplete';
 const style = {margin: 5};
 const profileInfo ={
   width:'400px',
@@ -214,7 +214,7 @@ class OtherProfile extends Component {
             friendAvatar:"https://friendzone.azurewebsites.net/" + friend.picture
           });
         }
-        console.log('fiendList', arr);
+
         self.setState({
           blog:false,
           chat: false,
@@ -225,6 +225,31 @@ class OtherProfile extends Component {
       }).catch(function(ex) {
         console.log('parsing failed', ex)
       })
+  };
+  handleUpdateInput = (value) => {
+    this.setState({searchText: value});
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/friends/' + self.state.friendID +'/' + value , {
+      headers: {
+        'Authorization': 'Basic ' + localStorage.getItem('usercred')
+      }
+    }).then(function(response) {
+        return response.json()
+    }).then(function(json) {
+      var arr =[]
+      for(let friend of json) {
+        arr.unshift({
+          friendID: friend.userID,
+          friendName: `${friend.first_name} ${friend.last_name}`,
+          friendAvatar:"https://friendzone.azurewebsites.net/" + friend.picture
+        });
+      }
+    self.setState({
+      friendList: arr
+    });
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })
   };
   render() {
     let friendsButton;
@@ -256,6 +281,13 @@ class OtherProfile extends Component {
       }
       profileTab = (<div style={{ textAlign: 'center' }}>
         <h2>{this.state.name + "'s Friends List"}</h2>
+          <AutoComplete
+                hintText="Search for a friend"
+                dataSource={this.state.friendList}
+                onUpdateInput={this.handleUpdateInput}
+                filter={AutoComplete.noFilter}
+                searchText={this.state.searchText}
+            />
         {myFriends}
       </div>);
     }
