@@ -26,6 +26,9 @@ var goWhite = {
 }
 var goFadeWhite ={
   color: '#CECECE'
+};
+var lighter = {
+  backgroundColor: '#FC4D1E'
 }
 class LoginPage extends Component {
   state = {
@@ -149,6 +152,7 @@ class LoginPage extends Component {
                 open={this.state.loginErr}
                 message="Wrong Login credentials!"
                 autoHideDuration={4000}
+                bodyStyle={lighter}
                 onRequestClose={this.handleLoginErr}
               />
           </form>
