@@ -35,7 +35,7 @@ class Blog extends Component {
   }
   getBlog = (userID) =>{
     var self = this;
-    fetch('http://friendzone.azurewebsites.net/API.php/blog/' + userID, {
+    fetch('https://friendzone.azurewebsites.net/API.php/blog/' + userID, {
       headers: {
         'Authorization': 'Basic ' + localStorage.getItem('usercred')
       }
@@ -54,7 +54,7 @@ class Blog extends Component {
         blog_title: json.blogName
       })
 
-      fetch('http://friendzone.azurewebsites.net/API.php/blog_posts/' + self.state.blogID, {
+      fetch('https://friendzone.azurewebsites.net/API.php/blog_posts/' + self.state.blogID, {
         headers: {
           'Authorization': 'Basic ' + localStorage.getItem('usercred')
         }})
