@@ -60,9 +60,9 @@ class OtherProfile extends Component {
   handleClose = () => {
     this.setState({open: false});
   };
-  getProfileInfo = () => {
+  getProfileInfo = (friendID) => {
     var self = this;
-    fetch('https://friendzone.azurewebsites.net/API.php/profile/' + self.props.friendID , {
+    fetch('https://friendzone.azurewebsites.net/API.php/profile/' + friendID , {
       headers: {
         'Authorization': 'Basic ' + localStorage.getItem('usercred')
       }})
@@ -77,18 +77,18 @@ class OtherProfile extends Component {
       console.log('parsing failed', ex)
     });
 
-    fetch('https://friendzone.azurewebsites.net/API.php/friendship_status/' + self.props.friendID , {
+    fetch('https://friendzone.azurewebsites.net/API.php/friendship_status/' + friendID , {
       headers: {
         'Authorization': 'Basic ' + localStorage.getItem('usercred')
       }})
     .then(function(response) {
       return response.json()})
     .then(function(json) {
-      console.log('friendID', self.props.friendID);
-      console.log('friendship_status', json);
+      //console.log('friendID', self.props.friendID);
+      //console.log('friendship_status', json);
       self.setState({
         friendship_status: (json.friendship_status === "true"),
-        friendID: self.props.friendID
+        friendID: friendID
       })})
     .catch(function(ex) {
       console.log('parsing failed', ex)
@@ -96,13 +96,13 @@ class OtherProfile extends Component {
   }
   componentDidMount(){
     this.setState({friendID: this.props.friendID});
-    this.getProfileInfo();
+    this.getProfileInfo(this.props.friendID);
   }
   componentWillReceiveProps(){
     if(this.state.friendID!==this.props.friendID)
     {
       this.setState({friendID: this.props.friendID, blog:true});
-      this.getProfileInfo();
+      this.getProfileInfo(this.props.friendID);
     }
     //console.log(this.props.friendID);
   }
@@ -246,10 +246,12 @@ class OtherProfile extends Component {
     if(this.state.friends === true) {
       let myFriends = [];
       for (let friend of this.state.friendList) {
+        var self = this;
         myFriends.push(
           <ListItem key={`friend${friend.friendID}`}
             primaryText={friend.friendName}
             leftAvatar={<Avatar src={friend.friendAvatar} />}
+            onTouchTap={() => {self.setState({friendID:friend.friendID, friends:false, blog:true}); self.getProfileInfo(friend.friendID);}}
           />);
       }
       profileTab = (<div style={{ textAlign: 'center' }}>
