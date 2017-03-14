@@ -4,6 +4,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import PasswordField from 'material-ui-password-field'
+import Snackbar from 'material-ui/Snackbar';
 
 const style = {
   margin: 12,
@@ -33,7 +34,8 @@ class LoginPage extends Component {
     password: '',
     firstName: '',
     lastName: '',
-    userID: null
+    userID: null,
+    loginErr: false
   };
 
   handleOpen = () => {
@@ -55,6 +57,13 @@ class LoginPage extends Component {
   handleLastName = (event) => {
     this.setState({lastName: event.target.value});
   }
+
+  handleLoginErr= () => {
+    this.setState({
+      loginErr: false
+    });
+  };
+
   handleLogin = (event) => {
     event.preventDefault();
     var credentials = this.state.username + ":" + this.state.password;
@@ -75,6 +84,9 @@ class LoginPage extends Component {
         self.props.handleLogin();
       }).catch(function(ex) {
         console.log('parsing failed', ex)
+        self.setState({
+          loginErr: true
+        })
       });
   }
   handleRegister = (event) => {
@@ -100,8 +112,8 @@ class LoginPage extends Component {
         console.log('parsing failed', ex)
       })
   }
-  render() {
 
+  render() {
     const actions = [
       <FlatButton
         label="Submit"
@@ -133,6 +145,12 @@ class LoginPage extends Component {
               floatingLabelText="Enter your password"
             />
             <RaisedButton type="submit" label="Login" style={style} />
+              <Snackbar
+                open={this.state.loginErr}
+                message="Wrong Login credentials!"
+                autoHideDuration={4000}
+                onRequestClose={this.handleLoginErr}
+              />
           </form>
             <h3 style={goWhite}>Not registered yet?</h3>
             <RaisedButton label="Register" onTouchTap={this.handleOpen} />
