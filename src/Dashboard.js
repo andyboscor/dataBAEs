@@ -130,7 +130,8 @@ class Dashboard extends Component {
 
   handleLogout = () =>{
     this.setState({loggedin:false});
-    localStorage.setItem('userID','');
+    localStorage.setItem('userID',null);
+    localStorage.setItem('usercred',null);
   };
 
   showProfile = (value) => {
@@ -152,10 +153,14 @@ class Dashboard extends Component {
     this.setState({searchText: ''});
   }
   componentDidMount(){
-    if(localStorage.getItem('userID') !== '')
-      this.setState({loggedin: true});
-  }
 
+    if(localStorage.getItem('userID') !== 'null' && localStorage.getItem('usercred') !== 'null')
+      this.setState({loggedin: true});
+    else this.setState({loggedin:false});
+  }
+  componentDidUpdate(){
+    console.log('123' + localStorage.getItem('userID'));
+  }
   handleUpdateInput = (value) => {
     this.setState({searchText: value});
     var self = this;
