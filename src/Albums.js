@@ -312,10 +312,10 @@ class Albums extends Component {
      />,
    ];
    let uploadButton;
-   if(this.state.otherProfile===false) uploadButton = <RaisedButton style={closeButtonStyle} onTouchTap={this.handleNewPhotoOpen} label="Upload Photo" labelColor="white" backgroundColor="#A61C24"></RaisedButton>
+   if(this.state.otherProfile===false) uploadButton = <RaisedButton style={closeButtonStyle} onTouchTap={this.handleNewPhotoOpen} label="Upload Photo" labelColor="white" backgroundColor="#7e6bbc"></RaisedButton>
     return(
       <div style={onTop}>
-        <RaisedButton style={closeButtonStyle} onTouchTap={this.handleClose} label="Close" labelColor="white" backgroundColor="#A61C24"></RaisedButton>
+        <RaisedButton style={closeButtonStyle} onTouchTap={this.handleClose} label="Close" labelColor="white" backgroundColor="#7e6bbc"></RaisedButton>
         {uploadButton}
         {editButton}
         <Dialog

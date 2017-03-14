@@ -92,7 +92,7 @@ class PrivacySettings extends Component {
     this.setState({
       openSnackbar: false,
     });
-  };  
+  };
 
   handleSubmit = () => {
     var self = this;
@@ -139,7 +139,7 @@ class PrivacySettings extends Component {
       .then(function(response) {
         return response.json()
       }).then(function(json) {
-        
+
       }).catch(function(ex) {
         console.log('parsing failed', ex);
         // FIXME: Add handling errors.
@@ -221,13 +221,13 @@ class PrivacySettings extends Component {
             onTouchTap={this.handleSubmit.bind(this)}
             label="Save Changes"
             labelColor="white"
-            backgroundColor="#A61C24">
+            backgroundColor="#7e6bbc">
               <Snackbar
                 open={this.state.openSnackbar}
                 message="Privacy saved!"
                 autoHideDuration={2000}
                 onRequestClose={this.snackbarClose}
-              />                        
+              />
           </RaisedButton>
         </center>
       </div>

@@ -17,7 +17,7 @@ var chatlist_style = {
   paddingTop: 0,
   overflowY: 'scroll',
   height: '100%',
-  borderRight: '1.5px solid #A61C24'
+  borderRight: '1.5px solid #7e6bbc'
 
 };
 var buttonStyle = {
@@ -333,7 +333,7 @@ class ChatList extends Component {
           labelPosition="after"
           style={buttonStyle}
           containerElement="label"
-          backgroundColor='#A61C24'
+          backgroundColor='#7e6bbc'
           labelStyle={labelStyle}
           onTouchTap={this.handleOpen}
           icon={<ContentAdd/>}
@@ -368,7 +368,7 @@ class ChatList extends Component {
           labelPosition="after"
           style={buttonStyle}
           containerElement="label"
-          backgroundColor='#A61C24'
+          backgroundColor='#7e6bbc'
           labelStyle={labelStyle}
           onTouchTap={this.handleOpen2}
           icon={<ContentAdd/>}
@@ -401,7 +401,7 @@ class ChatList extends Component {
               labelPosition="after"
               style={buttonStyle}
               containerElement="label"
-              backgroundColor='#A61C24'
+              backgroundColor='#7e6bbc'
               labelStyle={labelStyle}
               onTouchTap={this.addUser}
               icon={<ContentAdd/>}
@@ -468,7 +468,7 @@ class ChatList extends Component {
                       labelPosition="after"
                       style={buttonStyle}
                       containerElement="label"
-                      backgroundColor='#A61C24'
+                      backgroundColor='#7e6bbc'
                       labelStyle={labelStyle}
                       onTouchTap={() => {self.deleteCircle(item.circleID)}}
                       />

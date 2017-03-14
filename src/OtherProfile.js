@@ -229,9 +229,9 @@ class OtherProfile extends Component {
   render() {
     let friendsButton;
     if (!this.state.friendship_status && this.state.isAdmin !== true) {
-      friendsButton = (<RaisedButton style={closeButtonStyle} onTouchTap={this.submitFriendshiptRequest.bind(this)} label="Add Friend" labelColor="white" backgroundColor="#A61C24"></RaisedButton>);
+      friendsButton = (<RaisedButton style={closeButtonStyle} onTouchTap={this.submitFriendshiptRequest.bind(this)} label="Add Friend" labelColor="white" backgroundColor="#7e6bbc"></RaisedButton>);
     } else if (this.state.isAdmin !== true) {
-      friendsButton = (<RaisedButton style={closeButtonStyle} disabled={true} icon={<Done />} label="Friends" labelColor="white" backgroundColor="#A61C24"></RaisedButton>);
+      friendsButton = (<RaisedButton style={closeButtonStyle} disabled={true} icon={<Done />} label="Friends" labelColor="white" backgroundColor="#7e6bbc"></RaisedButton>);
     }
     let profileTab;
     if(this.state.blog === false && this.state.photos === false && this.state.chat === true) {
@@ -261,16 +261,22 @@ class OtherProfile extends Component {
     return (
       <div style={profileContainer}>
       <div style={profileInfo}>
-      <RaisedButton style={closeButtonStyle} onTouchTap={this.props.handleClose} label="Close" labelColor="white" backgroundColor="#A61C24"></RaisedButton>
+      <RaisedButton style={closeButtonStyle} onTouchTap={this.props.handleClose} label="Close" labelColor="white" backgroundColor="#7e6bbc"></RaisedButton>
           <center><h1 style={goWhite}> {this.state.name} </h1>
 		  <Avatar
           src={this.state.picture}
           size={230}
           style={style}/>
+<<<<<<< Updated upstream
             <RaisedButton style={closeButtonStyle} onTouchTap={this.openBlog} label="Blog" labelColor="white" backgroundColor="#A61C24"></RaisedButton>
             <RaisedButton style={closeButtonStyle} onTouchTap={this.openPhotos} label="Photos" labelColor="white" backgroundColor="#A61C24"></RaisedButton>
             <RaisedButton style={closeButtonStyle} onTouchTap={this.openChat} label="Message" labelColor="white" backgroundColor="#A61C24"></RaisedButton>
             <RaisedButton style={closeButtonStyle} onTouchTap={this.openFriendsList} label="Friends" labelColor="white" backgroundColor="#A61C24"></RaisedButton>
+=======
+            <RaisedButton style={closeButtonStyle} onTouchTap={this.openBlog} label="Blog" labelColor="white" backgroundColor="#7e6bbc"></RaisedButton>
+            <RaisedButton style={closeButtonStyle} onTouchTap={this.openPhotos} label="Photos" labelColor="white" backgroundColor="#7e6bbc"></RaisedButton>
+            <RaisedButton style={closeButtonStyle} onTouchTap={this.openChat} label="Message" labelColor="white" backgroundColor="#7e6bbc"></RaisedButton>
+>>>>>>> Stashed changes
           </center>
           <center>
             {friendsButton}

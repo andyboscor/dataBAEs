@@ -7,7 +7,7 @@ var hintStyle = {
 }
 var barStyle = {
   //flexGrow: '1'
-  backgroundColor:'#A61C24'
+  backgroundColor:'#7e6bbc'
 }
 var sendStyle = {
   color:'white',

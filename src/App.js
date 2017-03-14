@@ -7,9 +7,9 @@ import {green100, green500, green700} from 'material-ui/styles/colors';
 
 const muiTheme = getMuiTheme({
   palette: {
-    primary1Color: "#A61C24",
-    primary2Color: "#202020",
-    accent1Color: "#474646",
+    primary1Color: "#7e6bbc",
+    //primary2Color: "#202020",
+    accent1Color: "#A4D336",
     textColor: "#000000"
   },
 }, {

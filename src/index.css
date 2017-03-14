@@ -5,10 +5,10 @@ html, body {
   height:100%;
 }
 .backgroundLogin{
-  background: linear-gradient(to bottom, #EB5757 , #000000);
+  background: linear-gradient(to bottom, #80CBC4 , #9FA8DA);
 }
 .appBar{
-  background: linear-gradient(to bottom, #202020, #202020) ;
+    background: linear-gradient(to bottom, #80CBC4 , #80CBC4) ;
 }
 .tabBar {
   background: linear-gradient(to bottom, #DDB110 , #DDB110) ;

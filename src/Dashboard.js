@@ -22,10 +22,10 @@ var iconSize = {
 }
 
 var tabColor = {
-  backgroundColor: '#A61C24'
+  backgroundColor: '#7e6bbc'
 }
 var underlineColor = {
-  backgroundColor: '#E5D5C5',
+  backgroundColor: '#80CBC4',
   height:'5px'
 }
 var listStyle = {
@@ -36,7 +36,7 @@ var searchTextStyle = {
   color: 'white'
 }
 var goWhite = {
-  color: '#CECECE'
+  color: 'white'
 }
 
 const Logged = (props) => (
