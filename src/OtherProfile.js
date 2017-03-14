@@ -267,16 +267,10 @@ class OtherProfile extends Component {
           src={this.state.picture}
           size={230}
           style={style}/>
-<<<<<<< Updated upstream
-            <RaisedButton style={closeButtonStyle} onTouchTap={this.openBlog} label="Blog" labelColor="white" backgroundColor="#A61C24"></RaisedButton>
-            <RaisedButton style={closeButtonStyle} onTouchTap={this.openPhotos} label="Photos" labelColor="white" backgroundColor="#A61C24"></RaisedButton>
-            <RaisedButton style={closeButtonStyle} onTouchTap={this.openChat} label="Message" labelColor="white" backgroundColor="#A61C24"></RaisedButton>
-            <RaisedButton style={closeButtonStyle} onTouchTap={this.openFriendsList} label="Friends" labelColor="white" backgroundColor="#A61C24"></RaisedButton>
-=======
             <RaisedButton style={closeButtonStyle} onTouchTap={this.openBlog} label="Blog" labelColor="white" backgroundColor="#7e6bbc"></RaisedButton>
             <RaisedButton style={closeButtonStyle} onTouchTap={this.openPhotos} label="Photos" labelColor="white" backgroundColor="#7e6bbc"></RaisedButton>
             <RaisedButton style={closeButtonStyle} onTouchTap={this.openChat} label="Message" labelColor="white" backgroundColor="#7e6bbc"></RaisedButton>
->>>>>>> Stashed changes
+            <RaisedButton style={closeButtonStyle} onTouchTap={this.openFriendsList} label="Friends" labelColor="white" backgroundColor="#7e6bbc"></RaisedButton>
           </center>
           <center>
             {friendsButton}
