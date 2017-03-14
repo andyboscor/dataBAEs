@@ -277,7 +277,7 @@ class Profile extends Component {
     let value = localStorage.getItem('userID');
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/profile/' + value , {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Authorization': 'Basic ' + localStorage.getItem('usercred'),
           'Content-Type': 'application/json'

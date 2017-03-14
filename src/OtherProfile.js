@@ -5,6 +5,7 @@ import Blog from './Blog.js';
 import Chat from './Chat.js';
 import Done from 'material-ui/svg-icons/action/done';
 import Albums from './Albums.js';
+import {List, ListItem} from 'material-ui/List';
 
 const style = {margin: 5};
 const profileInfo ={
@@ -46,6 +47,8 @@ class OtherProfile extends Component {
     blog: true,
     photos: false,
     chat: false,
+    friends: false,
+    friendList: [],
     picture: '',
     isAdmin: this.props.isAdmin
   };
@@ -74,13 +77,15 @@ class OtherProfile extends Component {
       console.log('parsing failed', ex)
     });
 
-    fetch('https://friendzone.azurewebsites.net/API.php/friends/' + self.props.friendID , {
+    fetch('https://friendzone.azurewebsites.net/API.php/friendship_status/' + self.props.friendID , {
       headers: {
         'Authorization': 'Basic ' + localStorage.getItem('usercred')
       }})
     .then(function(response) {
       return response.json()})
     .then(function(json) {
+      console.log('friendID', self.props.friendID);
+      console.log('friendship_status', json);
       self.setState({
         friendship_status: (json.friendship_status === "true"),
         friendID: self.props.friendID
@@ -183,14 +188,44 @@ class OtherProfile extends Component {
   }
   openChat = () => {
     this.getMessages();
-    this.setState({blog:false, photos:false, chat: true});
+    this.setState({blog:false, photos:false, chat: true, friends: false});
   }
   openBlog = () => {
-    this.setState({blog:true, photos: false, chat: false});
+    this.setState({blog:true, photos: false, chat: false, friends: false});
   }
   openPhotos = () => {
-    this.setState({blog:false, chat: false, photos: true});
+    this.setState({blog:false, chat: false, photos: true, friends: false});
   }
+  openFriendsList = () => {
+    var self = this;
+    fetch('https://friendzone.azurewebsites.net/API.php/friends/' + self.state.friendID , {
+      headers: {
+        'Authorization': 'Basic ' + localStorage.getItem('usercred')
+      }
+    })
+      .then(function(response) {
+        return response.json()
+      }).then(function(reqFriends) {
+        var arr =[]
+        for(let friend of reqFriends) {
+          arr.unshift({
+            friendID: friend.userID,
+            friendName: `${friend.first_name} ${friend.last_name}`,
+            friendAvatar:"https://friendzone.azurewebsites.net/" + friend.picture
+          });
+        }
+        console.log('fiendList', arr);
+        self.setState({
+          blog:false,
+          chat: false,
+          photos: false,
+          friends: true,
+          friendList: arr
+        });
+      }).catch(function(ex) {
+        console.log('parsing failed', ex)
+      })
+  };
   render() {
     let friendsButton;
     if (!this.state.friendship_status && this.state.isAdmin !== true) {
@@ -208,6 +243,20 @@ class OtherProfile extends Component {
     if(this.state.blog === false && this.state.chat === false && this.state.photos === true) {
       profileTab = (<Albums {...this.state}/>)
     }
+    if(this.state.friends === true) {
+      let myFriends = [];
+      for (let friend of this.state.friendList) {
+        myFriends.push(
+          <ListItem key={`friend${friend.friendID}`}
+            primaryText={friend.friendName}
+            leftAvatar={<Avatar src={friend.friendAvatar} />}
+          />);
+      }
+      profileTab = (<div style={{ textAlign: 'center' }}>
+        <h2>{this.state.name + "'s Friends List"}</h2>
+        {myFriends}
+      </div>);
+    }
     //console.log(this.props.friendID);
     return (
       <div style={profileContainer}>
@@ -221,6 +270,7 @@ class OtherProfile extends Component {
             <RaisedButton style={closeButtonStyle} onTouchTap={this.openBlog} label="Blog" labelColor="white" backgroundColor="#A61C24"></RaisedButton>
             <RaisedButton style={closeButtonStyle} onTouchTap={this.openPhotos} label="Photos" labelColor="white" backgroundColor="#A61C24"></RaisedButton>
             <RaisedButton style={closeButtonStyle} onTouchTap={this.openChat} label="Message" labelColor="white" backgroundColor="#A61C24"></RaisedButton>
+            <RaisedButton style={closeButtonStyle} onTouchTap={this.openFriendsList} label="Friends" labelColor="white" backgroundColor="#A61C24"></RaisedButton>
           </center>
           <center>
             {friendsButton}
