@@ -67,6 +67,12 @@ class LoginPage extends Component {
     });
   };
 
+  handleRegisterErr= () => {
+    this.setState({
+      registerErr: false
+    });
+  };
+
   handleLogin = (event) => {
     event.preventDefault();
     var credentials = this.state.username + ":" + this.state.password;
@@ -113,6 +119,9 @@ class LoginPage extends Component {
         self.handleLogin(event);
       }).catch(function(ex) {
         console.log('parsing failed', ex)
+        self.setState({
+          registerErr: true
+        })
       })
   }
 
@@ -150,7 +159,7 @@ class LoginPage extends Component {
             <RaisedButton type="submit" label="Login" style={style} />
               <Snackbar
                 open={this.state.loginErr}
-                message="Wrong Login credentials!"
+                message="Invalid credentials!"
                 autoHideDuration={4000}
                 bodyStyle={lighter}
                 onRequestClose={this.handleLoginErr}
@@ -159,6 +168,7 @@ class LoginPage extends Component {
             <h3 style={goWhite}>Not registered yet?</h3>
             <RaisedButton label="Register" onTouchTap={this.handleOpen} />
             <form onSubmit={this.handleRegister}>
+
             <Dialog
               title="Register"
               actions={actions}
@@ -167,30 +177,37 @@ class LoginPage extends Component {
               onRequestClose={this.handleClose}
               autoScrollBodyContent={true}
             >
-            <div>
-              <center>
+              <div>
+                <center>
 
-              <TextField
-                  hintText="First Name"
-                  onChange={this.handleFirstName}
-              /><br />
-              <TextField
-                hintText="Last Name"
+                <TextField
+                    hintText="First Name"
+                    onChange={this.handleFirstName}
+                /><br />
+                <TextField
+                  hintText="Last Name"
 
-                  onChange={this.handleLastName}
-              /><br />
-              <TextField
-                hintText="Email"
-                 onChange={this.handleUsername}
-              /><br />
-              <PasswordField
-                style={maxPass}
-                disableButton={false}
-                onChange={this.handlePassword}
-                floatingLabelText="Enter your password"
+                    onChange={this.handleLastName}
+                /><br />
+                <TextField
+                  hintText="Email"
+                   onChange={this.handleUsername}
+                /><br />
+                <PasswordField
+                  style={maxPass}
+                  disableButton={false}
+                  onChange={this.handlePassword}
+                  floatingLabelText="Enter your password"
+                />
+                </center>
+              </div>
+              <Snackbar
+                open={this.state.registerErr}
+                message="Invalid credentials!"
+                autoHideDuration={2000}
+                bodyStyle={lighter}
+                onRequestClose={this.handleRegisterErr}
               />
-              </center>
-            </div>
             </Dialog>
             </form>
           </div>
