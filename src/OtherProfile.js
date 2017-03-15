@@ -7,6 +7,8 @@ import Done from 'material-ui/svg-icons/action/done';
 import Albums from './Albums.js';
 import {List, ListItem} from 'material-ui/List';
 import AutoComplete from 'material-ui/AutoComplete';
+
+
 const style = {margin: 5};
 const profileInfo ={
   width:'400px',
@@ -50,7 +52,8 @@ class OtherProfile extends Component {
     friends: false,
     friendList: [],
     picture: '',
-    isAdmin: this.props.isAdmin
+    isAdmin: this.props.isAdmin,
+    privacyError: false
   };
 
   handleOpen = () => {
@@ -188,13 +191,13 @@ class OtherProfile extends Component {
   }
   openChat = () => {
     this.getMessages();
-    this.setState({blog:false, photos:false, chat: true, friends: false});
+    this.setState({blog:false, photos:false, chat: true, friends: false, privacyError: false});
   }
   openBlog = () => {
-    this.setState({blog:true, photos: false, chat: false, friends: false});
+    this.setState({blog:true, photos: false, chat: false, friends: false, privacyError: false});
   }
   openPhotos = () => {
-    this.setState({blog:false, chat: false, photos: true, friends: false});
+    this.setState({blog:false, chat: false, photos: true, friends: false, privacyError: false});
   }
   openFriendsList = () => {
     var self = this;
@@ -204,8 +207,12 @@ class OtherProfile extends Component {
       }
     })
       .then(function(response) {
-        return response.json()
-      }).then(function(reqFriends) {
+        if(response.status===403)
+          self.setState({
+            privacyError: true
+          });
+        return response.json()})
+        .then(function(reqFriends) {
         var arr =[]
         for(let friend of reqFriends) {
           arr.unshift({
@@ -220,7 +227,7 @@ class OtherProfile extends Component {
           chat: false,
           photos: false,
           friends: true,
-          friendList: arr
+          friendList: arr,
         });
       }).catch(function(ex) {
         console.log('parsing failed', ex)
@@ -290,6 +297,18 @@ class OtherProfile extends Component {
             />
         {myFriends}
       </div>);
+    }
+    if(this.state.privacyError===true){
+      profileTab=(
+        <div style={{marginTop: '100px'}}><center>
+        <h1>Seems like you don't have the rights to view this user's Friends List</h1>
+        <Avatar
+            src="http://www.iconninja.com/files/415/882/376/confused-icon.svg"
+            size={230}
+            style={style}/>
+        </center>
+        </div>
+      );
     }
     //console.log(this.props.friendID);
     return (
