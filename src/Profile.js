@@ -142,6 +142,7 @@ class Profile extends Component {
       .then(function(response) {
         return response.json();
       }).then(function(recFriends) {
+        console.log(recFriends)
         var arr =[]
         for(let recommend of recFriends) {
           arr.unshift({
