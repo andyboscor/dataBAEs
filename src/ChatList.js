@@ -11,6 +11,12 @@ import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import Chip from 'material-ui/Chip';
+import Snackbar from 'material-ui/Snackbar';
+
+var lighter = {
+  backgroundColor: '#FC4D1E'
+}
+
 var chatlist_style = {
   width: '400px',
   fontWeight: 400,
@@ -56,7 +62,8 @@ class ChatList extends Component {
       circles: [],
       searchUser: '',
       circlecolor: false,
-      circleMembers: []
+      circleMembers: [],
+      chatErr: false
     };
 
     this.handleClick = this.handleClick.bind(this);
@@ -139,6 +146,12 @@ class ChatList extends Component {
   }
   handleOpen = () => {
     this.setState({open: true});
+  };
+
+  handleChatErr= () => {
+    this.setState({
+      chatErr: false
+    });
   };
 
   handleClose = () => {
@@ -248,6 +261,9 @@ class ChatList extends Component {
           self.getChatList();
         }).catch(function(ex) {
           console.log('parsing failed', ex)
+          self.setState({
+            chatErr: true
+          })
         })
     }
     sendCircleMessage(){
@@ -364,7 +380,15 @@ class ChatList extends Component {
               floatingLabelText="Message"
               fullWidth={true}
               />
+            <Snackbar
+              open={this.state.chatErr}
+              message="You have to input all column!"
+              autoHideDuration={2000}
+              bodyStyle={lighter}
+              onRequestClose={this.handleChatErr}
+            />
           </Dialog>
+
         </RaisedButton>
         <RaisedButton
           label="New circle chat"
