@@ -196,32 +196,34 @@ class ChatList extends Component {
     this.setState({searchUser: ''});
   }
   handleUpdateInput = (value) => {
-    this.setState({searchUser: value});
-    var self = this;
-    fetch('https://friendzone.azurewebsites.net/API.php/search/' + value , {
-      headers: {
-        'Authorization': 'Basic ' + localStorage.getItem('usercred')
-      }
-    }).then(function(response) {
-        return response.json()
-    }).then(function(json) {
-      //console.log(json);
-      var results = [];
-      json.map(function(item,i){
-        results.push({text: item.first_name + " " + item.last_name, value: (
-        <MenuItem
-          primaryText={item.first_name + " " + item.last_name}
-          secondaryText="&#9786;"
-          onTouchTap={() => self.setState({newUserID: item.userID, newUserName: item.first_name + " " + item.last_name })}
-        />)});
-        })
+    if(value.length>0){
+      this.setState({searchUser: value});
+      var self = this;
+      fetch('https://friendzone.azurewebsites.net/API.php/search/' + value , {
+        headers: {
+          'Authorization': 'Basic ' + localStorage.getItem('usercred')
+        }
+      }).then(function(response) {
+          return response.json()
+      }).then(function(json) {
+        //console.log(json);
+        var results = [];
+        json.map(function(item,i){
+          results.push({text: item.first_name + " " + item.last_name, value: (
+          <MenuItem
+            primaryText={item.first_name + " " + item.last_name}
+            secondaryText="&#9786;"
+            onTouchTap={() => self.setState({newUserID: item.userID, newUserName: item.first_name + " " + item.last_name })}
+          />)});
+          })
 
-        self.setState({
-          dataSource: results
-        });
-    }).catch(function(ex) {
-      console.log('parsing failed', ex)
-    })
+          self.setState({
+            dataSource: results
+          });
+      }).catch(function(ex) {
+        console.log('parsing failed', ex)
+      })
+    }
   };
 
     handleSend(){
@@ -294,6 +296,7 @@ class ChatList extends Component {
           //self.handleClose2();
           self.sendCircleMessage();
           self.getChatList();
+          self.handleClose2();
           //self.handleClick(self.state.newUserID);
         }).catch(function(ex) {
           console.log('parsing failed', ex)
