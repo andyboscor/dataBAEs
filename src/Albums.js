@@ -162,7 +162,8 @@ class Albums extends Component {
         });
       else
         self.setState({
-          albums:results
+          albums:results,
+          errorMessage: ""
         });
 
     }).catch(function(ex) {
