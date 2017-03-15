@@ -193,6 +193,7 @@ class ChatList extends Component {
     }).then(function(json) {
       //console.log(json);
       self.getChatList();
+      self.props.handleResponse(null, false);
     }).catch(function(ex) {
       console.log('parsing failed', ex)
     })
