@@ -7,11 +7,16 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import Create from 'material-ui/svg-icons/content/create';
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
+import Snackbar from 'material-ui/Snackbar';
 import 'whatwg-fetch';
 
 var addBottom = {
   marginTop:'40px',
   marginBottom: '150px'
+}
+
+var lighter = {
+  backgroundColor: '#FC4D1E'
 }
 
 class Blog extends Component {
@@ -31,7 +36,8 @@ class Blog extends Component {
     post_title: '',
     editTitle: false,
     userID: this.props.userID,
-    isAdmin: this.props.isAdmin
+    isAdmin: this.props.isAdmin,
+    blogErr: false
   }
   getBlog = (userID) =>{
     var self = this;
@@ -70,7 +76,6 @@ class Blog extends Component {
             postContent: postAttributes.content
           });
         }
-
         self.setState({
           cardarray: arr
         });
@@ -105,6 +110,12 @@ class Blog extends Component {
     this.setState({open: false});
   };
 
+  handleBlogErr= () => {
+    this.setState({
+      blogErr: false
+    });
+  };
+
   handleSubmit = () => {
     var self = this;
     fetch('https://friendzone.azurewebsites.net/API.php/blog_posts/' + self.state.blogID , {
@@ -133,7 +144,9 @@ class Blog extends Component {
         });
       }).catch(function(ex) {
         console.log('parsing failed', ex);
-        // FIXME: Add handling errors.
+        self.setState({
+          blogErr: true
+        })
       });
     this.handleClose();
   }
@@ -309,6 +322,13 @@ class Blog extends Component {
         <form id="titleEdit" onSubmit={(e) => this.submitNewTitle(e)}>
           {blogTitle}
         </form>
+        <Snackbar
+          open={this.state.blogErr}
+          message="Invalid input, make sure you input everything"
+          autoHideDuration={2000}
+          bodyStyle={lighter}
+          onRequestClose={this.handleBlogErr}
+        />
         {newPostButton}
       </center>
       </div>
