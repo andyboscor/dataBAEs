@@ -72,7 +72,7 @@ class ChatList extends Component {
         return response.json()
       }).then(function(json) {
         let users = [];
-        for(let user of json.users) {
+        for(let user of json) {
           users.push({
             picture: ("https://friendzone.azurewebsites.net/" + user.picture),
             userID: user.userID,
